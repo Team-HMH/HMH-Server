@@ -9,9 +9,9 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        codedeploy-application-name: [ skt-t1-app ]
-        deployment-group-name: [ skt-t1-app-deploy-group ]
-        s3-bucket: [ skt-t1-app ]
+        codedeploy-application-name: [ hmh-codedeploy-app ]
+        deployment-group-name: [ hmh-app-deploy-group ]
+        s3-bucket: [ hmh-server-bucket ]
 
     steps:
       - name: checkout
@@ -46,7 +46,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
-          aws-region: ap-northeast-2
+          aws-region: ap-northeast-2d
 
       - name: 🚀 s3 upload
         run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://${{matrix.s3-bucket}}/deploy/$GITHUB_SHA.zip
