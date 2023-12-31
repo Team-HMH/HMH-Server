@@ -164,6 +164,7 @@ gradle-app.setting
 
 ### Config ###
 application.properties
+application-secret.properties
 application.yml
 
 ### Test ###
