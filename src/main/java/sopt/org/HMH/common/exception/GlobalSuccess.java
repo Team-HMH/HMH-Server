@@ -6,11 +6,11 @@ import sopt.org.HMH.common.exception.base.SuccessBase;
 
 @AllArgsConstructor
 public enum GlobalSuccess implements SuccessBase {
+
     ;
 
     private final HttpStatus status;
     private final String successMessage;
-
 
     @Override
     public int getHttpStatusCode() {
