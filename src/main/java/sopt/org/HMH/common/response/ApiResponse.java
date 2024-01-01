@@ -27,7 +27,7 @@ public class ApiResponse<T> {
         return new ApiResponse<>(success.getHttpStatusCode(), success.getSuccessMessage(), data);
     }
 
-    public static <T> ApiResponse <T> error(ErrorBase error) {
+    public static <T> ApiResponse<T> error(ErrorBase error) {
         return new ApiResponse<>(error.getHttpStatusCode(), error.getErrorMessage());
     }
 
@@ -35,7 +35,7 @@ public class ApiResponse<T> {
         return new ApiResponse<>(error.getHttpStatusCode(), error.getErrorMessage(), data);
     }
 
-    public static ApiResponse <Exception> error(ErrorBase error, Exception exception) {
+    public static ApiResponse<Exception> error(ErrorBase error, Exception exception) {
         return new ApiResponse<>(error.getHttpStatusCode(), error.getErrorMessage(), exception);
     }
 }
