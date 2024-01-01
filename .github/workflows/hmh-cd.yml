@@ -46,7 +46,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
-          aws-region: ap-northeast-2d
+          aws-region: ${{ secrets.AWS_REGION }}
 
       - name: 🚀 s3 upload
         run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://${{matrix.s3-bucket}}/deploy/$GITHUB_SHA.zip
