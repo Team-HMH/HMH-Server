@@ -2,7 +2,7 @@ name: 🚀 APPLICATION-DEPLOY!
 
 on:
   push:
-    branches: [ 'main' ]
+    branches: [ 'develop' ]
 
 jobs:
   build:
