@@ -3,8 +3,8 @@ name: 🏭 APPLICATION-BUILD!
 on:
   pull_request:
     branches: [ "develop" ]
-  push:
-    branches: [ "develop" ]
+  #push:
+    #branches: [ "develop" ]
 
 permissions:
   contents: read
