@@ -1,4 +1,4 @@
-package sopt.org.HMH.common.domain;
+package sopt.org.HMH.dayChallenge.domain;
 
 import static jakarta.persistence.FetchType.*;
 import static jakarta.persistence.GenerationType.*;
@@ -7,6 +7,9 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import sopt.org.HMH.app.App;
+import sopt.org.HMH.common.domain.BaseTimeEntity;
+import sopt.org.HMH.challenge.domain.Challenge;
 
 import java.time.LocalDateTime;
 import java.util.List;

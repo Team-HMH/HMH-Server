@@ -1,9 +1,10 @@
-package sopt.org.HMH.common.domain;
+package sopt.org.HMH.app;
 
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import sopt.org.HMH.dayChallenge.domain.DayChallenge;
 
 import static jakarta.persistence.FetchType.LAZY;
 import static jakarta.persistence.GenerationType.IDENTITY;
