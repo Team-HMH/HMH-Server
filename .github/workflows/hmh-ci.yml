@@ -28,9 +28,9 @@ jobs:
           mkdir ./src/main/resources
           touch ./src/main/resources/application.yml
           
-          echo "${{ secrets.APPLICATION_YML }}" >> ./src/main/resources/application.yaml
+          echo "${{ secrets.APPLICATION_YML }}" >> ./src/main/resources/application.yml
           
-          cat ./src/main/resources/application.yaml
+          cat ./src/main/resources/application.yml
         shell: bash
 
       - name: Grant execute permission for gradlew
