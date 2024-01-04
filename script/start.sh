@@ -22,4 +22,5 @@ JAR_PID=$(pgrep -f $JAR_NAME)
  echo "> $JAR_PATH 배포" #3
  # shellcheck disable=SC2153
  # shellcheck disable=SC2024
- sudo nohup java -jar -Dspring.profiles.active=prod "$JAR_PATH" >nohup.out 2>&1 </dev/null &
+ source ~/.bashrc
+ sudo nohup java -jar "$JAR_PATH" >nohup.out 2>&1 </dev/null &
