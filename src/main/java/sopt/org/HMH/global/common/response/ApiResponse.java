@@ -1,12 +1,12 @@
-package sopt.org.HMH.common.response;
+package sopt.org.HMH.global.common.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import sopt.org.HMH.common.exception.base.ErrorBase;
-import sopt.org.HMH.common.exception.base.SuccessBase;
+import sopt.org.HMH.global.common.exception.base.ErrorBase;
+import sopt.org.HMH.global.common.exception.base.SuccessBase;
 
 
 @Getter

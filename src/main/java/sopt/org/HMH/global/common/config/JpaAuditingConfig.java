@@ -1,4 +1,4 @@
-package sopt.org.HMH.common.config;
+package sopt.org.HMH.global.common.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;

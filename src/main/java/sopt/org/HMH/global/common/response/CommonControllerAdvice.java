@@ -1,11 +1,11 @@
-package sopt.org.HMH.common.response;
+package sopt.org.HMH.global.common.response;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import sopt.org.HMH.common.exception.base.ErrorBase;
-import sopt.org.HMH.common.exception.base.ExceptionBase;
+import sopt.org.HMH.global.common.exception.base.ErrorBase;
+import sopt.org.HMH.global.common.exception.base.ExceptionBase;
 
 @ControllerAdvice
 @RequiredArgsConstructor

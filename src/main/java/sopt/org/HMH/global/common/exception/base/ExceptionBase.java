@@ -1,4 +1,4 @@
-package sopt.org.HMH.common.exception.base;
+package sopt.org.HMH.global.common.exception.base;
 
 /**
  * 하위 도메인 예외는 본 Exception 클래스를 상속 받습니다.

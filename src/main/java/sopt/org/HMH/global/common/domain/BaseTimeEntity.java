@@ -1,4 +1,4 @@
-package sopt.org.HMH.common.domain;
+package sopt.org.HMH.global.common.domain;
 
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;

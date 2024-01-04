@@ -1,20 +1,20 @@
-package sopt.org.HMH.common.exception;
+package sopt.org.HMH.global.common.exception;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
-import sopt.org.HMH.common.exception.base.ErrorBase;
+import sopt.org.HMH.global.common.exception.base.SuccessBase;
 
 @AllArgsConstructor
-public enum GlobalError implements ErrorBase {
+public enum GlobalSuccess implements SuccessBase {
 
     ;
 
     private final HttpStatus status;
-    private final String errorMessage;
+    private final String successMessage;
 
     @Override
     public int getHttpStatusCode() {
-        return status.value();
+        return this.status.value();
     }
 
     @Override
@@ -23,8 +23,8 @@ public enum GlobalError implements ErrorBase {
     }
 
     @Override
-    public String getErrorMessage() {
-        return this.errorMessage;
+    public String getSuccessMessage() {
+        return this.successMessage;
     }
 
 }

@@ -1,4 +1,4 @@
-package sopt.org.HMH.common.exception.base;
+package sopt.org.HMH.global.common.exception.base;
 
 import org.springframework.http.HttpStatus;
 
