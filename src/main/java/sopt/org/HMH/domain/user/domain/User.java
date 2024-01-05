@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import sopt.org.HMH.global.auth.social.SocialPlatform;
 import sopt.org.HMH.global.common.domain.BaseTimeEntity;
 
 @Getter
@@ -23,17 +24,22 @@ public class User extends BaseTimeEntity {
     @Id
     @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
 
     @Column(name = "user_name")
-    String name;
+    private String name;
 
     @Column(name = "social_platform")
-    String socialPlatform;
+    private SocialPlatform socialPlatform;
 
     @Column(name = "social_id")
-    String socialId;
+    private Long socialId;
 
-    @Column(name = "profile_image")
-    String profileImage;
+    @Column(name = "profile_image_url")
+    private String profileImageUrl;
+
+    public void updateSocialInfo(String nickname, String profileImageUrl) {
+        this.name = nickname;
+        this.profileImageUrl = profileImageUrl;
+    }
 }
