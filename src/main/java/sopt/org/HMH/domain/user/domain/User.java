@@ -28,12 +28,12 @@ public class User extends BaseTimeEntity {
     @Column(name = "user_name")
     String name;
 
-    @Column(name = "refresh_token")
-    String RefreshToken;
-
     @Column(name = "social_platform")
     String socialPlatform;
 
     @Column(name = "social_id")
     String socialId;
+
+    @Column(name = "profile_image")
+    String profileImage;
 }
