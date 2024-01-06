@@ -6,7 +6,7 @@ import sopt.org.HMH.domain.user.domain.User;
 import sopt.org.HMH.global.auth.social.SocialPlatform;
 
 public interface UserRepository extends JpaRepository<User, Long> {
-    boolean existsBySocialPlatformAndSocialId(SocialPlatform socialPlatform, String socialId);
+    boolean existsBySocialPlatformAndSocialId(SocialPlatform socialPlatform, Long socialId);
 
-    Optional<User> findBySocialPlatformAndSocialId(SocialPlatform socialPlatform, String socialId);
+    Optional<User> findBySocialPlatformAndSocialId(SocialPlatform socialPlatform, Long socialId);
 }

@@ -1,0 +1,159 @@
+package sopt.org.HMH.global.auth.jwt;
+
+import static java.util.Objects.isNull;
+
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Header;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
+import java.nio.charset.StandardCharsets;
+import java.security.Principal;
+import java.util.Base64;
+import java.util.Date;
+import javax.crypto.SecretKey;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Component;
+import sopt.org.HMH.global.auth.jwt.exception.JwtError;
+import sopt.org.HMH.global.auth.jwt.exception.JwtException;
+import sopt.org.HMH.global.auth.redis.RefreshToken;
+import sopt.org.HMH.global.auth.redis.TokenRepository;
+
+
+@Slf4j
+@Component
+@RequiredArgsConstructor
+public class JwtProvider {
+
+    private static final Long ACCESS_TOKEN_EXPIRATION_TIME = 60 * 1000L;  // 릴리즈 전 액세스 토큰 만료 시간: 1분, 릴리즈 이후 2일
+    private static final Long REFRESH_TOKEN_EXPIRATION_TIME = 60 * 1000L * 2;  // 릴리즈 전 리프레시 토큰 만료 시간: 2분, 릴리즈 이후 2주
+
+    @Value("${jwt.secret}")
+    private String JWT_SECRET;
+    private final TokenRepository tokenRepository;
+
+    @PostConstruct
+    protected void init() {
+        JWT_SECRET = Base64.getEncoder().encodeToString(JWT_SECRET.getBytes(StandardCharsets.UTF_8));
+    }
+
+    // Access 토큰, Refresh 토큰 발급
+    public TokenDto issueToken(Authentication authentication) {
+        return TokenDto.of(
+                generateAccessToken(authentication),
+                generateRefreshToken(authentication));
+    }
+
+    // Access 토큰 생성
+    private String generateAccessToken(Authentication authentication) {
+        final Date now = new Date();
+
+        final Claims claims = Jwts.claims()
+                .setIssuedAt(now)
+                .setExpiration(new Date(now.getTime() + ACCESS_TOKEN_EXPIRATION_TIME));
+
+        claims.put("userId", authentication.getPrincipal());
+
+        return Jwts.builder()
+                .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
+                .setClaims(claims)
+                .signWith(getSigningKey())
+                .compact();
+    }
+
+
+    private String generateRefreshToken(Authentication authentication) {
+        final Date now = new Date();
+
+        final Claims claims = Jwts.claims()
+                .setIssuedAt(now)
+                .setExpiration(new Date(now.getTime() + REFRESH_TOKEN_EXPIRATION_TIME));
+
+        claims.put("userId", authentication.getPrincipal());
+
+        String refreshToken = Jwts.builder()
+                .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
+                .setClaims(claims)
+                .signWith(getSigningKey())
+                .compact();
+
+        tokenRepository.save(
+                RefreshToken.builder()
+                        .userId(Long.parseLong(authentication.getPrincipal().toString()))
+                        .refreshToken(refreshToken)
+                        .expiration(REFRESH_TOKEN_EXPIRATION_TIME.intValue() / 1000)
+                        .build());
+
+        return refreshToken;
+    }
+
+    // Access 토큰 검증
+    public JwtValidationType validateAccessToken(String accessToken) {
+        try {
+            final Claims claims = getBody(accessToken);
+            return JwtValidationType.VALID_JWT;
+        } catch (MalformedJwtException ex) {
+            return JwtValidationType.INVALID_JWT;
+        } catch (ExpiredJwtException ex) {
+            return JwtValidationType.EXPIRED_JWT;
+        } catch (UnsupportedJwtException ex) {
+            return JwtValidationType.UNSUPPORTED_JWT;
+        } catch (IllegalArgumentException ex) {
+            return JwtValidationType.EMPTY_JWT;
+        }
+    }
+
+    // Refresh 토큰 검증
+    public Long validateRefreshToken(String refreshToken) {
+        // Refresh 토큰 만료 : Redis에 해당 Refresh 토큰이 존재하지 않음
+        Long userId = getUserFromJwt(refreshToken);
+        if (tokenRepository.existsById(userId)) {
+            return userId;
+        } else {
+            throw new JwtException(JwtError.INVALID_REFRESH_TOKEN);
+        }
+    }
+
+    // Refresh 토큰 삭제 (userId 기준으로)
+    public void deleteRefreshToken(Long userId) {
+        if (tokenRepository.existsById(userId)) {
+            tokenRepository.deleteById(userId);
+        } else {
+            throw new JwtException(JwtError.NOT_FOUND_REFRESH_TOKEN_ERROR);
+        }
+    }
+
+    // Access 토큰에 담겨있는 userId 획득
+    public Long getUserFromJwt(String token) {
+        Claims claims = getBody(token);
+        return Long.parseLong(claims.get("userId").toString());
+    }
+
+    private Claims getBody(final String token) {
+        // 만료된 토큰에 대해 parseClaimsJws를 수행하면 io.jsonwebtoken.ExpiredJwtException이 발생
+        return Jwts.parserBuilder()
+                .setSigningKey(getSigningKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+    }
+
+    private SecretKey getSigningKey() {
+        String encodedKey = Base64.getEncoder().encodeToString(JWT_SECRET.getBytes());
+        return Keys.hmacShaKeyFor(encodedKey.getBytes());
+    }
+
+    public static Long getUserFromPrincipal(Principal principal) {
+        if (isNull(principal)) {
+            throw new JwtException(JwtError.EMPTY_PRINCIPLE_EXCEPTION);
+        }
+
+        return Long.valueOf(principal.getName());
+    }
+}
