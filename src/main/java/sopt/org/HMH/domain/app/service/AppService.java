@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import sopt.org.HMH.domain.app.domain.App;
 import sopt.org.HMH.domain.app.dto.response.AppResponse;
 import sopt.org.HMH.domain.app.repository.AppRepository;
+import sopt.org.HMH.domain.challenge.domain.exception.ChallengeError;
+import sopt.org.HMH.domain.challenge.domain.exception.ChallengeException;
 import sopt.org.HMH.global.common.exception.GlobalError;
 import sopt.org.HMH.global.common.exception.GlobalException;
 import sopt.org.HMH.domain.dayChallenge.domain.DayChallenge;
@@ -22,11 +24,11 @@ public class AppService {
 
     public List<App> add(Long dayChallengeId, List<AppResponse> responses) {
         DayChallenge dayChallenge = dayChallengeRepository.findById(dayChallengeId)
-                .orElseThrow(() -> new GlobalException(GlobalError.CHALLENGE_NOT_FOUND));
+                .orElseThrow(() -> new ChallengeException(ChallengeError.CHALLENGE_NOT_FOUND));
 
         List<App> apps = emptyList();
         for (AppResponse response: responses) {
-            App app = appRepository.save(new App(dayChallenge, response.appCode(), 0L, response.goalTime(), response.os()));
+            App app = appRepository.save(new App(dayChallenge, response.appCode(), 0L, response.goalTime()));
         }
 
         return apps;

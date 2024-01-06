@@ -26,5 +26,4 @@ public enum ChallengeError implements ErrorBase {
     public String getErrorMessage() {
         return this.errorMessage;
     }
-
 }
