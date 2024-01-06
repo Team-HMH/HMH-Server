@@ -1,4 +1,4 @@
-package sopt.org.HMH.global.common.config;
+package sopt.org.HMH.global.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

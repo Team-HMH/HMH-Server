@@ -14,19 +14,25 @@ public class KakaoLoginService {
     private KakaoApiClient kakaoApiClient;
     private static final String TOKEN_TYPE = "Bearer: ";
 
-    public String getKakaoId(String socialAccessToken) {
+    /**
+     * 카카오 Acess Token으로 유저 Id 불러오는 함수
+     */
+    public String getUserIdByKakao(String socialAccessToken) {
 
         KakaoUserResponse userResponse = kakaoApiClient.getUserInformation(TOKEN_TYPE + socialAccessToken);
 
         return Long.toString(userResponse.getId());
     }
 
-    public void setKakaoInfo(User loginUser, String socialAccessToken) {
+    /**
+     * 카카오 Access Token으로 유저 정보 업데이트
+     */
+    public void updateUserInfoByKakao(User loginUser, String socialAccessToken) {
 
         KakaoUserResponse userResponse = kakaoApiClient.getUserInformation(TOKEN_TYPE + socialAccessToken);
 
         loginUser.updateSocialInfo(userResponse.getKakaoAccount().getProfile().getNickname(),
-                userResponse.getKakaoAccount().getProfile().getProfileImageUrl()); //카카오 Access 토큰도 매번 업데이트
+                userResponse.getKakaoAccount().getProfile().getProfileImageUrl());
     }
 
 }

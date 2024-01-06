@@ -43,14 +43,18 @@ public class JwtProvider {
         JWT_SECRET = Base64.getEncoder().encodeToString(JWT_SECRET.getBytes(StandardCharsets.UTF_8));
     }
 
-    // Access 토큰, Refresh 토큰 발급
+    /**
+     * Access 토큰, Refresh 토큰 발급
+     */
     public TokenDto issueToken(Authentication authentication) {
         return TokenDto.of(
                 generateAccessToken(authentication),
                 generateRefreshToken(authentication));
     }
 
-    // Access 토큰 생성
+    /**
+     * Access 토큰 생성
+     */
     private String generateAccessToken(Authentication authentication) {
         final Date now = new Date();
 
@@ -93,10 +97,12 @@ public class JwtProvider {
         return refreshToken;
     }
 
-    // Access 토큰 검증
+    /**
+     * Access 토큰 검증
+     */
     public JwtValidationType validateAccessToken(String accessToken) {
         try {
-            final Claims claims = getBody(accessToken);
+            final Claims claims = getClaim(accessToken);
             return JwtValidationType.VALID_JWT;
         } catch (MalformedJwtException ex) {
             return JwtValidationType.INVALID_JWT;
@@ -109,10 +115,13 @@ public class JwtProvider {
         }
     }
 
-    // Refresh 토큰 검증
+    /**
+     * Refresh 토큰 검증
+     */
     public Long validateRefreshToken(String refreshToken) {
-        // Refresh 토큰 만료 : Redis에 해당 Refresh 토큰이 존재하지 않음
         Long userId = getUserFromJwt(refreshToken);
+
+        // Redis에 해당 Refresh 토큰이 존재하지 않음 = Refresh 토큰 만료라는 뜻이므로
         if (tokenRepository.existsById(userId)) {
             return userId;
         } else {
@@ -120,7 +129,9 @@ public class JwtProvider {
         }
     }
 
-    // Refresh 토큰 삭제 (userId 기준으로)
+    /**
+     * Refresh 토큰 삭제
+     */
     public void deleteRefreshToken(Long userId) {
         if (tokenRepository.existsById(userId)) {
             tokenRepository.deleteById(userId);
@@ -129,13 +140,18 @@ public class JwtProvider {
         }
     }
 
-    // Access 토큰에 담겨있는 userId 획득
+    /**
+     * Access 토큰에 담겨있는 userId 획득
+     */
     public Long getUserFromJwt(String token) {
-        Claims claims = getBody(token);
+        Claims claims = getClaim(token);
         return Long.parseLong(claims.get("userId").toString());
     }
 
-    private Claims getBody(final String token) {
+    /**
+     * token에서 claim 부분 획득
+     */
+    private Claims getClaim(final String token) {
         // 만료된 토큰에 대해 parseClaimsJws를 수행하면 io.jsonwebtoken.ExpiredJwtException이 발생
         return Jwts.parserBuilder()
                 .setSigningKey(getSigningKey())
@@ -144,11 +160,21 @@ public class JwtProvider {
                 .getBody();
     }
 
+    /**
+     * JWT의 서명을 위한 Secret Key를 가져오는 함수
+     */
     private SecretKey getSigningKey() {
+
+        // 시크릿 키 문자열을 바이트 배열로 변환 & Base64로 인코딩
         String encodedKey = Base64.getEncoder().encodeToString(JWT_SECRET.getBytes());
+
+        // HMAC SHA 알고리즘을 사용하는 Secret Key 생성
         return Keys.hmacShaKeyFor(encodedKey.getBytes());
     }
 
+    /**
+     * Principal 객체로부터 User의 식별자를 추출하는 메서드
+     */
     public static Long getUserFromPrincipal(Principal principal) {
         if (isNull(principal)) {
             throw new JwtException(JwtError.EMPTY_PRINCIPLE_EXCEPTION);
