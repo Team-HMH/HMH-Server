@@ -35,7 +35,6 @@ public class SecurityConfig {
             // Authentication
             "/login",
             "/reissue",
-
     };
 
     @Bean

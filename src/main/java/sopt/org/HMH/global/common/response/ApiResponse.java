@@ -13,6 +13,7 @@ import sopt.org.HMH.global.common.exception.base.SuccessBase;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class ApiResponse<T> {
+
     private final int code;
     private final String message;
 

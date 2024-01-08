@@ -19,12 +19,11 @@ public enum JwtError implements ErrorBase {
     // 403 FORBIDDEN
 
     // 404 NOT FOUND
-    NOT_FOUND_REFRESH_TOKEN_ERROR(HttpStatus.NOT_FOUND, "존재하지 않는 리프레시 토큰입니다.")
-
-    ;
+    NOT_FOUND_REFRESH_TOKEN_ERROR(HttpStatus.NOT_FOUND, "존재하지 않는 리프레시 토큰입니다.");
 
     private final HttpStatus status;
     private final String errorMessage;
+
     @Override
     public int getHttpStatusCode() {
         return this.status.value();

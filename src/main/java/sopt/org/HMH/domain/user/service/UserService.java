@@ -6,8 +6,8 @@ import org.springframework.transaction.annotation.Transactional;
 import sopt.org.HMH.domain.user.domain.User;
 import sopt.org.HMH.domain.user.domain.exception.UserError;
 import sopt.org.HMH.domain.user.domain.exception.UserException;
-import sopt.org.HMH.domain.user.dto.request.SocialLoginRequestDto;
-import sopt.org.HMH.domain.user.dto.response.LoginResponseDto;
+import sopt.org.HMH.domain.user.dto.request.SocialLoginRequest;
+import sopt.org.HMH.domain.user.dto.response.LoginResponse;
 import sopt.org.HMH.domain.user.repository.UserRepository;
 import sopt.org.HMH.global.auth.jwt.JwtProvider;
 import sopt.org.HMH.global.auth.jwt.TokenDto;
@@ -27,7 +27,7 @@ public class UserService {
     private final KakaoLoginService kakaoLoginService;
 
     @Transactional
-    public LoginResponseDto login(String socialAccessToken, SocialLoginRequestDto request) {
+    public LoginResponse login(String socialAccessToken, SocialLoginRequest request) {
         socialAccessToken = parseTokenString(socialAccessToken);
         SocialPlatform socialPlatform = request.getSocialPlatform();
         Long socialId = getUserIdBySocialAccessToken(socialPlatform, socialAccessToken);
@@ -40,7 +40,7 @@ public class UserService {
 
         TokenDto tokenDto = jwtProvider.issueToken(new UserAuthentication(loginUser.getId(), null, null));
 
-        return LoginResponseDto.of(loginUser, tokenDto);
+        return LoginResponse.of(loginUser, tokenDto);
     }
 
     @Transactional

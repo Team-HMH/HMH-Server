@@ -1,7 +1,6 @@
 package sopt.org.HMH.global.auth.social.kakao.fegin;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sopt.org.HMH.domain.user.domain.User;
@@ -33,5 +32,4 @@ public class KakaoLoginService {
         loginUser.updateSocialInfo(userResponse.getKakaoAccount().getProfile().getNickname(),
                 userResponse.getKakaoAccount().getProfile().getProfileImageUrl());
     }
-
 }

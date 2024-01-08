@@ -23,6 +23,7 @@ import sopt.org.HMH.global.common.domain.BaseTimeEntity;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
 public class User extends BaseTimeEntity {
+
     @Id
     @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)

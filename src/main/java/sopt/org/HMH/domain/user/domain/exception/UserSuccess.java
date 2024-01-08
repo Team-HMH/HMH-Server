@@ -6,6 +6,7 @@ import sopt.org.HMH.global.common.exception.base.SuccessBase;
 
 @AllArgsConstructor
 public enum UserSuccess implements SuccessBase {
+
     LOGIN_SUCCESS(HttpStatus.OK, "로그인에 성공했습니다."),
     REISSUE_SUCCESS(HttpStatus.OK, "Access 토큰 재발급에 성공했습니다."),
     LOGOUT_SUCCESS(HttpStatus.OK, "로그아웃에 성공했습니다."),
@@ -28,5 +29,4 @@ public enum UserSuccess implements SuccessBase {
     public String getSuccessMessage() {
         return this.successMessage;
     }
-
 }

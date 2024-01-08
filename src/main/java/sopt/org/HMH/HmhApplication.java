@@ -11,5 +11,4 @@ public class HmhApplication {
     public static void main(String[] args) {
         SpringApplication.run(HmhApplication.class, args);
     }
-
 }

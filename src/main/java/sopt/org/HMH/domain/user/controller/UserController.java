@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 import sopt.org.HMH.domain.user.domain.exception.UserSuccess;
-import sopt.org.HMH.domain.user.dto.request.SocialLoginRequestDto;
-import sopt.org.HMH.domain.user.dto.response.LoginResponseDto;
+import sopt.org.HMH.domain.user.dto.request.SocialLoginRequest;
+import sopt.org.HMH.domain.user.dto.response.LoginResponse;
 import sopt.org.HMH.domain.user.service.UserService;
 import sopt.org.HMH.global.auth.jwt.JwtProvider;
 import sopt.org.HMH.global.auth.jwt.TokenDto;
@@ -23,9 +23,9 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse<LoginResponseDto>> login(
+    public ResponseEntity<ApiResponse<LoginResponse>> login(
             @RequestHeader("Authorization") String socialAccessToken,
-            @RequestBody SocialLoginRequestDto request
+            @RequestBody SocialLoginRequest request
     ) {
         return ResponseEntity
                 .status(UserSuccess.LOGIN_SUCCESS.getHttpStatus())
@@ -48,5 +48,4 @@ public class UserController {
                 .status(UserSuccess.LOGOUT_SUCCESS.getHttpStatus())
                 .body(ApiResponse.success(UserSuccess.LOGOUT_SUCCESS));
     }
-
 }

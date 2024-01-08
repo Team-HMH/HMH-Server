@@ -3,12 +3,11 @@ package sopt.org.HMH.global.auth.security;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
-
-import java.io.IOException;
 import sopt.org.HMH.global.auth.jwt.exception.JwtError;
 import sopt.org.HMH.global.common.response.ApiResponse;
 
@@ -22,7 +21,8 @@ public class CustomJwtAuthenticationEntryPoint implements AuthenticationEntryPoi
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
-    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
+    public void commence(HttpServletRequest request, HttpServletResponse response,
+                         AuthenticationException authException) throws IOException {
         setResponse(response);
     }
 

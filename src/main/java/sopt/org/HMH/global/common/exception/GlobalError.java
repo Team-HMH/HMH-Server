@@ -26,5 +26,4 @@ public enum GlobalError implements ErrorBase {
     public String getErrorMessage() {
         return this.errorMessage;
     }
-
 }

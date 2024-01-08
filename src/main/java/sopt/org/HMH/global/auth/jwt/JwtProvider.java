@@ -177,7 +177,6 @@ public class JwtProvider {
         if (isNull(principal)) {
             throw new JwtException(JwtError.EMPTY_PRINCIPLE_EXCEPTION);
         }
-
         return Long.valueOf(principal.getName());
     }
 }
