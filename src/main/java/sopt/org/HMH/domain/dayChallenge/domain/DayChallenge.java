@@ -11,7 +11,6 @@ import sopt.org.HMH.domain.app.domain.App;
 import sopt.org.HMH.global.common.domain.BaseTimeEntity;
 import sopt.org.HMH.domain.challenge.domain.Challenge;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -41,6 +40,5 @@ public class DayChallenge extends BaseTimeEntity {
         this.goalTime = goalTime;
         this.isSuccess = false;
         this.didGettingPoint = false;
-        this.createdAt = LocalDateTime.now();
     }
 }

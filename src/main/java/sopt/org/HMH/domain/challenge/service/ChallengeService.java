@@ -5,10 +5,11 @@ import org.springframework.stereotype.Service;
 import sopt.org.HMH.domain.app.domain.App;
 import sopt.org.HMH.domain.app.service.AppService;
 import sopt.org.HMH.domain.challenge.domain.Challenge;
-import sopt.org.HMH.domain.challenge.dto.request.ChallengeRequestDTO;
+import sopt.org.HMH.domain.challenge.dto.request.ChallengeRequest;
 import sopt.org.HMH.domain.challenge.repository.ChallengeRepository;
 import sopt.org.HMH.domain.dayChallenge.service.DayChallengeService;
 import sopt.org.HMH.domain.user.User;
+import sopt.org.HMH.domain.user.service.UserService;
 
 import java.util.List;
 
@@ -19,12 +20,10 @@ public class ChallengeService {
 
     private final DayChallengeService dayChallengeService;
     private final AppService appService;
-    // private final UserService userService;
+    private final UserService userService;
 
-    public Long add(Long userId, ChallengeRequestDTO request) {
-        // User user = userService.findById(userId);
-        User user = new User();
-
+    public Long add(Long userId, ChallengeRequest request) {
+        User user = userService.get(userId);
         Challenge challenge = challengeRepository.save(new Challenge(user, request.period()));
         Long dayChallengeId = dayChallengeService.add(challenge, request.goalTime());
         List<App> apps = appService.add(dayChallengeId, request.apps());

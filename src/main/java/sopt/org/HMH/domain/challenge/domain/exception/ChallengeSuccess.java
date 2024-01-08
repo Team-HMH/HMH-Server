@@ -26,5 +26,4 @@ public enum ChallengeSuccess implements SuccessBase {
     public String getSuccessMessage() {
         return this.successMessage;
     }
-
 }

@@ -10,7 +10,7 @@ import sopt.org.HMH.global.common.domain.BaseTimeEntity;
 import sopt.org.HMH.domain.dayChallenge.domain.DayChallenge;
 import sopt.org.HMH.domain.user.User;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -18,7 +18,6 @@ import java.util.List;
 @NoArgsConstructor
 @Table(name = "challenge")
 public class Challenge extends BaseTimeEntity {
-
     @Id
     @GeneratedValue(strategy = IDENTITY)
     @Column(name = "challenge_id")
@@ -36,6 +35,6 @@ public class Challenge extends BaseTimeEntity {
     public Challenge(User user, Integer period) {
         this.user = user;
         this.period = period;
-        this.dayChallenges = Collections.emptyList();
+        this.dayChallenges = new ArrayList<>();
     }
 }

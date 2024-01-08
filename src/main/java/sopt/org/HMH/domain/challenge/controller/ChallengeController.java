@@ -7,11 +7,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import sopt.org.HMH.domain.challenge.domain.exception.ChallengeSuccess;
-import sopt.org.HMH.domain.challenge.dto.request.ChallengeRequestDTO;
+import sopt.org.HMH.domain.challenge.dto.request.ChallengeRequest;
 import sopt.org.HMH.domain.challenge.service.ChallengeService;
 import sopt.org.HMH.global.common.response.ApiResponse;
-
-import java.security.Principal;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,7 +18,8 @@ public class ChallengeController {
     private final ChallengeService challengeService;
 
     @PostMapping
-    public ResponseEntity<ApiResponse> orderAdd(Principal principal, @RequestBody ChallengeRequestDTO request) {
+    public ResponseEntity<ApiResponse> orderAdd(@RequestBody ChallengeRequest request) {
+        // db에 임시 유저 (userId=1) 존재 (임시 사용)
         Long response = challengeService.add(1L, request);
         return ResponseEntity
                 .status(ChallengeSuccess.SUCCESS_CREATE_CHALLENGE.getHttpStatus())
