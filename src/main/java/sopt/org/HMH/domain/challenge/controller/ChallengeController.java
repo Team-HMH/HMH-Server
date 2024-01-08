@@ -23,6 +23,6 @@ public class ChallengeController {
         // TODO: - 토큰으로 유저 아이디 찾는 함수 연결
         return ResponseEntity
                 .status(ChallengeSuccess.SUCCESS_CREATE_CHALLENGE.getHttpStatus())
-                .body(ApiResponse.success(ChallengeSuccess.SUCCESS_CREATE_CHALLENGE, challengeService.add(1L, request));
+                .body(ApiResponse.success(ChallengeSuccess.SUCCESS_CREATE_CHALLENGE, challengeService.addChallenge(1L, request)));
     }
 }
