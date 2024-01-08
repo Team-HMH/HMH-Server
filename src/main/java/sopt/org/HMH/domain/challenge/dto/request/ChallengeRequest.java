@@ -1,6 +1,6 @@
 package sopt.org.HMH.domain.challenge.dto.request;
 
-import sopt.org.HMH.domain.app.dto.response.AppGoalTimeRequest;
+import sopt.org.HMH.domain.app.dto.request.AppGoalTimeRequest;
 
 import java.util.List;
 

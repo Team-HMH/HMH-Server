@@ -22,11 +22,11 @@ public class ChallengeService {
     private final AppService appService;
     private final UserService userService;
 
-    public Long add(Long userId, ChallengeRequest request) {
+    public Long add(Long userId, ChallengeRequest request, String os) {
         User user = userService.get(userId);
         Challenge challenge = challengeRepository.save(new Challenge(user, request.period()));
         Long dayChallengeId = dayChallengeService.add(challenge, request.goalTime());
-        List<App> apps = appService.add(dayChallengeId, request.apps());
+        List<App> apps = appService.add(dayChallengeId, request.apps(), os);
 
         return challenge.getId();
     }

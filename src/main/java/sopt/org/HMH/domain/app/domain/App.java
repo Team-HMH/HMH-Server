@@ -20,12 +20,14 @@ public class App {
     @JoinColumn(name = "dayChallenge_id")
     private DayChallenge dayChallenge;
 
+    private String os;
     private String appCode;
     private Long useTime;
     private Long goalTime;
 
     @Builder
-    public App(DayChallenge dayChallenge, String appCode, Long useTime, Long goalTime) {
+    public App(DayChallenge dayChallenge, String appCode, Long useTime, Long goalTime, String os) {
+        this.os = os;
         this.dayChallenge = dayChallenge;
         this.appCode = appCode;
         this.useTime = 0L;
