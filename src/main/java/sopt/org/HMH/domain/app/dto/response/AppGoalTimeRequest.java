@@ -1,7 +1,6 @@
 package sopt.org.HMH.domain.app.dto.response;
 
-public record AppResponse(
-        String os,
+public record AppGoalTimeRequest(
         String appCode,
         Long goalTime
 ) {
