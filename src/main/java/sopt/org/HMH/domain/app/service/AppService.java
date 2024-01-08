@@ -23,7 +23,7 @@ public class AppService {
     public List<App> addApp(Long dayChallengeId, List<AppGoalTimeRequest> responses) {
         DayChallenge dayChallenge = dayChallengeRepository.findById(dayChallengeId)
                 .orElseThrow(() -> new ChallengeException(ChallengeError.CHALLENGE_NOT_FOUND));
-결
+
         List<App> apps = new ArrayList<>();
         for (AppGoalTimeRequest response: responses) {
             appRepository.save(new App(dayChallenge, response.appCode(), response.goalTime()));
