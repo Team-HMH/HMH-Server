@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import sopt.org.HMH.domain.user.domain.exception.UserSuccess;
 import sopt.org.HMH.domain.user.dto.request.SocialLoginRequest;
@@ -15,9 +16,11 @@ import sopt.org.HMH.domain.user.service.UserService;
 import sopt.org.HMH.global.auth.jwt.JwtProvider;
 import sopt.org.HMH.global.auth.jwt.TokenDto;
 import sopt.org.HMH.global.common.response.ApiResponse;
+import sopt.org.HMH.global.common.response.EmptyJsonResponse;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/v1/user")
 public class UserController {
 
     private final UserService userService;
@@ -41,11 +44,11 @@ public class UserController {
                 .body(ApiResponse.success(UserSuccess.REISSUE_SUCCESS, userService.reissueToken(refreshToken)));
     }
 
-    @PostMapping("/log-out")
+    @PostMapping("/logout")
     public ResponseEntity<ApiResponse<?>> logout(Principal principal) {
         userService.logout(JwtProvider.getUserFromPrincipal(principal));
         return ResponseEntity
                 .status(UserSuccess.LOGOUT_SUCCESS.getHttpStatus())
-                .body(ApiResponse.success(UserSuccess.LOGOUT_SUCCESS));
+                .body(ApiResponse.success(UserSuccess.LOGOUT_SUCCESS,new EmptyJsonResponse()));
     }
 }
