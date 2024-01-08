@@ -1,4 +1,4 @@
-package sopt.org.HMH.global.auth.social.kakao.fegin;
+package sopt.org.HMH.global.auth.social.kakao.response;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
