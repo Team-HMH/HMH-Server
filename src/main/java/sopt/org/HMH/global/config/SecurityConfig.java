@@ -31,8 +31,8 @@ public class SecurityConfig {
             "/api-docs/**",
 
             // Authentication
-            "/login",
-            "/reissue",
+            "/api/v1/user/login",
+            "/api/v1/user/reissue",
     };
 
     @Bean
