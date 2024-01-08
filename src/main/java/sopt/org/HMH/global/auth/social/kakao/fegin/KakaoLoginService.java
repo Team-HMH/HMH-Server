@@ -22,7 +22,7 @@ public class KakaoLoginService {
 
         KakaoUserResponse userResponse = kakaoApiClient.getUserInformation(TOKEN_TYPE + socialAccessToken);
         System.out.println("userResponse : " + userResponse);
-        return userResponse.getId();
+        return userResponse.id();
     }
 
     /**
@@ -31,8 +31,8 @@ public class KakaoLoginService {
     public void updateUserInfoByKakao(User loginUser, String socialAccessToken) {
         KakaoUserResponse userResponse = kakaoApiClient.getUserInformation(TOKEN_TYPE + socialAccessToken);
 
-        String nickname = userResponse.getKakaoAccount().getProfile().getNickname();
-        String profileImageUrl = userResponse.getKakaoAccount().getProfile().getProfileImageUrl();
+        String nickname = userResponse.kakaoAccount().profile().nickname();
+        String profileImageUrl = userResponse.kakaoAccount().profile().profileImageUrl();
 
         if (StringUtils.isEmpty(profileImageUrl)) {
             profileImageUrl = "";

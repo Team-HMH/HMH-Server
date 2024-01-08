@@ -3,4 +3,4 @@ package sopt.org.HMH.global.common.response;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @JsonSerialize
-public class EmptyJsonResponse { }
+public record EmptyJsonResponse() { }
