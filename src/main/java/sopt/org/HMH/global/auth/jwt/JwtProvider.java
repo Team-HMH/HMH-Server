@@ -136,7 +136,7 @@ public class JwtProvider {
         if (tokenRepository.existsById(userId)) {
             tokenRepository.deleteById(userId);
         } else {
-            throw new JwtException(JwtError.NOT_FOUND_REFRESH_TOKEN_ERROR);
+            throw new JwtException(JwtError.INVALID_REFRESH_TOKEN);
         }
     }
 
@@ -164,10 +164,8 @@ public class JwtProvider {
      * JWT의 서명을 위한 Secret Key를 가져오는 함수
      */
     private SecretKey getSigningKey() {
-
         // 시크릿 키 문자열을 바이트 배열로 변환 & Base64로 인코딩
         String encodedKey = Base64.getEncoder().encodeToString(JWT_SECRET.getBytes());
-
         // HMAC SHA 알고리즘을 사용하는 Secret Key 생성
         return Keys.hmacShaKeyFor(encodedKey.getBytes());
     }

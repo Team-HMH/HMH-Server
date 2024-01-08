@@ -29,9 +29,9 @@ public class CustomJwtAuthenticationEntryPoint implements AuthenticationEntryPoi
     private void setResponse(HttpServletResponse response) throws IOException {
         response.setCharacterEncoding("UTF-8");
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        response.setStatus(HttpServletResponse.SC_FORBIDDEN); // 응답의 상태코드를 403으로 정의
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 응답의 상태코드를 401으로 정의
 
-        // 응답 상태코드 403으로 정의
+        // 응답 상태코드 401으로 정의
         response.getWriter().println(objectMapper.writeValueAsString(ApiResponse.error(JwtError.INVALID_ACCESS_TOKEN)));
     }
 }

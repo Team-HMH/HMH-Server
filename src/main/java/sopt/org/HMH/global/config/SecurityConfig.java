@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import sopt.org.HMH.global.auth.security.CustomAccessDeniedHandler;
 import sopt.org.HMH.global.auth.security.CustomJwtAuthenticationEntryPoint;
 import sopt.org.HMH.global.auth.security.JwtAuthenticationFilter;
 
@@ -21,16 +22,25 @@ public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     // JWT에 대한 인증 예외 처리를 담당하는 인증 진입점
     private final CustomJwtAuthenticationEntryPoint customJwtAuthenticationEntryPoint;
+    private final CustomAccessDeniedHandler customAccessDeniedHandler;
 
     private static final String[] AUTH_WHITELIST = {
-            "/api/kakao/**", "/loading", "/error", "/api/login", "/api/reissue",
-            "/api/test/**", "/health", "/actuator/health",
-            "/api/images/**", "/", "/swagger-ui/**", "/swagger-resources/**", "/api-docs/**"
+            "/", "/error", "/health",
+
+            // Swagger
+            "/swagger-ui/**",
+            "/swagger-resources/**",
+            "/api-docs/**",
+
+            // Authentication
+            "/login",
+            "/reissue",
+
     };
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        return http
+    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
+        return httpSecurity
                 .formLogin(AbstractHttpConfigurer::disable) // Form Login 사용 X
                 .httpBasic(AbstractHttpConfigurer::disable) // HTTP Basic 사용 X
                 .csrf(AbstractHttpConfigurer::disable) // 쿠키 기반이 아닌 JWT 기반이므로 사용 X

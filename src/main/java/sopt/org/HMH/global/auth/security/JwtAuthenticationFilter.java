@@ -35,16 +35,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter { // 모든 �
 
             // 추출한 토큰이 존재하고, 토큰이 유효한 경우
             if (StringUtils.hasText(token) && jwtProvider.validateAccessToken(token) == JwtValidationType.VALID_JWT) {
-
                 // JWT 토큰에서 사용자 정보 추출
                 Long userId = jwtProvider.getUserFromJwt(token);
-
                 // 사용자 정보로 Spring Security의 사용자 인증 객체 생성
                 UserAuthentication authentication = new UserAuthentication(userId, null, null);
-
                 // 사용자 인증 객체에 요청의 세부 정보 추가
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
                 // Spring Security의 SecurityContextHolder에 사용자 인증 객체 설정
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }

@@ -28,12 +28,9 @@ public class UserService {
 
     @Transactional
     public LoginResponseDto login(String socialAccessToken, SocialLoginRequestDto request) {
-
         socialAccessToken = parseTokenString(socialAccessToken);
-
         SocialPlatform socialPlatform = request.getSocialPlatform();
         Long socialId = getUserIdBySocialAccessToken(socialPlatform, socialAccessToken);
-
         // 유저를 찾지 못하면 404 Error를 던져 클라이언트에게 회원가입 api를 요구한다.
         User loginUser = getUserBySocialAndSocialId(socialPlatform, socialId);
 
