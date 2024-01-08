@@ -29,7 +29,7 @@ public class UserService {
     @Transactional
     public LoginResponse login(String socialAccessToken, SocialLoginRequest request) {
         socialAccessToken = parseTokenString(socialAccessToken);
-        SocialPlatform socialPlatform = request.getSocialPlatform();
+        SocialPlatform socialPlatform = request.socialPlatform();
         Long socialId = getUserIdBySocialAccessToken(socialPlatform, socialAccessToken);
         // 유저를 찾지 못하면 404 Error를 던져 클라이언트에게 회원가입 api를 요구한다.
         User loginUser = getUserBySocialAndSocialId(socialPlatform, socialId);
@@ -47,10 +47,8 @@ public class UserService {
     public TokenDto reissueToken(String refreshToken) {
 
         refreshToken = parseTokenString(refreshToken);
-
         Long userId = jwtProvider.validateRefreshToken(refreshToken);
         validateUserId(userId);  // userId가 DB에 저장된 유효한 값인지 검사
-
         jwtProvider.deleteRefreshToken(userId);
         return jwtProvider.issueToken(new UserAuthentication(userId, null, null));
     }
@@ -67,8 +65,7 @@ public class UserService {
     }
 
     private User getUserBySocialAndSocialId(SocialPlatform socialPlatform, Long socialId) {
-        return userRepository.findBySocialPlatformAndSocialId(socialPlatform, socialId)
-                .orElseThrow(() -> new UserException(UserError.NOT_SIGNUP_USER));
+        return userRepository.findBySocialPlatformAndSocialIdOrThrowException(socialPlatform, socialId);
     }
 
     private Long getUserIdBySocialAccessToken(SocialPlatform socialPlatform, String socialAccessToken) {
