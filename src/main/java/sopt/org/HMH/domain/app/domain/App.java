@@ -11,21 +11,21 @@ import sopt.org.HMH.domain.dayChallenge.domain.DayChallenge;
 @NoArgsConstructor
 @Table(name = "app")
 public class App {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "app_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "dayChallenge_id")
+    @JoinColumn(name = "day_challenge_id")
     private DayChallenge dayChallenge;
 
     private String appCode;
     private Long useTime;
     private Long goalTime;
 
-    @Builder
-    public App(DayChallenge dayChallenge, String appCode, Long useTime, Long goalTime) {
+    public App(DayChallenge dayChallenge, String appCode, Long goalTime) {
         this.dayChallenge = dayChallenge;
         this.appCode = appCode;
         this.useTime = 0L;

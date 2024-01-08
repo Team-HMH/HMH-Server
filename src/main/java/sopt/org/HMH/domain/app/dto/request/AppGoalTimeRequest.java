@@ -1,4 +1,4 @@
-package sopt.org.HMH.domain.app.dto.response;
+package sopt.org.HMH.domain.app.dto.request;
 
 public record AppGoalTimeRequest(
         String appCode,

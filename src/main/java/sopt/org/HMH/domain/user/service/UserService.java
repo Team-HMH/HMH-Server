@@ -10,9 +10,10 @@ import sopt.org.HMH.domain.user.repository.UserRepository;
 @Service
 @RequiredArgsConstructor
 public class UserService {
+
     private final UserRepository userRepository;
 
-    public User get(Long userId) {
+    public User getUserId(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException(UserError.USER_NOT_FOUND.getErrorMessage()));
     }

@@ -16,17 +16,18 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class ChallengeService {
+
     private final ChallengeRepository challengeRepository;
 
     private final DayChallengeService dayChallengeService;
     private final AppService appService;
     private final UserService userService;
 
-    public Long add(Long userId, ChallengeRequest request) {
-        User user = userService.get(userId);
+    public Long addChallenge(Long userId, ChallengeRequest request) {
+        User user = userService.getUserId(userId);
         Challenge challenge = challengeRepository.save(new Challenge(user, request.period()));
-        Long dayChallengeId = dayChallengeService.add(challenge, request.goalTime());
-        List<App> apps = appService.add(dayChallengeId, request.apps());
+        Long dayChallengeId = dayChallengeService.addDayChallenge(challenge, request.goalTime());
+        List<App> apps = appService.addApp(dayChallengeId, request.apps());
 
         return challenge.getId();
     }

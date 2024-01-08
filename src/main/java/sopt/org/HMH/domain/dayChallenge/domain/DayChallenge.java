@@ -31,7 +31,7 @@ public class DayChallenge extends BaseTimeEntity {
     private Boolean isSuccess;
     private Boolean didGettingPoint;
 
-    @OneToMany
+    @OneToMany(mappedBy = "dayChallenge")
     private List<App> apps;
 
     @Builder
