@@ -10,7 +10,7 @@
 
 
 - **Language** : Java (jdk-17)
-- **Web application Framework** : Spring boot (3.2.0), Spring Data JPA
+- **Web application Framework** : Spring boot (3.2.1), Spring Data JPA
 - **DataBase** : MySql (8.1.0)
 - **Cloud/Infra** : Aws EC2, RDS, code deploy
 - **web server** : Tomcat
@@ -21,19 +21,18 @@
 
 ## 🖤 Developers
 
-------
+
 
 
 | 임주민                                                | 김승환                                                       |
 | :-----------------------------------------------------: | :------------------------------------------------------------: |
-| <img width="300" alt="image" src="https://github.com/Team-HMH/HMH-Server/assets/76610340/ea57f67f-adcb-4abc-a198-7b962e61a6bc"> | <img width="300" height="330" alt="image" src="https://github.com/SOPT-33-iOS-Team-1/SOPKATHON_33-Server/assets/86935274/b1308faa-06cb-4818-878e-aeb8e17ac14c"> |
+| <img width="300" alt="image" src="https://github.com/Team-HMH/HMH-Server/assets/76610340/ea57f67f-adcb-4abc-a198-7b962e61a6bc"> | <img width="300" alt="image" src="https://github.com/SOPT-33-iOS-Team-1/SOPKATHON_33-Server/assets/86935274/b1308faa-06cb-4818-878e-aeb8e17ac14c"> |
 | [jumining](https://github.com/jumining)                      | [kseysh](https://github.com/kseysh)                                  |
 
 <br/>
 
 ## 🙋🏻‍♀️ 역할 분담
 
-------
 
 <div markdown="1">
 
@@ -56,7 +55,7 @@
 
 ## ✅ Convention
 
-------
+
 
 ### 🚀Convention
 
@@ -69,8 +68,9 @@
 <br/>
 
 ## 💾 ERD
-------
-<img width="1000" alt="스크린샷 2024-01-06 20 41 27" src="https://github.com/Team-HMH/HMH-Server/assets/76610340/8eb4a19f-85f6-48fb-95d5-9bc8e5c83e61">
+
+![image](https://github.com/Team-HMH/HMH-Server/assets/69035864/899d87a4-9262-47c4-9fc0-dc820a7f7189)
+
 
 
 
@@ -79,7 +79,7 @@
  <br>
 
 ## ⚙️ Architecture
-------
+
 <img width="700" src="https://github.com/Team-HMH/HMH-Server/assets/76610340/825d260e-5a2e-494e-8abe-7299604b0bed">
 
 
