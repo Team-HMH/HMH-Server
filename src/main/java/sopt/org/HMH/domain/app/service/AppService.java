@@ -22,8 +22,8 @@ public class AppService {
         DayChallenge dayChallenge = dayChallengeRepository.findByIdOrThrowException(dayChallengeId);
 
         List<App> apps = new ArrayList<>();
-        for (AppGoalTimeRequest response: requests) {
-            appRepository.save(new App(dayChallenge, response.appCode(), response.goalTime()));
+        for (AppGoalTimeRequest request: requests) {
+            appRepository.save(new App(dayChallenge, request.appCode(), request.goalTime()));
         }
 
         return apps;
