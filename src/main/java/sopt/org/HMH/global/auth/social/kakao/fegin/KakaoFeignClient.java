@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import sopt.org.HMH.global.auth.social.kakao.request.KakaoUserRequest;
 
 @FeignClient(name = "kakaoApiClient", url = "${oauth2.kakao.base-url}")
-public interface KakaoApiClient {
+public interface KakaoFeignClient {
 
     @GetMapping(value = "/v2/user/me")
     KakaoUserRequest getUserInformation(@RequestHeader(HttpHeaders.AUTHORIZATION) String accessToken);
