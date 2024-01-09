@@ -76,10 +76,8 @@ public class UserService {
     public TokenDto reissueToken(String refreshToken) {
 
         refreshToken = parseTokenString(refreshToken);
-
         Long userId = jwtProvider.validateRefreshToken(refreshToken);
         validateUserId(userId);  // userId가 DB에 저장된 유효한 값인지 검사
-
         jwtProvider.deleteRefreshToken(userId);
         return jwtProvider.issueToken(new UserAuthentication(userId, null, null));
     }
@@ -96,8 +94,7 @@ public class UserService {
     }
 
     private User getUserBySocialAndSocialId(SocialPlatform socialPlatform, Long socialId) {
-        return userRepository.findBySocialPlatformAndSocialId(socialPlatform, socialId)
-                .orElseThrow(() -> new UserException(UserError.NOT_SIGNUP_USER));
+        return userRepository.findBySocialPlatformAndSocialIdOrThrowException(socialPlatform, socialId);
     }
 
     private Long getUserIdBySocialAccessToken(SocialPlatform socialPlatform, String socialAccessToken) {

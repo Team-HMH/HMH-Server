@@ -1,16 +1,10 @@
 package sopt.org.HMH.global.auth.social.kakao.response;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
-@ToString
-@Getter
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class KakaoAccount {
-
-    private KakaoUserProfile profile;
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+public record KakaoAccount(
+        KakaoUserProfile profile
+) {
 }

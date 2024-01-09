@@ -3,6 +3,7 @@ package sopt.org.HMH.global.auth.social.kakao.fegin;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import sopt.org.HMH.domain.user.domain.User;
 import sopt.org.HMH.global.auth.social.kakao.response.KakaoUserResponse;
 
@@ -21,7 +22,7 @@ public class KakaoLoginService {
 
         KakaoUserResponse userResponse = kakaoApiClient.getUserInformation(TOKEN_TYPE + socialAccessToken);
         System.out.println("userResponse : " + userResponse);
-        return userResponse.getId();
+        return userResponse.id();
     }
 
     /**
@@ -29,7 +30,14 @@ public class KakaoLoginService {
      */
     public void updateUserInfoByKakao(User loginUser, String socialAccessToken) {
         KakaoUserResponse userResponse = kakaoApiClient.getUserInformation(TOKEN_TYPE + socialAccessToken);
-        loginUser.updateSocialInfo(userResponse.getKakaoAccount().getProfile().getNickname(),
-                userResponse.getKakaoAccount().getProfile().getProfileImageUrl());
+
+        String nickname = userResponse.kakaoAccount().profile().nickname();
+        String profileImageUrl = userResponse.kakaoAccount().profile().profileImageUrl();
+
+        if (StringUtils.isEmpty(profileImageUrl)) {
+            profileImageUrl = "";
+        }
+
+        loginUser.updateSocialInfo(nickname, profileImageUrl);
     }
 }
