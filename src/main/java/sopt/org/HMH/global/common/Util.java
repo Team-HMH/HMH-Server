@@ -1,7 +1,6 @@
 package sopt.org.HMH.global.common;
 
 import java.security.Principal;
-
 import static java.util.Objects.isNull;
 
 public class Util {
