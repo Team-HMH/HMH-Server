@@ -12,8 +12,6 @@ import sopt.org.HMH.domain.dayChallenge.service.DayChallengeService;
 import sopt.org.HMH.domain.user.User;
 import sopt.org.HMH.domain.user.service.UserService;
 
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 public class ChallengeService {
