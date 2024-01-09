@@ -7,12 +7,12 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class TokenDto {
+public class TokenResponse {
 
     private String accessToken;
     private String refreshToken;
 
-    public static TokenDto of(String accessToken, String refreshToken) {
-        return new TokenDto(accessToken, refreshToken);
+    public static TokenResponse of(String accessToken, String refreshToken) {
+        return new TokenResponse(accessToken, refreshToken);
     }
 }

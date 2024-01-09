@@ -1,4 +1,4 @@
-package sopt.org.HMH.global.auth.social.kakao.response;
+package sopt.org.HMH.global.auth.social.kakao.request;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;

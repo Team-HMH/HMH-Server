@@ -10,11 +10,13 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import sopt.org.HMH.domain.user.domain.exception.UserSuccess;
-import sopt.org.HMH.domain.user.dto.request.SocialLoginRequest;
+import sopt.org.HMH.domain.user.dto.request.SocialPlatformRequest;
+import sopt.org.HMH.domain.user.dto.request.SocialSignUpRequest;
 import sopt.org.HMH.domain.user.dto.response.LoginResponse;
+import sopt.org.HMH.domain.user.dto.response.UserInfoResponse;
 import sopt.org.HMH.domain.user.service.UserService;
-import sopt.org.HMH.global.auth.jwt.JwtProvider;
-import sopt.org.HMH.global.auth.jwt.TokenDto;
+import sopt.org.HMH.global.auth.jwt.TokenResponse;
+import sopt.org.HMH.global.common.Util;
 import sopt.org.HMH.global.common.response.ApiResponse;
 import sopt.org.HMH.global.common.response.EmptyJsonResponse;
 
@@ -26,17 +28,27 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse<LoginResponse>> login(
+    public ResponseEntity<ApiResponse<LoginResponse>> orderLogin(
             @RequestHeader("Authorization") String socialAccessToken,
-            @RequestBody SocialLoginRequest request
+            @RequestBody SocialPlatformRequest request
     ) {
         return ResponseEntity
                 .status(UserSuccess.LOGIN_SUCCESS.getHttpStatus())
                 .body(ApiResponse.success(UserSuccess.LOGIN_SUCCESS, userService.login(socialAccessToken, request)));
     }
 
+    @PostMapping("/signup")
+    public ResponseEntity<ApiResponse<LoginResponse>> orderSignup(
+            @RequestHeader("Authorization") String socialAccessToken,
+            @RequestBody SocialSignUpRequest request
+    ) {
+        return ResponseEntity
+                .status(UserSuccess.SIGNUP_SUCCESS.getHttpStatus())
+                .body(ApiResponse.success(UserSuccess.SIGNUP_SUCCESS, userService.signup(socialAccessToken, request)));
+    }
+
     @GetMapping("/reissue")
-    public ResponseEntity<ApiResponse<TokenDto>> reissue(
+    public ResponseEntity<ApiResponse<TokenResponse>> orderReissue(
             @RequestHeader("Authorization") String refreshToken
     ) {
         return ResponseEntity
@@ -45,10 +57,18 @@ public class UserController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<ApiResponse<?>> logout(Principal principal) {
-        userService.logout(JwtProvider.getUserFromPrincipal(principal));
+    public ResponseEntity<ApiResponse<?>> orderLogout(Principal principal) {
+        userService.logout(Util.getUserId(principal));
         return ResponseEntity
                 .status(UserSuccess.LOGOUT_SUCCESS.getHttpStatus())
-                .body(ApiResponse.success(UserSuccess.LOGOUT_SUCCESS,new EmptyJsonResponse()));
+                .body(ApiResponse.success(UserSuccess.LOGOUT_SUCCESS, new EmptyJsonResponse()));
+    }
+
+    @GetMapping("/")
+    public ResponseEntity<ApiResponse<UserInfoResponse>> orderGetUserInfo(Principal principal) {
+        System.out.println(Util.getUserId(principal));
+        return ResponseEntity
+                .status(UserSuccess.GET_USER_INFO_SUCCESS.getHttpStatus())
+                .body(ApiResponse.success(UserSuccess.GET_USER_INFO_SUCCESS, userService.getUserInfo(Util.getUserId(principal))));
     }
 }

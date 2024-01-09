@@ -8,8 +8,10 @@ import sopt.org.HMH.global.common.exception.base.SuccessBase;
 public enum UserSuccess implements SuccessBase {
 
     LOGIN_SUCCESS(HttpStatus.OK, "로그인에 성공했습니다."),
+    SIGNUP_SUCCESS(HttpStatus.OK, "회원가입에 성공했습니다."),
     REISSUE_SUCCESS(HttpStatus.OK, "토큰 재발급에 성공했습니다."),
     LOGOUT_SUCCESS(HttpStatus.OK, "로그아웃에 성공했습니다."),
+    GET_USER_INFO_SUCCESS(HttpStatus.OK, "유저의 정보를 불러오는데에 성공했습니다."),
     ;
 
     private final HttpStatus status;

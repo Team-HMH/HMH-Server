@@ -5,31 +5,29 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import sopt.org.HMH.domain.user.domain.User;
-import sopt.org.HMH.global.auth.social.kakao.response.KakaoUserResponse;
+import sopt.org.HMH.global.auth.social.kakao.request.KakaoUserRequest;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class KakaoLoginService {
 
-    private final KakaoApiClient kakaoApiClient;
-    private static final String TOKEN_TYPE = "Bearer ";
+    private final KakaoFeignClient kakaoFeignClient;
 
     /**
-     * 카카오 Acess Token으로 유저 Id 불러오는 함수
+     * 카카오 Acess Token으로 유저의 소셜 Id 불러오는 함수
      */
-    public Long getUserIdByKakao(String socialAccessToken) {
+    public String getSocialIdByKakao(String socialAccessToken) {
 
-        KakaoUserResponse userResponse = kakaoApiClient.getUserInformation(TOKEN_TYPE + socialAccessToken);
-        System.out.println("userResponse : " + userResponse);
-        return userResponse.id();
+        KakaoUserRequest userResponse = kakaoFeignClient.getUserInformation(socialAccessToken);
+        return String.valueOf(userResponse.id());
     }
 
     /**
      * 카카오 Access Token으로 유저 정보 업데이트
      */
     public void updateUserInfoByKakao(User loginUser, String socialAccessToken) {
-        KakaoUserResponse userResponse = kakaoApiClient.getUserInformation(TOKEN_TYPE + socialAccessToken);
+        KakaoUserRequest userResponse = kakaoFeignClient.getUserInformation(socialAccessToken);
 
         String nickname = userResponse.kakaoAccount().profile().nickname();
         String profileImageUrl = userResponse.kakaoAccount().profile().profileImageUrl();

@@ -1,7 +1,5 @@
 package sopt.org.HMH.global.auth.jwt;
 
-import static java.util.Objects.isNull;
-
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Header;
@@ -11,7 +9,6 @@ import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import java.nio.charset.StandardCharsets;
-import java.security.Principal;
 import java.util.Base64;
 import java.util.Date;
 import javax.crypto.SecretKey;
@@ -46,8 +43,8 @@ public class JwtProvider {
     /**
      * Access 토큰, Refresh 토큰 발급
      */
-    public TokenDto issueToken(Authentication authentication) {
-        return TokenDto.of(
+    public TokenResponse issueToken(Authentication authentication) {
+        return TokenResponse.of(
                 generateAccessToken(authentication),
                 generateRefreshToken(authentication));
     }
@@ -168,15 +165,5 @@ public class JwtProvider {
         String encodedKey = Base64.getEncoder().encodeToString(JWT_SECRET.getBytes());
         // HMAC SHA 알고리즘을 사용하는 Secret Key 생성
         return Keys.hmacShaKeyFor(encodedKey.getBytes());
-    }
-
-    /**
-     * Principal 객체로부터 User의 식별자를 추출하는 메서드
-     */
-    public static Long getUserFromPrincipal(Principal principal) {
-        if (isNull(principal)) {
-            throw new JwtException(JwtError.EMPTY_PRINCIPLE_EXCEPTION);
-        }
-        return Long.valueOf(principal.getName());
     }
 }

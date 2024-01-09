@@ -1,20 +1,28 @@
 package sopt.org.HMH.domain.user.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sopt.org.HMH.domain.user.domain.OnboardingInfo;
+import sopt.org.HMH.domain.user.domain.OnboardingProblem;
 import sopt.org.HMH.domain.user.domain.User;
 import sopt.org.HMH.domain.user.domain.exception.UserError;
 import sopt.org.HMH.domain.user.domain.exception.UserException;
-import sopt.org.HMH.domain.user.dto.request.SocialLoginRequest;
+import sopt.org.HMH.domain.user.dto.request.SocialPlatformRequest;
+import sopt.org.HMH.domain.user.dto.request.SocialSignUpRequest;
 import sopt.org.HMH.domain.user.dto.response.LoginResponse;
+import sopt.org.HMH.domain.user.dto.response.UserInfoResponse;
+import sopt.org.HMH.domain.user.repository.OnboardingInfoRepository;
 import sopt.org.HMH.domain.user.repository.UserRepository;
 import sopt.org.HMH.global.auth.jwt.JwtProvider;
-import sopt.org.HMH.global.auth.jwt.TokenDto;
+import sopt.org.HMH.global.auth.jwt.TokenResponse;
 import sopt.org.HMH.global.auth.jwt.exception.JwtError;
 import sopt.org.HMH.global.auth.jwt.exception.JwtException;
 import sopt.org.HMH.global.auth.security.UserAuthentication;
 import sopt.org.HMH.global.auth.social.SocialPlatform;
+import sopt.org.HMH.global.auth.social.apple.fegin.AppleOAuthProvider;
 import sopt.org.HMH.global.auth.social.kakao.fegin.KakaoLoginService;
 
 @Service
@@ -24,28 +32,39 @@ public class UserService {
 
     private final JwtProvider jwtProvider;
     private final UserRepository userRepository;
+    private final OnboardingInfoRepository onboardingInfoRepository;
     private final KakaoLoginService kakaoLoginService;
+    private final AppleOAuthProvider appleOAuthProvider;
 
     @Transactional
-    public LoginResponse login(String socialAccessToken, SocialLoginRequest request) {
-        socialAccessToken = parseTokenString(socialAccessToken);
+    public LoginResponse login(String socialAccessToken, SocialPlatformRequest request) {
+
         SocialPlatform socialPlatform = request.socialPlatform();
-        Long socialId = getUserIdBySocialAccessToken(socialPlatform, socialAccessToken);
+        String socialId = getSocialIdBySocialAccessToken(socialPlatform, socialAccessToken);
+
         // 유저를 찾지 못하면 404 Error를 던져 클라이언트에게 회원가입 api를 요구한다.
-        User loginUser = getUserBySocialAndSocialId(socialPlatform, socialId);
+        User loginUser = getUserBySocialPlatformAndSocialId(socialPlatform, socialId);
 
-        if (socialPlatform == SocialPlatform.KAKAO) {
-            kakaoLoginService.updateUserInfoByKakao(loginUser, socialAccessToken);
-        }
-
-        TokenDto tokenDto = jwtProvider.issueToken(new UserAuthentication(loginUser.getId(), null, null));
-
-        return LoginResponse.of(loginUser, tokenDto);
+        return performLogin(socialAccessToken, socialPlatform, loginUser);
     }
 
     @Transactional
-    public TokenDto reissueToken(String refreshToken) {
+    public LoginResponse signup(String socialAccessToken, SocialSignUpRequest request) {
 
+        SocialPlatform socialPlatform = request.socialPlatform();
+        String socialId = getSocialIdBySocialAccessToken(socialPlatform, socialAccessToken);
+
+        // 이미 회원가입된 유저가 있다면 400 Error 발생
+        validateDuplicateUser(socialId, socialPlatform);
+
+        OnboardingInfo onboardingInfo = registerOnboardingInfo(request);
+        User user = addUser(socialPlatform, socialId, onboardingInfo, request.name());
+
+        return performLogin(socialAccessToken, socialPlatform, user);
+    }
+
+    @Transactional
+    public TokenResponse reissueToken(String refreshToken) {
         refreshToken = parseTokenString(refreshToken);
         Long userId = jwtProvider.validateRefreshToken(refreshToken);
         validateUserId(userId);  // userId가 DB에 저장된 유효한 값인지 검사
@@ -58,29 +77,82 @@ public class UserService {
         jwtProvider.deleteRefreshToken(userId);
     }
 
+    public UserInfoResponse getUserInfo(Long userId) {
+        User user = userRepository.findByIdOrThrowException(userId);
+        return UserInfoResponse.of(user);
+    }
+
     private void validateUserId(Long userId) {
         if (!userRepository.existsById(userId)) {
             throw new UserException(UserError.NOT_FOUND_USER);
         }
     }
 
-    private User getUserBySocialAndSocialId(SocialPlatform socialPlatform, Long socialId) {
+    private User getUserBySocialPlatformAndSocialId(SocialPlatform socialPlatform, String socialId) {
         return userRepository.findBySocialPlatformAndSocialIdOrThrowException(socialPlatform, socialId);
     }
 
-    private Long getUserIdBySocialAccessToken(SocialPlatform socialPlatform, String socialAccessToken) {
+    private String getSocialIdBySocialAccessToken(SocialPlatform socialPlatform, String socialAccessToken) {
         return switch (socialPlatform.toString()) {
-            case "KAKAO" -> kakaoLoginService.getUserIdByKakao(socialAccessToken);
+            case "KAKAO" -> kakaoLoginService.getSocialIdByKakao(socialAccessToken);
+            case "APPLE" -> appleOAuthProvider.getApplePlatformId(socialAccessToken);
             default -> throw new JwtException(JwtError.INVALID_SOCIAL_ACCESS_TOKEN);
         };
     }
 
-    private static String parseTokenString(String tokenString) {
-        String[] strings = tokenString.split(" ");
-        if (strings.length != 2) {
+    /**
+     * 소셜 액세스 토큰에서 "Bearer " 부분을 삭제시키고 유효한 소셜 액세스 토큰만을 받기 위한 함수
+     */
+    private String parseTokenString(String tokenString) {
+        String[] parsedTokens = tokenString.split(" ");
+        if (parsedTokens.length != 2) {
             throw new JwtException(JwtError.INVALID_TOKEN_HEADER);
         }
-        return strings[1];
+        String validSocialAccessToken = parsedTokens[1];
+        return validSocialAccessToken;
+    }
+
+    private void validateDuplicateUser(String socialId, SocialPlatform socialPlatform) {
+        if (userRepository.existsBySocialPlatformAndSocialId(socialPlatform, socialId)) {
+            throw new UserException(UserError.DUPLICATE_USER);
+        }
+    }
+
+    private LoginResponse performLogin(String socialAccessToken, SocialPlatform socialPlatform, User loginUser) {
+        if (socialPlatform == SocialPlatform.KAKAO) {
+            kakaoLoginService.updateUserInfoByKakao(loginUser, socialAccessToken);
+        }
+        TokenResponse tokenResponse = jwtProvider.issueToken(new UserAuthentication(loginUser.getId(), null, null));
+        return LoginResponse.of(loginUser, tokenResponse);
+    }
+
+    private User addUser(SocialPlatform socialPlatform, String socialId, OnboardingInfo onboardingInfo, String name) {
+        User user = User.builder()
+                    .socialPlatform(socialPlatform)
+                    .socialId(socialId)
+                    .onboardingInfo(onboardingInfo)
+                    .name(name)
+                    .build();
+        userRepository.save(user);
+        return user;
+    }
+
+    private OnboardingInfo registerOnboardingInfo(SocialSignUpRequest request) {
+        List<OnboardingProblem> problemList = new ArrayList<>();
+        for (String problem : request.onboardingRequest().problemList()) {
+            problemList.add(
+                    OnboardingProblem.builder()
+                            .problem(problem)
+                            .build()
+            );
+        }
+
+        OnboardingInfo onboardingInfo = OnboardingInfo.builder()
+                .averageUseTime(request.onboardingRequest().averageUseTime())
+                .problem(problemList)
+                .build();
+        onboardingInfoRepository.save(onboardingInfo);
+        return onboardingInfo;
     }
 
     public User getUserId(Long userId) {
