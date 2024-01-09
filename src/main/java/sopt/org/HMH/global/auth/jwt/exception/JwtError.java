@@ -16,6 +16,7 @@ public enum JwtError implements ErrorBase {
     INVALID_ACCESS_TOKEN(HttpStatus.UNAUTHORIZED, "유효하지 않은 액세스 토큰입니다. 액세스 토큰을 재발급 받아주세요."),
     INVALID_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "유효하지 않은 리프레시 토큰입니다. 다시 로그인 해주세요."),
     INVALID_IDENTITY_TOKEN(HttpStatus.UNAUTHORIZED, "유효하지 않은 IDENTITY 토큰입니다. 다시 로그인 해주세요."),
+    UNABLE_TO_CREATE_APPLE_PUBLIC_KEY(HttpStatus.UNAUTHORIZED, "apple public key를 생성할 수 없습니다."),
 
     // 403 FORBIDDEN
 
