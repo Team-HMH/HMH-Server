@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import sopt.org.HMH.domain.user.domain.User;
-import sopt.org.HMH.global.auth.social.kakao.response.KakaoUserResponse;
+import sopt.org.HMH.global.auth.social.kakao.response.KakaoUserRequest;
 
 @Service
 @Transactional
@@ -20,7 +20,7 @@ public class KakaoLoginService {
      */
     public Long getUserIdByKakao(String socialAccessToken) {
 
-        KakaoUserResponse userResponse = kakaoApiClient.getUserInformation(TOKEN_TYPE + socialAccessToken);
+        KakaoUserRequest userResponse = kakaoApiClient.getUserInformation(TOKEN_TYPE + socialAccessToken);
         System.out.println("userResponse : " + userResponse);
         return userResponse.id();
     }
@@ -29,7 +29,7 @@ public class KakaoLoginService {
      * 카카오 Access Token으로 유저 정보 업데이트
      */
     public void updateUserInfoByKakao(User loginUser, String socialAccessToken) {
-        KakaoUserResponse userResponse = kakaoApiClient.getUserInformation(TOKEN_TYPE + socialAccessToken);
+        KakaoUserRequest userResponse = kakaoApiClient.getUserInformation(TOKEN_TYPE + socialAccessToken);
 
         String nickname = userResponse.kakaoAccount().profile().nickname();
         String profileImageUrl = userResponse.kakaoAccount().profile().profileImageUrl();
