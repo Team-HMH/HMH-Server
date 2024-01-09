@@ -8,8 +8,6 @@ public record ChallengeRequest(
 
         Integer period,
         Long goalTime,
-
-        @JsonProperty(value = "apps")
         List<AppGoalTimeRequest> apps
 ) {
 }
