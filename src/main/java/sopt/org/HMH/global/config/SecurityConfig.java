@@ -9,7 +9,6 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import sopt.org.HMH.global.auth.security.CustomAccessDeniedHandler;
 import sopt.org.HMH.global.auth.security.CustomJwtAuthenticationEntryPoint;
 import sopt.org.HMH.global.auth.security.JwtAuthenticationFilter;
 
@@ -22,7 +21,6 @@ public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     // JWT에 대한 인증 예외 처리를 담당하는 인증 진입점
     private final CustomJwtAuthenticationEntryPoint customJwtAuthenticationEntryPoint;
-    private final CustomAccessDeniedHandler customAccessDeniedHandler;
 
     private static final String[] AUTH_WHITELIST = {
             "/", "/error", "/health",
@@ -33,8 +31,8 @@ public class SecurityConfig {
             "/api-docs/**",
 
             // Authentication
-            "/login",
-            "/reissue",
+            "/api/v1/user/login",
+            "/api/v1/user/reissue",
     };
 
     @Bean

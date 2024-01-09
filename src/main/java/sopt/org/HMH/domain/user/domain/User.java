@@ -7,6 +7,8 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -41,6 +43,10 @@ public class User extends BaseTimeEntity {
 
     @Column(name = "profile_image_url")
     private String profileImageUrl;
+
+    @OneToOne
+    @JoinColumn(name = "onboarding_info_id")
+    private OnboardingInfo onboardingInfo;
 
     public void updateSocialInfo(String nickname, String profileImageUrl) {
         this.name = nickname;

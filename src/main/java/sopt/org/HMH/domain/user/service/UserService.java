@@ -3,10 +3,12 @@ package sopt.org.HMH.domain.user.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sopt.org.HMH.domain.user.domain.OnboardingInfo;
 import sopt.org.HMH.domain.user.domain.User;
 import sopt.org.HMH.domain.user.domain.exception.UserError;
 import sopt.org.HMH.domain.user.domain.exception.UserException;
-import sopt.org.HMH.domain.user.dto.request.SocialLoginRequest;
+import sopt.org.HMH.domain.user.dto.request.SocialPlatformRequest;
+import sopt.org.HMH.domain.user.dto.request.SocialSignUpRequest;
 import sopt.org.HMH.domain.user.dto.response.LoginResponse;
 import sopt.org.HMH.domain.user.repository.UserRepository;
 import sopt.org.HMH.global.auth.jwt.JwtProvider;
@@ -27,10 +29,12 @@ public class UserService {
     private final KakaoLoginService kakaoLoginService;
 
     @Transactional
-    public LoginResponse login(String socialAccessToken, SocialLoginRequest request) {
+    public LoginResponse login(String socialAccessToken, SocialPlatformRequest request) {
+
         socialAccessToken = parseTokenString(socialAccessToken);
-        SocialPlatform socialPlatform = request.getSocialPlatform();
+        SocialPlatform socialPlatform = request.socialPlatform();
         Long socialId = getUserIdBySocialAccessToken(socialPlatform, socialAccessToken);
+
         // 유저를 찾지 못하면 404 Error를 던져 클라이언트에게 회원가입 api를 요구한다.
         User loginUser = getUserBySocialAndSocialId(socialPlatform, socialId);
 
@@ -41,6 +45,31 @@ public class UserService {
         TokenDto tokenDto = jwtProvider.issueToken(new UserAuthentication(loginUser.getId(), null, null));
 
         return LoginResponse.of(loginUser, tokenDto);
+    }
+
+    @Transactional
+    public LoginResponse signup(String socialAccessToken, SocialSignUpRequest request) {
+
+        socialAccessToken = parseTokenString(socialAccessToken);
+        SocialPlatform socialPlatform = request.socialPlatformRequest().socialPlatform();
+        Long socialId = getUserIdBySocialAccessToken(socialPlatform, socialAccessToken);
+
+        OnboardingInfo onboardingInfo = OnboardingInfo.builder()
+                .averageUseTime(request.onboardingRequest().averageUseTime())
+                .problem(request.onboardingRequest().problem())
+                .build();
+
+        User user = User.builder()
+                .socialPlatform(socialPlatform)
+                .socialId(socialId)
+                .onboardingInfo(onboardingInfo)
+                .build();
+
+        userRepository.save(user);
+
+        TokenDto tokenDto = jwtProvider.issueToken(new UserAuthentication(user.getId(), null, null));
+
+        return LoginResponse.of(user, tokenDto);
     }
 
     @Transactional
