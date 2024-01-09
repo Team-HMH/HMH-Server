@@ -58,7 +58,7 @@ public class UserService {
         validateDuplicateUser(socialId, socialPlatform);
 
         OnboardingInfo onboardingInfo = registerOnboardingInfo(request);
-        User user = addUser(socialPlatform, socialId, onboardingInfo);
+        User user = addUser(socialPlatform, socialId, onboardingInfo, request.name());
 
         return performLogin(socialAccessToken, socialPlatform, user);
     }
@@ -126,12 +126,13 @@ public class UserService {
         return LoginResponse.of(loginUser, tokenResponse);
     }
 
-    private User addUser(SocialPlatform socialPlatform, String socialId, OnboardingInfo onboardingInfo) {
+    private User addUser(SocialPlatform socialPlatform, String socialId, OnboardingInfo onboardingInfo, String name) {
         User user = User.builder()
-                .socialPlatform(socialPlatform)
-                .socialId(socialId)
-                .onboardingInfo(onboardingInfo)
-                .build();
+                    .socialPlatform(socialPlatform)
+                    .socialId(socialId)
+                    .onboardingInfo(onboardingInfo)
+                    .name(name)
+                    .build();
         userRepository.save(user);
         return user;
     }
