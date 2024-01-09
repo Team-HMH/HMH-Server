@@ -12,6 +12,7 @@ import sopt.org.HMH.global.common.response.ApiResponse;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/challenge")
 public class ChallengeController {
+
     private final ChallengeService challengeService;
 
     @PostMapping
@@ -20,9 +21,8 @@ public class ChallengeController {
             @RequestBody ChallengeRequest request
     ) {
         // db에 임시 유저 (userId=1) 존재 (임시 사용)
-        Long response = challengeService.add(1L, request, os);
         return ResponseEntity
                 .status(ChallengeSuccess.SUCCESS_CREATE_CHALLENGE.getHttpStatus())
-                .body(ApiResponse.success(ChallengeSuccess.SUCCESS_CREATE_CHALLENGE, response));
+                .body(ApiResponse.success(ChallengeSuccess.SUCCESS_CREATE_CHALLENGE, challengeService.addChallenge(1L, request)));
     }
 }

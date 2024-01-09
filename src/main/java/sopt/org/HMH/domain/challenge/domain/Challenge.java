@@ -18,6 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 @Table(name = "challenge")
 public class Challenge extends BaseTimeEntity {
+
     @Id
     @GeneratedValue(strategy = IDENTITY)
     @Column(name = "challenge_id")
@@ -29,7 +30,7 @@ public class Challenge extends BaseTimeEntity {
 
     private Integer period;
 
-    @OneToMany
+    @OneToMany(mappedBy = "challenge")
     private List<DayChallenge> dayChallenges;
 
     public Challenge(User user, Integer period) {

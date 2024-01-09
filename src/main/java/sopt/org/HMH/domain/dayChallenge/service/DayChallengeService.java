@@ -9,9 +9,10 @@ import sopt.org.HMH.domain.dayChallenge.repository.DayChallengeRepository;
 @Service
 @RequiredArgsConstructor
 public class DayChallengeService {
+
     private final DayChallengeRepository dayChallengeRepository;
 
-    public Long add(Challenge challenge, Long goalTime) {
+    public Long addDayChallenge(Challenge challenge, Long goalTime) {
         DayChallenge dayChallenge = dayChallengeRepository.save(new DayChallenge(challenge, goalTime));
 
         return dayChallenge.getId();
