@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import sopt.org.HMH.domain.user.domain.User;
-import sopt.org.HMH.global.auth.social.kakao.response.KakaoUserRequest;
+import sopt.org.HMH.global.auth.social.kakao.request.KakaoUserRequest;
 
 @Service
 @Transactional
