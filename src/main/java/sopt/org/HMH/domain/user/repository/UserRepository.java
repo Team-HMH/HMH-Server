@@ -14,5 +14,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
                 UserError.NOT_SIGNUP_USER));
     }
 
+    boolean existsBySocialPlatformAndSocialId(SocialPlatform socialPlatform, Long socialId);
     Optional<User> findBySocialPlatformAndSocialId(SocialPlatform socialPlatform, Long socialId);
 }

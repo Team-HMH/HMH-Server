@@ -1,15 +1,19 @@
 package sopt.org.HMH.domain.user.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sopt.org.HMH.domain.user.domain.OnboardingInfo;
+import sopt.org.HMH.domain.user.domain.OnboardingProblem;
 import sopt.org.HMH.domain.user.domain.User;
 import sopt.org.HMH.domain.user.domain.exception.UserError;
 import sopt.org.HMH.domain.user.domain.exception.UserException;
 import sopt.org.HMH.domain.user.dto.request.SocialPlatformRequest;
 import sopt.org.HMH.domain.user.dto.request.SocialSignUpRequest;
 import sopt.org.HMH.domain.user.dto.response.LoginResponse;
+import sopt.org.HMH.domain.user.repository.OnboardingInfoRepository;
 import sopt.org.HMH.domain.user.repository.UserRepository;
 import sopt.org.HMH.global.auth.jwt.JwtProvider;
 import sopt.org.HMH.global.auth.jwt.TokenDto;
@@ -26,6 +30,7 @@ public class UserService {
 
     private final JwtProvider jwtProvider;
     private final UserRepository userRepository;
+    private final OnboardingInfoRepository onboardingInfoRepository;
     private final KakaoLoginService kakaoLoginService;
 
     @Transactional
@@ -51,20 +56,33 @@ public class UserService {
     public LoginResponse signup(String socialAccessToken, SocialSignUpRequest request) {
 
         socialAccessToken = parseTokenString(socialAccessToken);
-        SocialPlatform socialPlatform = request.socialPlatformRequest().socialPlatform();
+
+        SocialPlatform socialPlatform = request.socialPlatform();
         Long socialId = getUserIdBySocialAccessToken(socialPlatform, socialAccessToken);
+
+        // 이미 회원가입된 유저이면 400 Error를 발생시킨다.
+        validateDuplicateUser(socialId, socialPlatform);
+
+        List<OnboardingProblem> problemList = new ArrayList<>();
+        for (String problem : request.onboardingRequest().problemList()) {
+            problemList.add(
+                    OnboardingProblem.builder()
+                            .problem(problem)
+                            .build()
+            );
+        }
 
         OnboardingInfo onboardingInfo = OnboardingInfo.builder()
                 .averageUseTime(request.onboardingRequest().averageUseTime())
-                .problem(request.onboardingRequest().problem())
+                .problem(problemList)
                 .build();
+        onboardingInfoRepository.save(onboardingInfo);
 
         User user = User.builder()
                 .socialPlatform(socialPlatform)
                 .socialId(socialId)
                 .onboardingInfo(onboardingInfo)
                 .build();
-
         userRepository.save(user);
 
         TokenDto tokenDto = jwtProvider.issueToken(new UserAuthentication(user.getId(), null, null));
@@ -104,11 +122,17 @@ public class UserService {
         };
     }
 
-    private static String parseTokenString(String tokenString) {
+    private String parseTokenString(String tokenString) {
         String[] strings = tokenString.split(" ");
         if (strings.length != 2) {
             throw new JwtException(JwtError.INVALID_TOKEN_HEADER);
         }
         return strings[1];
+    }
+
+    private void validateDuplicateUser(Long socialId, SocialPlatform socialPlatform) {
+        if (userRepository.existsBySocialPlatformAndSocialId(socialPlatform, socialId)) {
+            throw new UserException(UserError.DUPLICATE_USER);
+        }
     }
 }

@@ -9,6 +9,7 @@ public enum UserError implements ErrorBase {
 
     // 400 BAD REQUEST
     INVALID_USER(HttpStatus.BAD_REQUEST, "Principle 객체가 없습니다."),
+    DUPLICATE_USER(HttpStatus.BAD_REQUEST, "이미 회원가입된 유저입니다."),
 
     // 401 UNAUTHORIZED
 

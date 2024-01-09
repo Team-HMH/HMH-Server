@@ -42,8 +42,8 @@ public class UserController {
             @RequestBody SocialSignUpRequest request
     ) {
         return ResponseEntity
-                .status(UserSuccess.LOGIN_SUCCESS.getHttpStatus())
-                .body(ApiResponse.success(UserSuccess.LOGIN_SUCCESS, userService.signup(socialAccessToken, request)));
+                .status(UserSuccess.SIGNUP_SUCCESS.getHttpStatus())
+                .body(ApiResponse.success(UserSuccess.SIGNUP_SUCCESS, userService.signup(socialAccessToken, request)));
     }
 
     @GetMapping("/reissue")
