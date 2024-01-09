@@ -13,8 +13,9 @@ import sopt.org.HMH.domain.user.domain.exception.UserSuccess;
 import sopt.org.HMH.domain.user.dto.request.SocialPlatformRequest;
 import sopt.org.HMH.domain.user.dto.request.SocialSignUpRequest;
 import sopt.org.HMH.domain.user.dto.response.LoginResponse;
+import sopt.org.HMH.domain.user.dto.response.UserInfoResponse;
 import sopt.org.HMH.domain.user.service.UserService;
-import sopt.org.HMH.global.auth.jwt.TokenDto;
+import sopt.org.HMH.global.auth.jwt.TokenResponse;
 import sopt.org.HMH.global.common.Util;
 import sopt.org.HMH.global.common.response.ApiResponse;
 import sopt.org.HMH.global.common.response.EmptyJsonResponse;
@@ -47,7 +48,7 @@ public class UserController {
     }
 
     @GetMapping("/reissue")
-    public ResponseEntity<ApiResponse<TokenDto>> orderReissue(
+    public ResponseEntity<ApiResponse<TokenResponse>> orderReissue(
             @RequestHeader("Authorization") String refreshToken
     ) {
         return ResponseEntity
@@ -64,10 +65,10 @@ public class UserController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<ApiResponse<?>> orderGetUserInfo(Principal principal) {
-        userService.logout(Util.getUserId(principal));
+    public ResponseEntity<ApiResponse<UserInfoResponse>> orderGetUserInfo(Principal principal) {
+        System.out.println(Util.getUserId(principal));
         return ResponseEntity
-                .status(UserSuccess.LOGOUT_SUCCESS.getHttpStatus())
-                .body(ApiResponse.success(UserSuccess.LOGOUT_SUCCESS, new EmptyJsonResponse()));
+                .status(UserSuccess.GET_USER_INFO_SUCCESS.getHttpStatus())
+                .body(ApiResponse.success(UserSuccess.GET_USER_INFO_SUCCESS, userService.getUserInfo(Util.getUserId(principal))));
     }
 }

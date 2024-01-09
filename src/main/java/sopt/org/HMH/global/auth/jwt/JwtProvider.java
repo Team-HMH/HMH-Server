@@ -1,7 +1,5 @@
 package sopt.org.HMH.global.auth.jwt;
 
-import static java.util.Objects.isNull;
-
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Header;
@@ -11,7 +9,6 @@ import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import java.nio.charset.StandardCharsets;
-import java.security.Principal;
 import java.util.Base64;
 import java.util.Date;
 import javax.crypto.SecretKey;
@@ -46,8 +43,8 @@ public class JwtProvider {
     /**
      * Access 토큰, Refresh 토큰 발급
      */
-    public TokenDto issueToken(Authentication authentication) {
-        return TokenDto.of(
+    public TokenResponse issueToken(Authentication authentication) {
+        return TokenResponse.of(
                 generateAccessToken(authentication),
                 generateRefreshToken(authentication));
     }

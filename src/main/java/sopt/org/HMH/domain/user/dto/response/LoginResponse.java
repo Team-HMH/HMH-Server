@@ -1,7 +1,7 @@
 package sopt.org.HMH.domain.user.dto.response;
 
 import sopt.org.HMH.domain.user.domain.User;
-import sopt.org.HMH.global.auth.jwt.TokenDto;
+import sopt.org.HMH.global.auth.jwt.TokenResponse;
 
 public record LoginResponse(
         Long userId,
@@ -9,11 +9,11 @@ public record LoginResponse(
         String refreshToken
 ){
 
-    public static LoginResponse of(User loginUser, TokenDto tokenDto) {
+    public static LoginResponse of(User loginUser, TokenResponse tokenResponse) {
         return new LoginResponse(
                 loginUser.getId(),
-                tokenDto.getAccessToken(),
-                tokenDto.getRefreshToken()
+                tokenResponse.getAccessToken(),
+                tokenResponse.getRefreshToken()
         );
     }
 
