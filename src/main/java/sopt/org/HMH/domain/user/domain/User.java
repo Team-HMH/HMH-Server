@@ -44,6 +44,10 @@ public class User extends BaseTimeEntity {
     @Column(name = "social_id")
     private Long socialId;
 
+    @Column(name = "point")
+    @Builder.Default
+    private Integer point = 0;
+
     @Column(name = "profile_image_url")
     private String profileImageUrl;
 
