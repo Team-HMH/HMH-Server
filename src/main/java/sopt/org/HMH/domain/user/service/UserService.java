@@ -36,22 +36,20 @@ public class UserService {
     @Transactional
     public LoginResponse login(String socialAccessToken, SocialPlatformRequest request) {
 
-        String parseSocialAccessToken = parseTokenString(socialAccessToken);
         SocialPlatform socialPlatform = request.socialPlatform();
-        Long socialId = getSocialIdBySocialAccessToken(socialPlatform, parseSocialAccessToken);
+        Long socialId = getSocialIdBySocialAccessToken(socialPlatform, socialAccessToken);
 
         // 유저를 찾지 못하면 404 Error를 던져 클라이언트에게 회원가입 api를 요구한다.
         User loginUser = getUserBySocialPlatformAndSocialId(socialPlatform, socialId);
 
-        return performLogin(parseSocialAccessToken, socialPlatform, loginUser);
+        return performLogin(socialAccessToken, socialPlatform, loginUser);
     }
 
     @Transactional
     public LoginResponse signup(String socialAccessToken, SocialSignUpRequest request) {
 
-        String parseSocialAccessToken = parseTokenString(socialAccessToken);
         SocialPlatform socialPlatform = request.socialPlatform();
-        Long socialId = getSocialIdBySocialAccessToken(socialPlatform, parseSocialAccessToken);
+        Long socialId = getSocialIdBySocialAccessToken(socialPlatform, socialAccessToken);
 
         // 이미 회원가입된 유저가 있다면 400 Error 발생
         validateDuplicateUser(socialId, socialPlatform);

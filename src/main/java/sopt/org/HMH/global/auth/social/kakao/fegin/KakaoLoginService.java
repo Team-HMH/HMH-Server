@@ -13,14 +13,13 @@ import sopt.org.HMH.global.auth.social.kakao.request.KakaoUserRequest;
 public class KakaoLoginService {
 
     private final KakaoApiClient kakaoApiClient;
-    private static final String TOKEN_TYPE = "Bearer ";
 
     /**
      * 카카오 Acess Token으로 유저의 소셜 Id 불러오는 함수
      */
     public Long getSocialIdByKakao(String socialAccessToken) {
 
-        KakaoUserRequest userResponse = kakaoApiClient.getUserInformation(TOKEN_TYPE + socialAccessToken);
+        KakaoUserRequest userResponse = kakaoApiClient.getUserInformation(socialAccessToken);
         System.out.println("userResponse : " + userResponse);
         return userResponse.id();
     }
@@ -29,7 +28,7 @@ public class KakaoLoginService {
      * 카카오 Access Token으로 유저 정보 업데이트
      */
     public void updateUserInfoByKakao(User loginUser, String socialAccessToken) {
-        KakaoUserRequest userResponse = kakaoApiClient.getUserInformation(TOKEN_TYPE + socialAccessToken);
+        KakaoUserRequest userResponse = kakaoApiClient.getUserInformation(socialAccessToken);
 
         String nickname = userResponse.kakaoAccount().profile().nickname();
         String profileImageUrl = userResponse.kakaoAccount().profile().profileImageUrl();
