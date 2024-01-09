@@ -34,11 +34,10 @@ public class DayChallenge extends BaseTimeEntity {
     @OneToMany(mappedBy = "dayChallenge")
     private List<App> apps;
 
-    @Builder
     public DayChallenge(Challenge challenge, Long goalTime) {
         this.challenge = challenge;
         this.goalTime = goalTime;
-        this.isSuccess = false;
+        this.isSuccess = true;
         this.didGettingPoint = false;
     }
 }
