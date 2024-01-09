@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.*;
 import org.springframework.stereotype.Component;
-
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.security.PublicKey;
@@ -12,9 +11,9 @@ import java.util.Base64;
 import java.util.Map;
 import sopt.org.HMH.global.auth.jwt.exception.JwtError;
 
-
 @Component
 public class AppleIdentityTokenParser {
+
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     public Map<String, String> parseHeaders(String identityToken) {
