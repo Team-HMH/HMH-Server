@@ -82,4 +82,8 @@ public class UserService {
         }
         return strings[1];
     }
+
+    public User getUserId(Long userId) {
+        return userRepository.findByIdOrThrowException(userId);
+    }
 }

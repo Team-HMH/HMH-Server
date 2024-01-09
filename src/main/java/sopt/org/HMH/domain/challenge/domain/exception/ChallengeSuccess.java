@@ -1,11 +1,13 @@
-package sopt.org.HMH.global.common.exception;
+package sopt.org.HMH.domain.challenge.domain.exception;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import sopt.org.HMH.global.common.exception.base.SuccessBase;
 
 @AllArgsConstructor
-public enum GlobalSuccess implements SuccessBase {
+public enum ChallengeSuccess implements SuccessBase {
+
+    SUCCESS_CREATE_CHALLENGE(HttpStatus.OK, "챌린지 생성 성공"),
     ;
 
     private final HttpStatus status;
