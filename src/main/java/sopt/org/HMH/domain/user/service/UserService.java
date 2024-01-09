@@ -54,8 +54,8 @@ public class UserService {
         // 이미 회원가입된 유저가 있다면 400 Error 발생
         validateDuplicateUser(socialId, socialPlatform);
 
-        OnboardingInfo onboardingInfo = createOnboardingInfo(request);
-        User user = createUser(socialPlatform, socialId, onboardingInfo);
+        OnboardingInfo onboardingInfo = registerOnboardingInfo(request);
+        User user = addUser(socialPlatform, socialId, onboardingInfo);
 
         return performLogin(socialAccessToken, socialPlatform, user);
     }
@@ -117,7 +117,7 @@ public class UserService {
         return LoginResponse.of(loginUser, tokenDto);
     }
 
-    private User createUser(SocialPlatform socialPlatform, Long socialId, OnboardingInfo onboardingInfo) {
+    private User addUser(SocialPlatform socialPlatform, Long socialId, OnboardingInfo onboardingInfo) {
         User user = User.builder()
                 .socialPlatform(socialPlatform)
                 .socialId(socialId)
@@ -127,7 +127,7 @@ public class UserService {
         return user;
     }
 
-    private OnboardingInfo createOnboardingInfo(SocialSignUpRequest request) {
+    private OnboardingInfo registerOnboardingInfo(SocialSignUpRequest request) {
         List<OnboardingProblem> problemList = new ArrayList<>();
         for (String problem : request.onboardingRequest().problemList()) {
             problemList.add(

@@ -27,7 +27,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse<LoginResponse>> login(
+    public ResponseEntity<ApiResponse<LoginResponse>> orderLogin(
             @RequestHeader("Authorization") String socialAccessToken,
             @RequestBody SocialPlatformRequest request
     ) {
@@ -37,7 +37,7 @@ public class UserController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<ApiResponse<LoginResponse>> signup(
+    public ResponseEntity<ApiResponse<LoginResponse>> orderSignup(
             @RequestHeader("Authorization") String socialAccessToken,
             @RequestBody SocialSignUpRequest request
     ) {
@@ -47,7 +47,7 @@ public class UserController {
     }
 
     @GetMapping("/reissue")
-    public ResponseEntity<ApiResponse<TokenDto>> reissue(
+    public ResponseEntity<ApiResponse<TokenDto>> orderReissue(
             @RequestHeader("Authorization") String refreshToken
     ) {
         return ResponseEntity
@@ -56,7 +56,7 @@ public class UserController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<ApiResponse<?>> logout(Principal principal) {
+    public ResponseEntity<ApiResponse<?>> orderLogout(Principal principal) {
         userService.logout(Util.getUserId(principal));
         return ResponseEntity
                 .status(UserSuccess.LOGOUT_SUCCESS.getHttpStatus())
@@ -64,7 +64,7 @@ public class UserController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<ApiResponse<?>> getUserInfo(Principal principal) {
+    public ResponseEntity<ApiResponse<?>> orderGetUserInfo(Principal principal) {
         userService.logout(Util.getUserId(principal));
         return ResponseEntity
                 .status(UserSuccess.LOGOUT_SUCCESS.getHttpStatus())
