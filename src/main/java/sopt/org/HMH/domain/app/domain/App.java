@@ -1,7 +1,6 @@
 package sopt.org.HMH.domain.app.domain;
 
 import jakarta.persistence.*;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import sopt.org.HMH.domain.dayChallenge.domain.DayChallenge;

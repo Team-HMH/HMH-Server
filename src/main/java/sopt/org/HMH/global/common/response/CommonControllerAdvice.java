@@ -20,5 +20,4 @@ public class CommonControllerAdvice {
                         ApiResponse.error(error)
                 );
     }
-
 }
