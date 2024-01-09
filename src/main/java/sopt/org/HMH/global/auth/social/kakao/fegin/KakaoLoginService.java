@@ -16,9 +16,9 @@ public class KakaoLoginService {
     private static final String TOKEN_TYPE = "Bearer ";
 
     /**
-     * 카카오 Acess Token으로 유저 Id 불러오는 함수
+     * 카카오 Acess Token으로 유저의 소셜 Id 불러오는 함수
      */
-    public Long getUserIdByKakao(String socialAccessToken) {
+    public Long getSocialIdByKakao(String socialAccessToken) {
 
         KakaoUserRequest userResponse = kakaoApiClient.getUserInformation(TOKEN_TYPE + socialAccessToken);
         System.out.println("userResponse : " + userResponse);
