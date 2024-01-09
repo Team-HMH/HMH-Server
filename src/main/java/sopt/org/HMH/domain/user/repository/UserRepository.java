@@ -15,9 +15,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
     }
 
     default User findByIdOrThrowException(Long userId) {
-        return findById(userId).orElseThrow(() -> new UserException(UserError.NOT_FOUND_USER));
+        return findById(userId).orElseThrow(() -> new UserException(
+                UserError.NOT_FOUND_USER));
     }
 
-    boolean existsBySocialPlatformAndSocialId(SocialPlatform socialPlatform, Long socialId);
     Optional<User> findBySocialPlatformAndSocialId(SocialPlatform socialPlatform, Long socialId);
+    boolean existsBySocialPlatformAndSocialId(SocialPlatform socialPlatform, Long socialId);
 }
