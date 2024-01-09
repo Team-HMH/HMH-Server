@@ -36,63 +36,34 @@ public class UserService {
     @Transactional
     public LoginResponse login(String socialAccessToken, SocialPlatformRequest request) {
 
-        socialAccessToken = parseTokenString(socialAccessToken);
+        String parseSocialAccessToken = parseTokenString(socialAccessToken);
         SocialPlatform socialPlatform = request.socialPlatform();
-        Long socialId = getUserIdBySocialAccessToken(socialPlatform, socialAccessToken);
+        Long socialId = getSocialIdBySocialAccessToken(socialPlatform, parseSocialAccessToken);
 
         // 유저를 찾지 못하면 404 Error를 던져 클라이언트에게 회원가입 api를 요구한다.
-        User loginUser = getUserBySocialAndSocialId(socialPlatform, socialId);
+        User loginUser = getUserBySocialPlatformAndSocialId(socialPlatform, socialId);
 
-        if (socialPlatform == SocialPlatform.KAKAO) {
-            kakaoLoginService.updateUserInfoByKakao(loginUser, socialAccessToken);
-        }
-
-        TokenDto tokenDto = jwtProvider.issueToken(new UserAuthentication(loginUser.getId(), null, null));
-
-        return LoginResponse.of(loginUser, tokenDto);
+        return performLogin(parseSocialAccessToken, socialPlatform, loginUser);
     }
 
     @Transactional
     public LoginResponse signup(String socialAccessToken, SocialSignUpRequest request) {
 
-        socialAccessToken = parseTokenString(socialAccessToken);
-
+        String parseSocialAccessToken = parseTokenString(socialAccessToken);
         SocialPlatform socialPlatform = request.socialPlatform();
-        Long socialId = getUserIdBySocialAccessToken(socialPlatform, socialAccessToken);
+        Long socialId = getSocialIdBySocialAccessToken(socialPlatform, parseSocialAccessToken);
 
-        // 이미 회원가입된 유저이면 400 Error를 발생시킨다.
+        // 이미 회원가입된 유저가 있다면 400 Error 발생
         validateDuplicateUser(socialId, socialPlatform);
 
-        List<OnboardingProblem> problemList = new ArrayList<>();
-        for (String problem : request.onboardingRequest().problemList()) {
-            problemList.add(
-                    OnboardingProblem.builder()
-                            .problem(problem)
-                            .build()
-            );
-        }
+        OnboardingInfo onboardingInfo = createOnboardingInfo(request);
+        User user = createUser(socialPlatform, socialId, onboardingInfo);
 
-        OnboardingInfo onboardingInfo = OnboardingInfo.builder()
-                .averageUseTime(request.onboardingRequest().averageUseTime())
-                .problem(problemList)
-                .build();
-        onboardingInfoRepository.save(onboardingInfo);
-
-        User user = User.builder()
-                .socialPlatform(socialPlatform)
-                .socialId(socialId)
-                .onboardingInfo(onboardingInfo)
-                .build();
-        userRepository.save(user);
-
-        TokenDto tokenDto = jwtProvider.issueToken(new UserAuthentication(user.getId(), null, null));
-
-        return LoginResponse.of(user, tokenDto);
+        return performLogin(socialAccessToken, socialPlatform, user);
     }
 
     @Transactional
     public TokenDto reissueToken(String refreshToken) {
-
         refreshToken = parseTokenString(refreshToken);
         Long userId = jwtProvider.validateRefreshToken(refreshToken);
         validateUserId(userId);  // userId가 DB에 저장된 유효한 값인지 검사
@@ -111,28 +82,68 @@ public class UserService {
         }
     }
 
-    private User getUserBySocialAndSocialId(SocialPlatform socialPlatform, Long socialId) {
+    private User getUserBySocialPlatformAndSocialId(SocialPlatform socialPlatform, Long socialId) {
         return userRepository.findBySocialPlatformAndSocialIdOrThrowException(socialPlatform, socialId);
     }
 
-    private Long getUserIdBySocialAccessToken(SocialPlatform socialPlatform, String socialAccessToken) {
+    private Long getSocialIdBySocialAccessToken(SocialPlatform socialPlatform, String socialAccessToken) {
         return switch (socialPlatform.toString()) {
-            case "KAKAO" -> kakaoLoginService.getUserIdByKakao(socialAccessToken);
+            case "KAKAO" -> kakaoLoginService.getSocialIdByKakao(socialAccessToken);
             default -> throw new JwtException(JwtError.INVALID_SOCIAL_ACCESS_TOKEN);
         };
     }
 
+    /**
+     * 소셜 액세스 토큰에서 "Bearer " 부분을 삭제시키고 유효한 소셜 액세스 토큰만을 받기 위한 함수
+     */
     private String parseTokenString(String tokenString) {
-        String[] strings = tokenString.split(" ");
-        if (strings.length != 2) {
+        String[] parsedTokens = tokenString.split(" ");
+        if (parsedTokens.length != 2) {
             throw new JwtException(JwtError.INVALID_TOKEN_HEADER);
         }
-        return strings[1];
+        String validSocialAccessToken = parsedTokens[1];
+        return validSocialAccessToken;
     }
 
     private void validateDuplicateUser(Long socialId, SocialPlatform socialPlatform) {
         if (userRepository.existsBySocialPlatformAndSocialId(socialPlatform, socialId)) {
             throw new UserException(UserError.DUPLICATE_USER);
         }
+    }
+
+    private LoginResponse performLogin(String socialAccessToken, SocialPlatform socialPlatform, User loginUser) {
+        if (socialPlatform == SocialPlatform.KAKAO) {
+            kakaoLoginService.updateUserInfoByKakao(loginUser, socialAccessToken);
+        }
+        TokenDto tokenDto = jwtProvider.issueToken(new UserAuthentication(loginUser.getId(), null, null));
+        return LoginResponse.of(loginUser, tokenDto);
+    }
+
+    private User createUser(SocialPlatform socialPlatform, Long socialId, OnboardingInfo onboardingInfo) {
+        User user = User.builder()
+                .socialPlatform(socialPlatform)
+                .socialId(socialId)
+                .onboardingInfo(onboardingInfo)
+                .build();
+        userRepository.save(user);
+        return user;
+    }
+
+    private OnboardingInfo createOnboardingInfo(SocialSignUpRequest request) {
+        List<OnboardingProblem> problemList = new ArrayList<>();
+        for (String problem : request.onboardingRequest().problemList()) {
+            problemList.add(
+                    OnboardingProblem.builder()
+                            .problem(problem)
+                            .build()
+            );
+        }
+
+        OnboardingInfo onboardingInfo = OnboardingInfo.builder()
+                .averageUseTime(request.onboardingRequest().averageUseTime())
+                .problem(problemList)
+                .build();
+        onboardingInfoRepository.save(onboardingInfo);
+        return onboardingInfo;
     }
 }
