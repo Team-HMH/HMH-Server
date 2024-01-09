@@ -169,14 +169,4 @@ public class JwtProvider {
         // HMAC SHA 알고리즘을 사용하는 Secret Key 생성
         return Keys.hmacShaKeyFor(encodedKey.getBytes());
     }
-
-    /**
-     * Principal 객체로부터 User의 식별자를 추출하는 메서드
-     */
-    public static Long getUserFromPrincipal(Principal principal) {
-        if (isNull(principal)) {
-            throw new JwtException(JwtError.EMPTY_PRINCIPLE_EXCEPTION);
-        }
-        return Long.valueOf(principal.getName());
-    }
 }

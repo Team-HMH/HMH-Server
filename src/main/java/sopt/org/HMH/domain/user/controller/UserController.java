@@ -14,8 +14,8 @@ import sopt.org.HMH.domain.user.dto.request.SocialPlatformRequest;
 import sopt.org.HMH.domain.user.dto.request.SocialSignUpRequest;
 import sopt.org.HMH.domain.user.dto.response.LoginResponse;
 import sopt.org.HMH.domain.user.service.UserService;
-import sopt.org.HMH.global.auth.jwt.JwtProvider;
 import sopt.org.HMH.global.auth.jwt.TokenDto;
+import sopt.org.HMH.global.common.Util;
 import sopt.org.HMH.global.common.response.ApiResponse;
 import sopt.org.HMH.global.common.response.EmptyJsonResponse;
 
@@ -57,9 +57,17 @@ public class UserController {
 
     @PostMapping("/logout")
     public ResponseEntity<ApiResponse<?>> logout(Principal principal) {
-        userService.logout(JwtProvider.getUserFromPrincipal(principal));
+        userService.logout(Util.getUserId(principal));
         return ResponseEntity
                 .status(UserSuccess.LOGOUT_SUCCESS.getHttpStatus())
-                .body(ApiResponse.success(UserSuccess.LOGOUT_SUCCESS,new EmptyJsonResponse()));
+                .body(ApiResponse.success(UserSuccess.LOGOUT_SUCCESS, new EmptyJsonResponse()));
+    }
+
+    @GetMapping("/")
+    public ResponseEntity<ApiResponse<?>> getUserInfo(Principal principal) {
+        userService.logout(Util.getUserId(principal));
+        return ResponseEntity
+                .status(UserSuccess.LOGOUT_SUCCESS.getHttpStatus())
+                .body(ApiResponse.success(UserSuccess.LOGOUT_SUCCESS, new EmptyJsonResponse()));
     }
 }
