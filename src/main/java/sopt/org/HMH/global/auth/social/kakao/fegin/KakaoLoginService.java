@@ -17,11 +17,10 @@ public class KakaoLoginService {
     /**
      * 카카오 Acess Token으로 유저의 소셜 Id 불러오는 함수
      */
-    public Long getSocialIdByKakao(String socialAccessToken) {
+    public String getSocialIdByKakao(String socialAccessToken) {
 
         KakaoUserRequest userResponse = kakaoFeignClient.getUserInformation(socialAccessToken);
-        System.out.println("userResponse : " + userResponse);
-        return userResponse.id();
+        return String.valueOf(userResponse.id());
     }
 
     /**

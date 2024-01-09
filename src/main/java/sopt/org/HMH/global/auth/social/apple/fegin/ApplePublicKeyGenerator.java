@@ -1,7 +1,6 @@
 package sopt.org.HMH.global.auth.social.apple.fegin;
 
 import org.springframework.stereotype.Component;
-
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;

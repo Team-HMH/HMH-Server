@@ -42,7 +42,7 @@ public class User extends BaseTimeEntity {
     private SocialPlatform socialPlatform;
 
     @Column(name = "social_id")
-    private Long socialId;
+    private String socialId;
 
     @Column(name = "point")
     @Builder.Default
