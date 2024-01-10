@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class AppleIdentityTokenValidator {
+
     @Value("${oauth2.apple.iss}")
     private String iss;
     @Value("${oauth2.apple.client-id}")

@@ -6,6 +6,7 @@ import sopt.org.HMH.global.auth.social.apple.request.ApplePublicKeys;
 
 @FeignClient(name = "appleFeignClient", url = "${oauth2.apple.base-url}")
 public interface AppleFeignClient {
+    
     @GetMapping("/auth/keys")
     ApplePublicKeys getApplePublicKeys();
 }
