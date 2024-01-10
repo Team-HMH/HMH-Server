@@ -9,7 +9,7 @@ import sopt.org.HMH.global.auth.social.SocialPlatform;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    default User findBySocialPlatformAndSocialIdOrThrowException(SocialPlatform socialPlatform, Long socialId) {
+    default User findBySocialPlatformAndSocialIdOrThrowException(SocialPlatform socialPlatform, String socialId) {
         return findBySocialPlatformAndSocialId(socialPlatform, socialId).orElseThrow(() -> new UserException(
                 UserError.NOT_SIGNUP_USER));
     }
@@ -19,6 +19,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
                 UserError.NOT_FOUND_USER));
     }
 
-    Optional<User> findBySocialPlatformAndSocialId(SocialPlatform socialPlatform, Long socialId);
-    boolean existsBySocialPlatformAndSocialId(SocialPlatform socialPlatform, Long socialId);
+    Optional<User> findBySocialPlatformAndSocialId(SocialPlatform socialPlatform, String socialId);
+    boolean existsBySocialPlatformAndSocialId(SocialPlatform socialPlatform, String socialId);
 }
