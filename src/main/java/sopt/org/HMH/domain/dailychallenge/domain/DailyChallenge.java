@@ -15,8 +15,8 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor
-@Table(name = "day_challenge")
-public class DayChallenge extends BaseTimeEntity {
+@Table(name = "daily_challenge")
+public class DailyChallenge extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
@@ -30,10 +30,10 @@ public class DayChallenge extends BaseTimeEntity {
     private Boolean isSuccess;
     private Boolean didGettingPoint;
 
-    @OneToMany(mappedBy = "dayChallenge")
+    @OneToMany(mappedBy = "dailyChallenge")
     private List<App> apps;
 
-    public DayChallenge(Challenge challenge, Long goalTime) {
+    public DailyChallenge(Challenge challenge, Long goalTime) {
         this.challenge = challenge;
         this.goalTime = goalTime;
         this.isSuccess = true;
