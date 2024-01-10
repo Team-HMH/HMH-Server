@@ -72,7 +72,6 @@ public class UserService {
         return jwtProvider.issueToken(new UserAuthentication(userId, null, null));
     }
 
-    @Transactional
     public void logout(Long userId) {
         jwtProvider.deleteRefreshToken(userId);
     }
@@ -128,11 +127,11 @@ public class UserService {
 
     private User addUser(SocialPlatform socialPlatform, String socialId, OnboardingInfo onboardingInfo, String name) {
         User user = User.builder()
-                    .socialPlatform(socialPlatform)
-                    .socialId(socialId)
-                    .onboardingInfo(onboardingInfo)
-                    .name(name)
-                    .build();
+                .socialPlatform(socialPlatform)
+                .socialId(socialId)
+                .name(name)
+                .onboardingInfo(onboardingInfo)
+                .build();
         userRepository.save(user);
         return user;
     }

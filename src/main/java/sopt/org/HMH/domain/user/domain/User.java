@@ -13,7 +13,6 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.util.List;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,8 +24,6 @@ import sopt.org.HMH.global.common.domain.BaseTimeEntity;
 @Entity
 @Table(name = "users")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-@Builder
 public class User extends BaseTimeEntity {
 
     @Id
@@ -41,7 +38,6 @@ public class User extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private SocialPlatform socialPlatform;
 
-    @Column(name = "social_id")
     private String socialId;
 
     @Column(name = "point")
@@ -57,6 +53,14 @@ public class User extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "user")
     private List<Challenge> challenges;
+
+    @Builder
+    public User(SocialPlatform socialPlatform, String socialId, String name, OnboardingInfo onboardingInfo) {
+        this.socialPlatform = socialPlatform;
+        this.socialId = socialId;
+        this.name = name;
+        this.onboardingInfo = onboardingInfo;
+    }
 
     public void updateSocialInfo(String nickname, String profileImageUrl) {
         this.name = nickname;
