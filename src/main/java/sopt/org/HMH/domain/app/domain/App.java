@@ -2,7 +2,9 @@ package sopt.org.HMH.domain.app.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
-import sopt.org.HMH.domain.dayChallenge.domain.DayChallenge;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import sopt.org.HMH.domain.dailychallenge.domain.DailyChallenge;
 
 @Entity
 @Getter
@@ -15,8 +17,8 @@ public class App {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "day_challenge_id")
-    private DayChallenge dayChallenge;
+    @JoinColumn(name = "daily_challenge_id")
+    private DailyChallenge dailyChallenge;
 
     private String os;
     private String appCode;
@@ -24,8 +26,8 @@ public class App {
     private Long goalTime;
 
     @Builder
-    private App(DayChallenge dayChallenge, String appCode, Long goalTime, String os) {
-        this.dayChallenge = dayChallenge;
+    private App(DailyChallenge dailyChallenge, String appCode, Long goalTime, String os) {
+        this.dailyChallenge = dailyChallenge;
         this.appCode = appCode;
         this.usageTime = 0L;
         this.goalTime = goalTime;
