@@ -58,7 +58,7 @@ public class UserService {
         validateDuplicateUser(socialId, socialPlatform);
 
         OnboardingInfo onboardingInfo = registerOnboardingInfo(request);
-        User user = addUser(socialPlatform, socialId, onboardingInfo, request.name());
+        User user = addUser(socialPlatform, socialId, onboardingInfo.getId(), request.name());
 
         return performLogin(socialAccessToken, socialPlatform, user);
     }
@@ -70,6 +70,11 @@ public class UserService {
         validateUserId(userId);  // userId가 DB에 저장된 유효한 값인지 검사
         jwtProvider.deleteRefreshToken(userId);
         return jwtProvider.issueToken(new UserAuthentication(userId, null, null));
+    }
+
+    @Transactional
+    public void withdraw(Long userId) {
+        User user = userRepository.findByIdOrThrowException(userId);
     }
 
     public void logout(Long userId) {
@@ -125,12 +130,12 @@ public class UserService {
         return LoginResponse.of(loginUser, tokenResponse);
     }
 
-    private User addUser(SocialPlatform socialPlatform, String socialId, OnboardingInfo onboardingInfo, String name) {
+    private User addUser(SocialPlatform socialPlatform, String socialId, Long onboardingInfoId, String name) {
         User user = User.builder()
                 .socialPlatform(socialPlatform)
                 .socialId(socialId)
                 .name(name)
-                .onboardingInfo(onboardingInfo)
+                .onboardingInfoId(onboardingInfoId)
                 .build();
         userRepository.save(user);
         return user;
