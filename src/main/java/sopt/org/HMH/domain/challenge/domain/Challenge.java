@@ -8,7 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import sopt.org.HMH.domain.user.domain.User;
 import sopt.org.HMH.global.common.domain.BaseTimeEntity;
-import sopt.org.HMH.domain.dayChallenge.domain.DayChallenge;
+import sopt.org.HMH.domain.dailychallenge.domain.DayChallenge;
 
 import java.util.ArrayList;
 import java.util.List;

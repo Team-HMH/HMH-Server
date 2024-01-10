@@ -5,8 +5,8 @@ import org.springframework.stereotype.Service;
 import sopt.org.HMH.domain.app.domain.App;
 import sopt.org.HMH.domain.app.dto.request.AppGoalTimeRequest;
 import sopt.org.HMH.domain.app.repository.AppRepository;
-import sopt.org.HMH.domain.dayChallenge.domain.DayChallenge;
-import sopt.org.HMH.domain.dayChallenge.repository.DayChallengeRepository;
+import sopt.org.HMH.domain.dailychallenge.domain.DayChallenge;
+import sopt.org.HMH.domain.dailychallenge.repository.DayChallengeRepository;
 
 import java.util.ArrayList;
 import java.util.List;

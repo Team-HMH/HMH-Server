@@ -1,10 +1,9 @@
-package sopt.org.HMH.domain.dayChallenge.domain;
+package sopt.org.HMH.domain.dailychallenge.domain;
 
 import static jakarta.persistence.FetchType.*;
 import static jakarta.persistence.GenerationType.*;
 
 import jakarta.persistence.*;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import sopt.org.HMH.domain.app.domain.App;

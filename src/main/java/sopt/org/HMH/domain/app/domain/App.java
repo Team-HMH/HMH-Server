@@ -3,7 +3,7 @@ package sopt.org.HMH.domain.app.domain;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import sopt.org.HMH.domain.dayChallenge.domain.DayChallenge;
+import sopt.org.HMH.domain.dailychallenge.domain.DayChallenge;
 
 @Entity
 @Getter

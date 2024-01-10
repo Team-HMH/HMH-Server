@@ -1,4 +1,4 @@
-package sopt.org.HMH.domain.dayChallenge.domain.exception;
+package sopt.org.HMH.domain.dailychallenge.domain.exception;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;

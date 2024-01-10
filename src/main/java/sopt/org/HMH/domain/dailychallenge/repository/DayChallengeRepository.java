@@ -1,9 +1,9 @@
-package sopt.org.HMH.domain.dayChallenge.repository;
+package sopt.org.HMH.domain.dailychallenge.repository;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.jpa.repository.JpaRepository;
-import sopt.org.HMH.domain.dayChallenge.domain.DayChallenge;
-import sopt.org.HMH.domain.dayChallenge.domain.exception.DayChallengeError;
+import sopt.org.HMH.domain.dailychallenge.domain.DayChallenge;
+import sopt.org.HMH.domain.dailychallenge.domain.exception.DayChallengeError;
 
 public interface DayChallengeRepository extends JpaRepository<DayChallenge, Long> {
 

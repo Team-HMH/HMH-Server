@@ -1,10 +1,10 @@
-package sopt.org.HMH.domain.dayChallenge.service;
+package sopt.org.HMH.domain.dailychallenge.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import sopt.org.HMH.domain.challenge.domain.Challenge;
-import sopt.org.HMH.domain.dayChallenge.domain.DayChallenge;
-import sopt.org.HMH.domain.dayChallenge.repository.DayChallengeRepository;
+import sopt.org.HMH.domain.dailychallenge.domain.DayChallenge;
+import sopt.org.HMH.domain.dailychallenge.repository.DayChallengeRepository;
 
 @Service
 @RequiredArgsConstructor
