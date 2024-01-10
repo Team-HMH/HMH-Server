@@ -8,19 +8,15 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
 import java.util.List;
-import lombok.AllArgsConstructor;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
-@Table(name = "onboarding_info")
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class OnboardingInfo {
 
     @Id
@@ -33,4 +29,10 @@ public class OnboardingInfo {
     private List<OnboardingProblem> problem;
 
     private String averageUseTime;
+
+    @Builder
+    public OnboardingInfo(List<OnboardingProblem> problem, String averageUseTime) {
+        this.problem = problem;
+        this.averageUseTime = averageUseTime;
+    }
 }

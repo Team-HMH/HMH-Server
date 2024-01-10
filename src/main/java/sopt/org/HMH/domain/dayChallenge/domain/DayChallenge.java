@@ -38,7 +38,7 @@ public class DayChallenge extends BaseTimeEntity {
     private DayChallenge(Challenge challenge, Long goalTime) {
         this.challenge = challenge;
         this.goalTime = goalTime;
-        this.isSuccess = false;
+        this.isSuccess = true;
         this.didGettingPoint = false;
     }
 }

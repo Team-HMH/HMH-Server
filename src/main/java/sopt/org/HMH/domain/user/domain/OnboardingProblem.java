@@ -16,8 +16,6 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "problem")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-@Builder
 public class OnboardingProblem {
 
     @Id
@@ -26,4 +24,9 @@ public class OnboardingProblem {
     private Long id;
 
     private String problem;
+
+    @Builder
+    public OnboardingProblem(String problem) {
+        this.problem = problem;
+    }
 }
