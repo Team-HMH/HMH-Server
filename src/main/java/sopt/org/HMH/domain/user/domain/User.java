@@ -19,6 +19,7 @@ import lombok.NoArgsConstructor;
 import sopt.org.HMH.domain.challenge.domain.Challenge;
 import sopt.org.HMH.global.auth.social.SocialPlatform;
 import sopt.org.HMH.global.common.domain.BaseTimeEntity;
+import sopt.org.HMH.global.common.domain.PointConstants;
 
 @Getter
 @Entity
@@ -30,16 +31,12 @@ public class User extends BaseTimeEntity {
     @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String name;
 
     @Enumerated(EnumType.STRING)
     private SocialPlatform socialPlatform;
-
     private String socialId;
-
-    @Builder.Default
-    private Integer point = 0;
+    private Integer point;
 
     @Column(columnDefinition = "TEXT")
     private String profileImageUrl;
@@ -57,6 +54,7 @@ public class User extends BaseTimeEntity {
         this.socialId = socialId;
         this.name = name;
         this.onboardingInfo = onboardingInfo;
+        this.point = PointConstants.INITIAL_POINT.getPoint();
     }
 
     public void updateSocialInfo(String nickname, String profileImageUrl) {
