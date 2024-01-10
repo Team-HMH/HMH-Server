@@ -8,7 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import sopt.org.HMH.domain.user.domain.User;
 import sopt.org.HMH.global.common.domain.BaseTimeEntity;
-import sopt.org.HMH.domain.dayChallenge.domain.DayChallenge;
+import sopt.org.HMH.domain.dailychallenge.domain.DailyChallenge;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,11 +31,11 @@ public class Challenge extends BaseTimeEntity {
     private Integer period;
 
     @OneToMany(mappedBy = "challenge")
-    private List<DayChallenge> dayChallenges;
+    private List<DailyChallenge> dailyChallenges;
 
     public Challenge(User user, Integer period) {
         this.user = user;
         this.period = period;
-        this.dayChallenges = new ArrayList<>();
+        this.dailyChallenges = new ArrayList<>();
     }
 }
