@@ -13,10 +13,11 @@ import sopt.org.HMH.domain.user.domain.exception.UserException;
 import sopt.org.HMH.domain.user.dto.request.SocialPlatformRequest;
 import sopt.org.HMH.domain.user.dto.request.SocialSignUpRequest;
 import sopt.org.HMH.domain.user.dto.response.LoginResponse;
+import sopt.org.HMH.domain.user.dto.response.UserInfoResponse;
 import sopt.org.HMH.domain.user.repository.OnboardingInfoRepository;
 import sopt.org.HMH.domain.user.repository.UserRepository;
 import sopt.org.HMH.global.auth.jwt.JwtProvider;
-import sopt.org.HMH.global.auth.jwt.TokenDto;
+import sopt.org.HMH.global.auth.jwt.TokenResponse;
 import sopt.org.HMH.global.auth.jwt.exception.JwtError;
 import sopt.org.HMH.global.auth.jwt.exception.JwtException;
 import sopt.org.HMH.global.auth.security.UserAuthentication;
@@ -54,14 +55,14 @@ public class UserService {
         // 이미 회원가입된 유저가 있다면 400 Error 발생
         validateDuplicateUser(socialId, socialPlatform);
 
-        OnboardingInfo onboardingInfo = createOnboardingInfo(request);
-        User user = createUser(socialPlatform, socialId, onboardingInfo);
+        OnboardingInfo onboardingInfo = registerOnboardingInfo(request);
+        User user = addUser(socialPlatform, socialId, onboardingInfo);
 
         return performLogin(socialAccessToken, socialPlatform, user);
     }
 
     @Transactional
-    public TokenDto reissueToken(String refreshToken) {
+    public TokenResponse reissueToken(String refreshToken) {
         refreshToken = parseTokenString(refreshToken);
         Long userId = jwtProvider.validateRefreshToken(refreshToken);
         validateUserId(userId);  // userId가 DB에 저장된 유효한 값인지 검사
@@ -72,6 +73,11 @@ public class UserService {
     @Transactional
     public void logout(Long userId) {
         jwtProvider.deleteRefreshToken(userId);
+    }
+
+    public UserInfoResponse getUserInfo(Long userId) {
+        User user = userRepository.findByIdOrThrowException(userId);
+        return UserInfoResponse.of(user);
     }
 
     private void validateUserId(Long userId) {
@@ -113,11 +119,11 @@ public class UserService {
         if (socialPlatform == SocialPlatform.KAKAO) {
             kakaoLoginService.updateUserInfoByKakao(loginUser, socialAccessToken);
         }
-        TokenDto tokenDto = jwtProvider.issueToken(new UserAuthentication(loginUser.getId(), null, null));
-        return LoginResponse.of(loginUser, tokenDto);
+        TokenResponse tokenResponse = jwtProvider.issueToken(new UserAuthentication(loginUser.getId(), null, null));
+        return LoginResponse.of(loginUser, tokenResponse);
     }
 
-    private User createUser(SocialPlatform socialPlatform, Long socialId, OnboardingInfo onboardingInfo) {
+    private User addUser(SocialPlatform socialPlatform, Long socialId, OnboardingInfo onboardingInfo) {
         User user = User.builder()
                 .socialPlatform(socialPlatform)
                 .socialId(socialId)
@@ -127,7 +133,7 @@ public class UserService {
         return user;
     }
 
-    private OnboardingInfo createOnboardingInfo(SocialSignUpRequest request) {
+    private OnboardingInfo registerOnboardingInfo(SocialSignUpRequest request) {
         List<OnboardingProblem> problemList = new ArrayList<>();
         for (String problem : request.onboardingRequest().problemList()) {
             problemList.add(
