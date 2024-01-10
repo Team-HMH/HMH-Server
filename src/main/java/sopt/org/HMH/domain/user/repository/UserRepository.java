@@ -20,4 +20,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     }
 
     Optional<User> findBySocialPlatformAndSocialId(SocialPlatform socialPlatform, Long socialId);
+    boolean existsBySocialPlatformAndSocialId(SocialPlatform socialPlatform, Long socialId);
 }

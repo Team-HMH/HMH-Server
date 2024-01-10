@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import sopt.org.HMH.domain.user.domain.exception.UserSuccess;
-import sopt.org.HMH.domain.user.dto.request.SocialLoginRequest;
+import sopt.org.HMH.domain.user.dto.request.SocialPlatformRequest;
+import sopt.org.HMH.domain.user.dto.request.SocialSignUpRequest;
 import sopt.org.HMH.domain.user.dto.response.LoginResponse;
 import sopt.org.HMH.domain.user.service.UserService;
 import sopt.org.HMH.global.auth.jwt.JwtProvider;
@@ -28,11 +29,21 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<LoginResponse>> login(
             @RequestHeader("Authorization") String socialAccessToken,
-            @RequestBody SocialLoginRequest request
+            @RequestBody SocialPlatformRequest request
     ) {
         return ResponseEntity
                 .status(UserSuccess.LOGIN_SUCCESS.getHttpStatus())
                 .body(ApiResponse.success(UserSuccess.LOGIN_SUCCESS, userService.login(socialAccessToken, request)));
+    }
+
+    @PostMapping("/signup")
+    public ResponseEntity<ApiResponse<LoginResponse>> signup(
+            @RequestHeader("Authorization") String socialAccessToken,
+            @RequestBody SocialSignUpRequest request
+    ) {
+        return ResponseEntity
+                .status(UserSuccess.SIGNUP_SUCCESS.getHttpStatus())
+                .body(ApiResponse.success(UserSuccess.SIGNUP_SUCCESS, userService.signup(socialAccessToken, request)));
     }
 
     @GetMapping("/reissue")
