@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sopt.org.HMH.domain.challenge.domain.exception.ChallengeSuccess;
 import sopt.org.HMH.domain.challenge.dto.request.ChallengeRequest;
+import sopt.org.HMH.domain.challenge.dto.response.CreatedChallengeResponse;
 import sopt.org.HMH.domain.challenge.service.ChallengeService;
 import sopt.org.HMH.global.common.response.ApiResponse;
 
@@ -16,13 +17,13 @@ public class ChallengeController {
     private final ChallengeService challengeService;
 
     @PostMapping
-    public ResponseEntity<ApiResponse> orderAdd(
+    public ResponseEntity<ApiResponse<CreatedChallengeResponse>> orderAddChallenge(
+            @RequestHeader("Authorization") final String socialAccessToken,
             @RequestHeader("OS") final String os,
             @RequestBody final ChallengeRequest request
     ) {
-        // db에 임시 유저 (userId=1) 존재 (임시 사용)
         return ResponseEntity
                 .status(ChallengeSuccess.SUCCESS_CREATE_CHALLENGE.getHttpStatus())
-                .body(ApiResponse.success(ChallengeSuccess.SUCCESS_CREATE_CHALLENGE, challengeService.addChallenge(1L, request)));
+                .body(ApiResponse.success(ChallengeSuccess.SUCCESS_CREATE_CHALLENGE, challengeService.addChallenge(socialAccessToken, request)));
     }
 }
