@@ -11,13 +11,11 @@ public enum UserError implements ErrorBase {
     INVALID_USER(HttpStatus.BAD_REQUEST, "Principle 객체가 없습니다."),
     DUPLICATE_USER(HttpStatus.BAD_REQUEST, "이미 회원가입된 유저입니다."),
 
-    // 401 UNAUTHORIZED
-
     // 403 FORBIDDEN
+    NOT_SIGNUP_USER(HttpStatus.FORBIDDEN, "회원가입된 유저가 아닙니다. 회원가입을 진행해주세요."),
 
     // 404 NOT FOUND
-    NOT_FOUND_USER(HttpStatus.NOT_FOUND, "User를 찾을 수 없습니다."),
-    NOT_SIGNUP_USER(HttpStatus.NOT_FOUND, "회원가입된 유저가 아닙니다. 회원가입을 진행해주세요.");
+    NOT_FOUND_USER(HttpStatus.NOT_FOUND, "User를 찾을 수 없습니다.");
 
     private final HttpStatus status;
     private final String errorMessage;
