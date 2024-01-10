@@ -10,6 +10,8 @@ public interface DayChallengeRepository extends JpaRepository<DayChallenge, Long
     default DayChallenge findByIdOrThrowException(Long dayChallengeId) {
         return findById(dayChallengeId).orElseThrow(() -> new EntityNotFoundException(DayChallengeError.CHALLENGE_NOT_FOUND.getErrorMessage()));
     }
+
+    DayChallenge findFirstByChallengeIdOrderByCreatedAtDesc(Long challengeId);
 }
 
 
