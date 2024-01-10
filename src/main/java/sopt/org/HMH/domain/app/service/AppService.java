@@ -40,7 +40,7 @@ public class AppService {
     public void removeApp(Long userId, AppDeleteRequest request) {
         Long latestChallengeId = challengeRepository.findFirstByUserIdOrderByCreatedAtDesc(userId).getId();
         Long latestDayChallengeId = dailyChallengeRepository.findFirstByChallengeIdOrderByCreatedAtDesc(latestChallengeId).getId();
-        Long appId = appRepository.findByDayChallengeIdAndAppCode(latestDayChallengeId, request.appCode()).getId();
+        Long appId = appRepository.findByDailyChallengeIdAndAppCode(latestDayChallengeId, request.appCode()).getId();
 
         appRepository.deleteById(appId);
     }
