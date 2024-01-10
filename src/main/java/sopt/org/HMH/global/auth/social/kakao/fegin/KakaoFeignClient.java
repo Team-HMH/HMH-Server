@@ -10,5 +10,5 @@ import sopt.org.HMH.global.auth.social.kakao.request.KakaoUserRequest;
 public interface KakaoFeignClient {
 
     @GetMapping(value = "/v2/user/me")
-    KakaoUserRequest getUserInformation(@RequestHeader(HttpHeaders.AUTHORIZATION) String accessToken);
+    KakaoUserRequest getUserInformation(@RequestHeader(HttpHeaders.AUTHORIZATION) final String accessToken);
 }

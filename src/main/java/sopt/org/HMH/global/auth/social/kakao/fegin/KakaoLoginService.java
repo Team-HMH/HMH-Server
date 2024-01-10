@@ -17,7 +17,7 @@ public class KakaoLoginService {
     /**
      * 카카오 Acess Token으로 유저의 소셜 Id 불러오는 함수
      */
-    public String getSocialIdByKakao(String socialAccessToken) {
+    public String getSocialIdByKakao(final String socialAccessToken) {
 
         KakaoUserRequest userResponse = kakaoFeignClient.getUserInformation(socialAccessToken);
         return String.valueOf(userResponse.id());
@@ -26,7 +26,7 @@ public class KakaoLoginService {
     /**
      * 카카오 Access Token으로 유저 정보 업데이트
      */
-    public void updateUserInfoByKakao(User loginUser, String socialAccessToken) {
+    public void updateUserInfoByKakao(User loginUser, final String socialAccessToken) {
         KakaoUserRequest userResponse = kakaoFeignClient.getUserInformation(socialAccessToken);
 
         String nickname = userResponse.kakaoAccount().profile().nickname();
