@@ -9,7 +9,11 @@ import sopt.org.HMH.domain.challenge.dto.response.CreatedChallengeResponse;
 import sopt.org.HMH.domain.challenge.repository.ChallengeRepository;
 import sopt.org.HMH.domain.dayChallenge.service.DayChallengeService;
 import sopt.org.HMH.domain.user.domain.User;
+import sopt.org.HMH.domain.user.repository.UserRepository;
 import sopt.org.HMH.domain.user.service.UserService;
+import sopt.org.HMH.global.common.Util;
+
+import java.security.Principal;
 
 @Service
 @RequiredArgsConstructor
@@ -19,15 +23,17 @@ public class ChallengeService {
     private final ChallengeRepository challengeRepository;
 
     private final DayChallengeService dayChallengeService;
-    private final UserService userService;
+    private final UserRepository userRepository;
 
     @Transactional
-    public CreatedChallengeResponse addChallenge(Long userId, ChallengeRequest request) {
-        User user = userService.getUserById(userId);
+    public CreatedChallengeResponse addChallenge(Long userId,
+                                                 ChallengeRequest request,
+                                                 String os) {
+        User user = userRepository.findByIdOrThrowException(userId);
         Challenge challenge = challengeRepository.save(Challenge.builder()
                         .period(request.period())
                         .user(user).build());
-        dayChallengeService.addDayChallenge(challenge, request.goalTime(), request.apps());
+        dayChallengeService.addDayChallenge(challenge, request.goalTime(), request.apps(), os);
 
         return CreatedChallengeResponse.of(challenge.getId());
     }

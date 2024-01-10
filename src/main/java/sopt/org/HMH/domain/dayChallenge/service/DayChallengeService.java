@@ -21,11 +21,11 @@ public class DayChallengeService {
     private final AppService appService;
 
     @Transactional
-    public Long addDayChallenge(Challenge challenge, Long goalTime, List<AppGoalTimeRequest> apps) {
+    public Long addDayChallenge(Challenge challenge, Long goalTime, List<AppGoalTimeRequest> apps, String os) {
         DayChallenge dayChallenge = dayChallengeRepository.save(DayChallenge.builder()
                 .challenge(challenge)
                 .goalTime(goalTime).build());
-        appService.addAppByChallengeId(dayChallenge.getId(), apps);
+        appService.addAppByChallengeId(dayChallenge.getId(), apps, os);
 
         return dayChallenge.getId();
     }

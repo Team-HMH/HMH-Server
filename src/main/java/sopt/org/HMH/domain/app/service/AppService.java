@@ -11,7 +11,9 @@ import sopt.org.HMH.domain.app.repository.AppRepository;
 import sopt.org.HMH.domain.challenge.repository.ChallengeRepository;
 import sopt.org.HMH.domain.dayChallenge.domain.DayChallenge;
 import sopt.org.HMH.domain.dayChallenge.repository.DayChallengeRepository;
+import sopt.org.HMH.global.common.Util;
 
+import java.security.Principal;
 import java.util.List;
 
 @Service
@@ -24,14 +26,15 @@ public class AppService {
     private final ChallengeRepository challengeRepository;
 
     @Transactional
-    public void addAppByChallengeId(Long dayChallengeId, List<AppGoalTimeRequest> requests) {
+    public void addAppByChallengeId(Long dayChallengeId, List<AppGoalTimeRequest> requests, String os) {
         val dayChallenge = dayChallengeRepository.findByIdOrThrowException(dayChallengeId);
 
         for (AppGoalTimeRequest request : requests) {
             appRepository.save(App.builder()
-                            .dayChallenge(dayChallenge)
-                            .appCode(request.appCode())
-                            .goalTime(request.goalTime()).build());
+                    .dayChallenge(dayChallenge)
+                    .appCode(request.appCode())
+                    .goalTime(request.goalTime())
+                    .os(os).build());
         }
     }
 
@@ -45,12 +48,13 @@ public class AppService {
     }
 
     @Transactional
-    public void addAppsByUserId(Long userId, List<AppGoalTimeRequest> requests) {
+    public void addAppsByUserId(Long userId, List<AppGoalTimeRequest> requests, String os) {
         for (AppGoalTimeRequest request : requests) {
             appRepository.save(App.builder()
                     .dayChallenge(getTodayChallengeId(userId))
                     .appCode(request.appCode())
-                    .goalTime(request.goalTime()).build());
+                    .goalTime(request.goalTime())
+                    .os(os).build());
         }
     }
 

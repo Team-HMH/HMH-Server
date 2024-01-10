@@ -24,10 +24,11 @@ public class App {
     private Long goalTime;
 
     @Builder
-    private App(DayChallenge dayChallenge, String appCode, Long goalTime) {
+    private App(DayChallenge dayChallenge, String appCode, Long goalTime, String os) {
         this.dayChallenge = dayChallenge;
         this.appCode = appCode;
         this.useTime = 0L;
         this.goalTime = goalTime;
+        this.os = os;
     }
 }

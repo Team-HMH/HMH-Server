@@ -5,6 +5,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sopt.org.HMH.domain.challenge.service.ChallengeService;
 import sopt.org.HMH.domain.user.domain.OnboardingInfo;
 import sopt.org.HMH.domain.user.domain.OnboardingProblem;
 import sopt.org.HMH.domain.user.domain.User;
@@ -33,6 +34,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final OnboardingInfoRepository onboardingInfoRepository;
     private final KakaoLoginService kakaoLoginService;
+    private final ChallengeService challengeService;
 
     @Transactional
     public LoginResponse login(String socialAccessToken, SocialPlatformRequest request) {
@@ -47,7 +49,7 @@ public class UserService {
     }
 
     @Transactional
-    public LoginResponse signup(String socialAccessToken, SocialSignUpRequest request) {
+    public LoginResponse signup(String socialAccessToken, SocialSignUpRequest request, String os) {
 
         SocialPlatform socialPlatform = request.socialPlatform();
         Long socialId = getSocialIdBySocialAccessToken(socialPlatform, socialAccessToken);
@@ -57,6 +59,8 @@ public class UserService {
 
         OnboardingInfo onboardingInfo = registerOnboardingInfo(request);
         User user = addUser(socialPlatform, socialId, onboardingInfo);
+
+        challengeService.addChallenge(user.getId(), request.challengeRequest(), os);
 
         return performLogin(socialAccessToken, socialPlatform, user);
     }
