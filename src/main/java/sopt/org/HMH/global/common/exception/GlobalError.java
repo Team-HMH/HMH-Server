@@ -6,6 +6,7 @@ import sopt.org.HMH.global.common.exception.base.ErrorBase;
 
 @AllArgsConstructor
 public enum GlobalError implements ErrorBase {
+
     ;
 
     private final HttpStatus status;
@@ -25,5 +26,4 @@ public enum GlobalError implements ErrorBase {
     public String getErrorMessage() {
         return this.errorMessage;
     }
-
 }

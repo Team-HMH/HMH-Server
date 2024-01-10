@@ -13,6 +13,3 @@ public interface DayChallengeRepository extends JpaRepository<DayChallenge, Long
 
     DayChallenge findFirstByChallengeIdOrderByCreatedAtDesc(Long challengeId);
 }
-
-
-

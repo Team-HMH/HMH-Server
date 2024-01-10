@@ -25,5 +25,4 @@ public enum GlobalSuccess implements SuccessBase {
     public String getSuccessMessage() {
         return this.successMessage;
     }
-
 }
