@@ -17,4 +17,11 @@ public class DayChallengeService {
 
         return dayChallenge.getId();
     }
+
+    public void ChangeDayChallengeStatusFailure(Long userId) {
+        // userID를 전달해서 DayChallenge를 찾는 로직
+        //getCurrentChallengeByUserId(userId);
+        //DayChallenge dayChallenge; // 이건 삭제
+        //dayChallenge.changeStatusFailure();
+    }
 }
