@@ -6,10 +6,9 @@ import sopt.org.HMH.global.auth.social.SocialPlatform;
 
 public record SocialSignUpRequest(
         SocialPlatform socialPlatform,
-
+        String name,
         @JsonProperty(value = "onboarding")
         OnboardingRequest onboardingRequest,
-
         @JsonProperty(value = "challenge")
         ChallengeRequest challengeRequest
 ) {

@@ -6,7 +6,7 @@ import sopt.org.HMH.global.auth.jwt.exception.JwtException;
 
 import static java.util.Objects.isNull;
 
-public class Util {
+public class UserIdConvertor {
 
     /**
      * Principal 객체로부터 User의 식별자를 추출하는 메서드
