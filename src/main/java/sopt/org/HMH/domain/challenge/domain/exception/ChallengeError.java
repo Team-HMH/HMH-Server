@@ -6,6 +6,7 @@ import sopt.org.HMH.global.common.exception.base.ErrorBase;
 
 @AllArgsConstructor
 public enum ChallengeError implements ErrorBase {
+
     CHALLENGE_NOT_FOUND(HttpStatus.NOT_FOUND, "챌린지 찾기 불가"),
     ;
 

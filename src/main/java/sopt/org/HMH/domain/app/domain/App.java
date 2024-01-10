@@ -1,15 +1,12 @@
 package sopt.org.HMH.domain.app.domain;
 
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import sopt.org.HMH.domain.dayChallenge.domain.DayChallenge;
 
 @Entity
 @Getter
-@NoArgsConstructor
-@Table(name = "app")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class App {
 
     @Id
@@ -26,7 +23,8 @@ public class App {
     private Long useTime;
     private Long goalTime;
 
-    public App(DayChallenge dayChallenge, String appCode, Long goalTime) {
+    @Builder
+    private App(DayChallenge dayChallenge, String appCode, Long goalTime) {
         this.dayChallenge = dayChallenge;
         this.appCode = appCode;
         this.useTime = 0L;

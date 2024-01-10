@@ -6,16 +6,14 @@ import sopt.org.HMH.global.common.domain.BaseTimeEntity;
 
 import java.util.List;
 
-import static jakarta.persistence.GenerationType.IDENTITY;
-
 @Entity
 @Table(name = "user")
 public class User extends BaseTimeEntity {
 
     @Id
-    @GeneratedValue(strategy = IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
-    private Integer Id;
+    private Long id;
 
     @OneToMany(mappedBy = "user")
     private List<Challenge> challenges;

@@ -11,7 +11,7 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public User getUserId(Long userId) {
+    public User getUserById(Long userId) {
         return userRepository.findByIdOrThrowException(userId);
     }
 }

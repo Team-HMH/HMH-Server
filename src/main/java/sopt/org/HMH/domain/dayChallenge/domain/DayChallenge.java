@@ -11,12 +11,12 @@ import sopt.org.HMH.domain.app.domain.App;
 import sopt.org.HMH.global.common.domain.BaseTimeEntity;
 import sopt.org.HMH.domain.challenge.domain.Challenge;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Getter
 @NoArgsConstructor
-@Table(name = "day_challenge")
 public class DayChallenge extends BaseTimeEntity {
 
     @Id
@@ -32,9 +32,10 @@ public class DayChallenge extends BaseTimeEntity {
     private Boolean didGettingPoint;
 
     @OneToMany(mappedBy = "dayChallenge")
-    private List<App> apps;
+    private final List<App> apps = new ArrayList<>();
 
-    public DayChallenge(Challenge challenge, Long goalTime) {
+    @Builder
+    private DayChallenge(Challenge challenge, Long goalTime) {
         this.challenge = challenge;
         this.goalTime = goalTime;
         this.isSuccess = false;

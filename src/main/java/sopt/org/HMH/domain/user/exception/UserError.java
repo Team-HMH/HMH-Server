@@ -6,6 +6,7 @@ import sopt.org.HMH.global.common.exception.base.ErrorBase;
 
 @AllArgsConstructor
 public enum UserError implements ErrorBase {
+
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "유저 찾기 불가"),
     ;
 

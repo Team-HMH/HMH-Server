@@ -17,8 +17,8 @@ public class ChallengeController {
 
     @PostMapping
     public ResponseEntity<ApiResponse> orderAdd(
-            @RequestHeader("os") String os,
-            @RequestBody ChallengeRequest request
+            @RequestHeader("OS") final String os,
+            @RequestBody final ChallengeRequest request
     ) {
         // db에 임시 유저 (userId=1) 존재 (임시 사용)
         return ResponseEntity
