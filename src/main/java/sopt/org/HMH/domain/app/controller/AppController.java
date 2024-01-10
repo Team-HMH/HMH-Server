@@ -8,8 +8,11 @@ import sopt.org.HMH.domain.app.dto.request.AppArrayGoalTimeRequest;
 import sopt.org.HMH.domain.app.dto.request.AppDeleteRequest;
 import sopt.org.HMH.domain.app.service.AppService;
 import sopt.org.HMH.global.auth.jwt.JwtProvider;
+import sopt.org.HMH.global.common.Util;
 import sopt.org.HMH.global.common.response.ApiResponse;
 import sopt.org.HMH.global.common.response.EmptyJsonResponse;
+
+import java.security.Principal;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,11 +23,11 @@ public class AppController {
 
     @PostMapping
     public ResponseEntity<ApiResponse<?>> orderAddApp(
-            @RequestHeader("Authorization") final String socialAccessToken,
+            Principal principal,
             @RequestHeader("OS") final String os,
             @RequestBody final AppArrayGoalTimeRequest request
     ) {
-        appService.addAppsByUserId(socialAccessToken, request.apps());
+        appService.addAppsByUserId(Util.getUserId(principal), request.apps(), os);
         return ResponseEntity
                 .status(AppSuccess.SUCCESS_ADD_APP.getHttpStatus())
                 .body(ApiResponse.success(AppSuccess.SUCCESS_ADD_APP, new EmptyJsonResponse()));
@@ -32,11 +35,11 @@ public class AppController {
 
     @DeleteMapping
     public ResponseEntity<ApiResponse<?>> orderRemoveApp(
-            @RequestHeader("Authorization") final String socialAccessToken,
+            Principal principal,
             @RequestHeader("OS") final String os,
             @RequestBody final AppDeleteRequest request
     ) {
-        appService.removeApp(socialAccessToken, request);
+        appService.removeApp(Util.getUserId(principal), request);
         return ResponseEntity
                 .status(AppSuccess.SUCCESS_DELETE_APP.getHttpStatus())
                 .body(ApiResponse.success(AppSuccess.SUCCESS_DELETE_APP, new EmptyJsonResponse()));
