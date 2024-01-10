@@ -40,4 +40,8 @@ public class DayChallenge extends BaseTimeEntity {
         this.isSuccess = true;
         this.didGettingPoint = false;
     }
+
+    protected void changeStatusFailure() {
+        this.isSuccess = false;
+    }
 }
