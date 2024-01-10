@@ -64,9 +64,8 @@ public class UserController {
                 .body(ApiResponse.success(UserSuccess.LOGOUT_SUCCESS, new EmptyJsonResponse()));
     }
 
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<ApiResponse<UserInfoResponse>> orderGetUserInfo(Principal principal) {
-        System.out.println(Util.getUserId(principal));
         return ResponseEntity
                 .status(UserSuccess.GET_USER_INFO_SUCCESS.getHttpStatus())
                 .body(ApiResponse.success(UserSuccess.GET_USER_INFO_SUCCESS, userService.getUserInfo(Util.getUserId(principal))));
