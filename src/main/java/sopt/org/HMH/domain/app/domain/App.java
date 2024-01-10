@@ -20,14 +20,14 @@ public class App {
 
     private String os;
     private String appCode;
-    private Long useTime;
+    private Long usageTime;
     private Long goalTime;
 
     @Builder
     private App(DayChallenge dayChallenge, String appCode, Long goalTime, String os) {
         this.dayChallenge = dayChallenge;
         this.appCode = appCode;
-        this.useTime = 0L;
+        this.usageTime = 0L;
         this.goalTime = goalTime;
         this.os = os;
     }
