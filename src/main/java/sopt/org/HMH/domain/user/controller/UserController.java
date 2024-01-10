@@ -29,8 +29,8 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<LoginResponse>> orderLogin(
-            @RequestHeader("Authorization") String socialAccessToken,
-            @RequestBody SocialPlatformRequest request
+            @RequestHeader("Authorization") final String socialAccessToken,
+            @RequestBody final SocialPlatformRequest request
     ) {
         return ResponseEntity
                 .status(UserSuccess.LOGIN_SUCCESS.getHttpStatus())
@@ -39,8 +39,8 @@ public class UserController {
 
     @PostMapping("/signup")
     public ResponseEntity<ApiResponse<LoginResponse>> orderSignup(
-            @RequestHeader("Authorization") String socialAccessToken,
-            @RequestBody SocialSignUpRequest request
+            @RequestHeader("Authorization") final String socialAccessToken,
+            @RequestBody final SocialSignUpRequest request
     ) {
         return ResponseEntity
                 .status(UserSuccess.SIGNUP_SUCCESS.getHttpStatus())
@@ -49,7 +49,7 @@ public class UserController {
 
     @GetMapping("/reissue")
     public ResponseEntity<ApiResponse<TokenResponse>> orderReissue(
-            @RequestHeader("Authorization") String refreshToken
+            @RequestHeader("Authorization") final String refreshToken
     ) {
         return ResponseEntity
                 .status(UserSuccess.REISSUE_SUCCESS.getHttpStatus())
@@ -64,9 +64,8 @@ public class UserController {
                 .body(ApiResponse.success(UserSuccess.LOGOUT_SUCCESS, new EmptyJsonResponse()));
     }
 
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<ApiResponse<UserInfoResponse>> orderGetUserInfo(Principal principal) {
-        System.out.println(Util.getUserId(principal));
         return ResponseEntity
                 .status(UserSuccess.GET_USER_INFO_SUCCESS.getHttpStatus())
                 .body(ApiResponse.success(UserSuccess.GET_USER_INFO_SUCCESS, userService.getUserInfo(Util.getUserId(principal))));
