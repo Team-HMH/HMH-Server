@@ -8,6 +8,7 @@ import sopt.org.HMH.domain.app.dto.request.AppArrayGoalTimeRequest;
 import sopt.org.HMH.domain.app.dto.request.AppDeleteRequest;
 import sopt.org.HMH.domain.app.service.AppService;
 import sopt.org.HMH.global.common.response.ApiResponse;
+import sopt.org.HMH.global.common.response.EmptyJsonResponse;
 
 @RestController
 @RequiredArgsConstructor
@@ -17,7 +18,7 @@ public class AppController {
     private final AppService appService;
 
     @PostMapping
-    public ResponseEntity<ApiResponse> orderAdd(
+    public ResponseEntity<ApiResponse<?>> orderAddApp(
             @RequestHeader("os") String os,
             @RequestBody AppArrayGoalTimeRequest request
     ) {
@@ -25,17 +26,17 @@ public class AppController {
         appService.addAppsByUserId(1L, request.apps());
         return ResponseEntity
                 .status(AppSuccess.SUCCESS_ADD_APP.getHttpStatus())
-                .body(ApiResponse.success(AppSuccess.SUCCESS_ADD_APP));
+                .body(ApiResponse.success(AppSuccess.SUCCESS_ADD_APP, new EmptyJsonResponse()));
     }
 
     @DeleteMapping
-    public ResponseEntity<ApiResponse> orderRemove(
+    public ResponseEntity<ApiResponse<?>> orderRemoveApp(
             @RequestHeader("os") String os,
             @RequestBody AppDeleteRequest request
     ) {
         appService.removeApp(1L, request);
         return ResponseEntity
                 .status(AppSuccess.SUCCESS_DELETE_APP.getHttpStatus())
-                .body(ApiResponse.success(AppSuccess.SUCCESS_DELETE_APP));
+                .body(ApiResponse.success(AppSuccess.SUCCESS_DELETE_APP, new EmptyJsonResponse()));
     }
 }
