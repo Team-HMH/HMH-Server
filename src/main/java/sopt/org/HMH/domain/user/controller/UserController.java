@@ -29,8 +29,8 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<LoginResponse>> orderLogin(
-            @RequestHeader("Authorization") String socialAccessToken,
-            @RequestBody SocialPlatformRequest request
+            @RequestHeader("Authorization") final String socialAccessToken,
+            @RequestBody final SocialPlatformRequest request
     ) {
         return ResponseEntity
                 .status(UserSuccess.LOGIN_SUCCESS.getHttpStatus())
@@ -39,8 +39,8 @@ public class UserController {
 
     @PostMapping("/signup")
     public ResponseEntity<ApiResponse<LoginResponse>> orderSignup(
-            @RequestHeader("Authorization") String socialAccessToken,
-            @RequestBody SocialSignUpRequest request
+            @RequestHeader("Authorization") final String socialAccessToken,
+            @RequestBody final SocialSignUpRequest request
     ) {
         return ResponseEntity
                 .status(UserSuccess.SIGNUP_SUCCESS.getHttpStatus())
@@ -49,7 +49,7 @@ public class UserController {
 
     @GetMapping("/reissue")
     public ResponseEntity<ApiResponse<TokenResponse>> orderReissue(
-            @RequestHeader("Authorization") String refreshToken
+            @RequestHeader("Authorization") final String refreshToken
     ) {
         return ResponseEntity
                 .status(UserSuccess.REISSUE_SUCCESS.getHttpStatus())

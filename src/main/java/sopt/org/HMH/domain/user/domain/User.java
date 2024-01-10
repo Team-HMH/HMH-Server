@@ -31,20 +31,17 @@ public class User extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name")
     private String name;
 
-    @Column(name = "social_platform")
     @Enumerated(EnumType.STRING)
     private SocialPlatform socialPlatform;
 
     private String socialId;
 
-    @Column(name = "point")
     @Builder.Default
     private Integer point = 0;
 
-    @Column(name = "profile_image_url")
+    @Column(columnDefinition = "TEXT")
     private String profileImageUrl;
 
     @OneToOne
