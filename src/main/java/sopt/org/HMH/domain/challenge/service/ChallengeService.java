@@ -2,6 +2,7 @@ package sopt.org.HMH.domain.challenge.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import sopt.org.HMH.domain.app.service.AppService;
 import sopt.org.HMH.domain.challenge.domain.Challenge;
 import sopt.org.HMH.domain.challenge.dto.request.ChallengeRequest;
@@ -13,10 +14,10 @@ import sopt.org.HMH.domain.user.service.UserService;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class ChallengeService {
 
     private final ChallengeRepository challengeRepository;
-
     private final DayChallengeService dayChallengeService;
     private final AppService appService;
     private final UserService userService;
