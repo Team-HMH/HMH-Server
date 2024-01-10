@@ -10,10 +10,6 @@ import sopt.org.HMH.domain.challenge.repository.ChallengeRepository;
 import sopt.org.HMH.domain.dayChallenge.service.DayChallengeService;
 import sopt.org.HMH.domain.user.domain.User;
 import sopt.org.HMH.domain.user.repository.UserRepository;
-import sopt.org.HMH.domain.user.service.UserService;
-import sopt.org.HMH.global.common.Util;
-
-import java.security.Principal;
 
 @Service
 @RequiredArgsConstructor

@@ -11,9 +11,7 @@ import sopt.org.HMH.domain.app.repository.AppRepository;
 import sopt.org.HMH.domain.challenge.repository.ChallengeRepository;
 import sopt.org.HMH.domain.dayChallenge.domain.DayChallenge;
 import sopt.org.HMH.domain.dayChallenge.repository.DayChallengeRepository;
-import sopt.org.HMH.global.common.Util;
 
-import java.security.Principal;
 import java.util.List;
 
 @Service
