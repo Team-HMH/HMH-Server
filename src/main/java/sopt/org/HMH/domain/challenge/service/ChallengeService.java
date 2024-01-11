@@ -13,13 +13,12 @@ import sopt.org.HMH.domain.user.repository.UserRepository;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class ChallengeService {
 
     private final ChallengeRepository challengeRepository;
+    private final UserRepository userRepository;
 
     private final DailyChallengeService dailyChallengeService;
-    private final UserRepository userRepository;
 
     @Transactional
     public AddChallengeResponse addChallenge(Long userId,
