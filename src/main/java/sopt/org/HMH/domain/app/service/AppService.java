@@ -9,8 +9,8 @@ import sopt.org.HMH.domain.app.dto.request.AppDeleteRequest;
 import sopt.org.HMH.domain.app.dto.request.AppGoalTimeRequest;
 import sopt.org.HMH.domain.app.repository.AppRepository;
 import sopt.org.HMH.domain.challenge.repository.ChallengeRepository;
-import sopt.org.HMH.domain.dailychallenge.domain.DailyChallenge;
 import sopt.org.HMH.domain.dailychallenge.repository.DailyChallengeRepository;
+import sopt.org.HMH.global.util.IdConverter;
 
 import java.util.List;
 
@@ -37,7 +37,8 @@ public class AppService {
 
     @Transactional
     public void removeApp(Long userId, AppDeleteRequest request, String os) {
-        Long todayDailyChallengeId = getTodayDailyChallenge(userId).getId();
+        Long todayDailyChallengeId = IdConverter.getTodayDailyChallenge(challengeRepository,
+                dailyChallengeRepository, userId).getId();
         App app = appRepository.findByDailyChallengeIdAndAppCodeAndOs(todayDailyChallengeId, request.appCode(), os);
 
         appRepository.deleteById(app.getId());
@@ -47,16 +48,11 @@ public class AppService {
     public void addAppsByUserId(Long userId, List<AppGoalTimeRequest> requests, String os) {
         for (AppGoalTimeRequest request : requests) {
             appRepository.save(App.builder()
-                    .dailyChallenge(getTodayDailyChallenge(userId))
+                    .dailyChallenge(IdConverter.getTodayDailyChallenge(challengeRepository,
+                            dailyChallengeRepository, userId))
                     .appCode(request.appCode())
                     .goalTime(request.goalTime())
                     .os(os).build());
         }
-    }
-
-    private DailyChallenge getTodayDailyChallenge(final Long userId) {
-        val challenge = challengeRepository.findFirstByUserIdOrderByCreatedAtDesc(userId);
-
-        return dailyChallengeRepository.findFirstByChallengeIdOrderByCreatedAtDesc(challenge.getId());
     }
 }
