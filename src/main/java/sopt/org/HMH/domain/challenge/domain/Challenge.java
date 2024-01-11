@@ -25,18 +25,15 @@ public class Challenge extends BaseTimeEntity {
     @Column(name = "challenge_id")
     private Long id;
 
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
-
+    private Long userId;
     private Integer period;
 
     @OneToMany(mappedBy = "challenge")
     private final List<DailyChallenge> dailyChallenges  = new ArrayList<>();
 
     @Builder
-    private Challenge(User user, Integer period) {
-        this.user = user;
+    private Challenge(Integer period, Long userId) {
         this.period = period;
+        this.userId = userId;
     }
 }

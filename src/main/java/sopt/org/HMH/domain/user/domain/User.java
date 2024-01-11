@@ -45,9 +45,6 @@ public class User extends BaseTimeEntity {
     @JoinColumn(name = "onboarding_info_id")
     private OnboardingInfo onboardingInfo;
 
-    @OneToMany(mappedBy = "user")
-    private List<Challenge> challenges;
-
     @Builder
     public User(SocialPlatform socialPlatform, String socialId, String name, OnboardingInfo onboardingInfo) {
         this.socialPlatform = socialPlatform;
