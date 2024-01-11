@@ -43,7 +43,7 @@ public class AppController {
             @RequestHeader("OS") final String os,
             @RequestBody final AppDeleteRequest request
     ) {
-        appService.removeApp(UserIdConvertor.getUserId(principal), request);
+        appService.removeApp(UserIdConvertor.getUserId(principal), request, os);
         return ResponseEntity
                 .status(AppSuccess.DELETE_APP_SUCCESS.getHttpStatus())
                 .body(ApiResponse.success(AppSuccess.DELETE_APP_SUCCESS, new EmptyJsonResponse()));
