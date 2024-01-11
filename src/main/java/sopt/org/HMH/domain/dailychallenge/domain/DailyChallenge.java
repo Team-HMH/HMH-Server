@@ -28,8 +28,7 @@ public class DailyChallenge extends BaseTimeEntity {
     private Challenge challenge;
 
     private Long goalTime;
-    private Boolean isSuccess;
-    private Boolean didGettingPoint;
+    private Status status;
 
     @OneToMany(mappedBy = "dailyChallenge")
     private final List<App> apps = new ArrayList<>();
@@ -38,7 +37,6 @@ public class DailyChallenge extends BaseTimeEntity {
     public DailyChallenge(Challenge challenge, Long goalTime) {
         this.challenge = challenge;
         this.goalTime = goalTime;
-        this.isSuccess = true;
-        this.didGettingPoint = false;
+        this.status = Status.NONE;
     }
 }
