@@ -20,7 +20,6 @@ import lombok.NoArgsConstructor;
 public class OnboardingInfo {
 
     @Id
-    @Column(name = "onboarding_info_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

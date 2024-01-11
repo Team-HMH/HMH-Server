@@ -21,7 +21,6 @@ public class App {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "app_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

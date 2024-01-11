@@ -22,7 +22,6 @@ public class Challenge extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
-    @Column(name = "challenge_id")
     private Long id;
 
     private Long userId;

@@ -19,7 +19,6 @@ import lombok.NoArgsConstructor;
 public class OnboardingProblem {
 
     @Id
-    @Column(name = "problem_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
