@@ -5,5 +5,5 @@ import sopt.org.HMH.domain.app.domain.App;
 
 public interface AppRepository extends JpaRepository<App, Long> {
 
-    App findByDailyChallengeIdAndAppCode(Long dayChallengeId, String appCode);
+    App findByDailyChallengeIdAndAppCodeAndOs(Long dayChallengeId, String appCode, String os);
 }
