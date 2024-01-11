@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sopt.org.HMH.domain.challenge.domain.exception.ChallengeSuccess;
 import sopt.org.HMH.domain.challenge.dto.request.ChallengeRequest;
-import sopt.org.HMH.domain.challenge.dto.response.CreatedChallengeResponse;
+import sopt.org.HMH.domain.challenge.dto.response.AddChallengeResponse;
 import sopt.org.HMH.domain.challenge.service.ChallengeService;
 import sopt.org.HMH.global.common.UserIdConvertor;
 import sopt.org.HMH.global.common.response.ApiResponse;
@@ -20,7 +20,7 @@ public class ChallengeController {
     private final ChallengeService challengeService;
 
     @PostMapping
-    public ResponseEntity<ApiResponse<CreatedChallengeResponse>> orderAddChallenge(
+    public ResponseEntity<ApiResponse<AddChallengeResponse>> orderAddChallenge(
             Principal principal,
             @RequestHeader("OS") final String os,
             @RequestBody final ChallengeRequest request
