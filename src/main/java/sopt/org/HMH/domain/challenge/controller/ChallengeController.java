@@ -30,8 +30,8 @@ public class ChallengeController {
             @RequestBody final ChallengeRequest request
     ) {
         return ResponseEntity
-                .status(ChallengeSuccess.SUCCESS_CREATE_CHALLENGE.getHttpStatus())
-                .body(ApiResponse.success(ChallengeSuccess.SUCCESS_CREATE_CHALLENGE,
+                .status(ChallengeSuccess.ADD_CHALLENGE_SUCCESS.getHttpStatus())
+                .body(ApiResponse.success(ChallengeSuccess.ADD_CHALLENGE_SUCCESS,
                         challengeService.addChallenge(UserIdConvertor.getUserId(principal), request, os)));
     }
 }
