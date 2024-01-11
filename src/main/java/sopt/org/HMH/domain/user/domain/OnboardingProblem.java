@@ -22,10 +22,12 @@ public class OnboardingProblem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private Long onboardingInfoId;
     private String problem;
 
     @Builder
-    public OnboardingProblem(String problem) {
+    public OnboardingProblem(Long onboardingInfoId, String problem) {
+        this.onboardingInfoId = onboardingInfoId;
         this.problem = problem;
     }
 }

@@ -60,7 +60,7 @@ public class UserService {
         validateDuplicateUser(socialId, socialPlatform);
 
         OnboardingInfo onboardingInfo = registerOnboardingInfo(request);
-        User user = addUser(socialPlatform, socialId, onboardingInfo, request.name());
+        User user = addUser(socialPlatform, socialId, request.name());
 
         challengeService.addChallenge(user.getId(), request.challengeRequest(), os);
 
@@ -129,12 +129,11 @@ public class UserService {
         return LoginResponse.of(loginUser, tokenResponse);
     }
 
-    private User addUser(SocialPlatform socialPlatform, String socialId, OnboardingInfo onboardingInfo, String name) {
+    private User addUser(SocialPlatform socialPlatform, String socialId, String name) {
         User user = User.builder()
                 .socialPlatform(socialPlatform)
                 .socialId(socialId)
                 .name(name)
-                .onboardingInfo(onboardingInfo)
                 .build();
         userRepository.save(user);
         return user;
@@ -152,7 +151,6 @@ public class UserService {
 
         OnboardingInfo onboardingInfo = OnboardingInfo.builder()
                 .averageUseTime(request.onboardingRequest().averageUseTime())
-                .problem(problemList)
                 .build();
         onboardingInfoRepository.save(onboardingInfo);
         return onboardingInfo;

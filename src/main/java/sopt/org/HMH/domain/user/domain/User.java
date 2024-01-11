@@ -40,16 +40,11 @@ public class User extends BaseTimeEntity {
     @Column(columnDefinition = "TEXT")
     private String profileImageUrl;
 
-    @OneToOne
-    @JoinColumn(name = "onboarding_info_id")
-    private OnboardingInfo onboardingInfo;
-
     @Builder
-    public User(SocialPlatform socialPlatform, String socialId, String name, OnboardingInfo onboardingInfo) {
+    public User(SocialPlatform socialPlatform, String socialId, String name) {
         this.socialPlatform = socialPlatform;
         this.socialId = socialId;
         this.name = name;
-        this.onboardingInfo = onboardingInfo;
         this.point = PointConstants.INITIAL_POINT.getPoint();
     }
 
