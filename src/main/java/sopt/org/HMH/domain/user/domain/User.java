@@ -7,10 +7,9 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -19,13 +18,15 @@ import lombok.NoArgsConstructor;
 import sopt.org.HMH.domain.challenge.domain.Challenge;
 import sopt.org.HMH.global.auth.social.SocialPlatform;
 import sopt.org.HMH.global.common.domain.BaseTimeEntity;
-import sopt.org.HMH.global.common.domain.PointConstants;
+import sopt.org.HMH.global.common.constant.PointConstants;
 
 @Getter
 @Entity
 @Table(name = "users")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User extends BaseTimeEntity {
+
+    private static final Long MEMBER_INFO_RETENTION_PERIOD = 30L;
 
     @Id
     @Column(name = "user_id")
@@ -42,6 +43,8 @@ public class User extends BaseTimeEntity {
     private String profileImageUrl;
 
     private Long onboardingInfoId;
+    private boolean isDeleted = false;
+    private LocalDateTime deleteAt;
 
     @OneToMany(mappedBy = "user")
     private List<Challenge> challenges;
@@ -58,5 +61,15 @@ public class User extends BaseTimeEntity {
     public void updateSocialInfo(String nickname, String profileImageUrl) {
         this.name = nickname;
         this.profileImageUrl = profileImageUrl;
+    }
+
+    public void softDelete() {
+        this.isDeleted = true;
+        this.deleteAt = LocalDateTime.now().plusDays(MEMBER_INFO_RETENTION_PERIOD);
+    }
+
+    public void recover() {
+        this.isDeleted = false;
+        this.deleteAt = null;
     }
 }
