@@ -24,10 +24,9 @@ public class ChallengeService {
     public AddChallengeResponse addChallenge(Long userId,
                                              ChallengeRequest request,
                                              String os) {
-        User user = userRepository.findByIdOrThrowException(userId);
         Challenge challenge = challengeRepository.save(Challenge.builder()
                         .period(request.period())
-                        .user(user).build());
+                        .userId(userId).build());
         dailyChallengeService.addDailyChallenge(challenge, request.goalTime(), request.apps(), os);
 
         return AddChallengeResponse.of(challenge.getId());
