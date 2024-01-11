@@ -1,13 +1,13 @@
-package sopt.org.HMH.domain.challenge.domain.exception;
+package sopt.org.HMH.domain.user.exception;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import sopt.org.HMH.global.common.exception.base.ErrorBase;
 
 @AllArgsConstructor
-public enum ChallengeError implements ErrorBase {
+public enum UserError implements ErrorBase {
 
-    CHALLENGE_NOT_FOUND(HttpStatus.NOT_FOUND, "챌린지 찾기 불가"),
+    USER_NOT_FOUND(HttpStatus.NOT_FOUND, "유저 찾기 불가"),
     ;
 
     private final HttpStatus status;

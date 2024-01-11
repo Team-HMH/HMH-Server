@@ -4,18 +4,19 @@ import static jakarta.persistence.FetchType.*;
 import static jakarta.persistence.GenerationType.*;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import sopt.org.HMH.domain.app.domain.App;
 import sopt.org.HMH.global.common.domain.BaseTimeEntity;
 import sopt.org.HMH.domain.challenge.domain.Challenge;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Getter
 @NoArgsConstructor
-@Table(name = "daily_challenge")
 public class DailyChallenge extends BaseTimeEntity {
 
     @Id
@@ -31,8 +32,9 @@ public class DailyChallenge extends BaseTimeEntity {
     private Boolean didGettingPoint;
 
     @OneToMany(mappedBy = "dailyChallenge")
-    private List<App> apps;
+    private final List<App> apps = new ArrayList<>();
 
+    @Builder
     public DailyChallenge(Challenge challenge, Long goalTime) {
         this.challenge = challenge;
         this.goalTime = goalTime;

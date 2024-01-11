@@ -40,11 +40,12 @@ public class UserController {
     @PostMapping("/signup")
     public ResponseEntity<ApiResponse<LoginResponse>> orderSignup(
             @RequestHeader("Authorization") final String socialAccessToken,
+            @RequestHeader("OS") final String os,
             @RequestBody final SocialSignUpRequest request
     ) {
         return ResponseEntity
                 .status(UserSuccess.SIGNUP_SUCCESS.getHttpStatus())
-                .body(ApiResponse.success(UserSuccess.SIGNUP_SUCCESS, userService.signup(socialAccessToken, request)));
+                .body(ApiResponse.success(UserSuccess.SIGNUP_SUCCESS, userService.signup(socialAccessToken, request, os)));
     }
 
     @GetMapping("/reissue")

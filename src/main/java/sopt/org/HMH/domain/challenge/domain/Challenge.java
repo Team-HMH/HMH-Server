@@ -4,6 +4,8 @@ import static jakarta.persistence.FetchType.*;
 import static jakarta.persistence.GenerationType.*;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import sopt.org.HMH.domain.user.domain.User;
@@ -15,8 +17,7 @@ import java.util.List;
 
 @Entity
 @Getter
-@NoArgsConstructor
-@Table(name = "challenge")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Challenge extends BaseTimeEntity {
 
     @Id
@@ -31,11 +32,11 @@ public class Challenge extends BaseTimeEntity {
     private Integer period;
 
     @OneToMany(mappedBy = "challenge")
-    private List<DailyChallenge> dailyChallenges;
+    private final List<DailyChallenge> dailyChallenges  = new ArrayList<>();
 
-    public Challenge(User user, Integer period) {
+    @Builder
+    private Challenge(User user, Integer period) {
         this.user = user;
         this.period = period;
-        this.dailyChallenges = new ArrayList<>();
     }
 }
