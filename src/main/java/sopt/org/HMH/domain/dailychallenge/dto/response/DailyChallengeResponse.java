@@ -16,7 +16,6 @@ public record DailyChallengeResponse(
     public static DailyChallengeResponse of(DailyChallenge dailyChallenge) {
         return DailyChallengeResponse.builder()
                 .status(dailyChallenge.getStatus().toString())
-                .status(dailyChallenge.getStatus().toString())
                 .goalTime(dailyChallenge.getGoalTime())
                 .apps(dailyChallenge.getApps().stream().map(AppGoalTimeResponse::of).toList())
                 .build();

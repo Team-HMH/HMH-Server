@@ -28,6 +28,8 @@ public class DailyChallenge extends BaseTimeEntity {
     private Challenge challenge;
 
     private Long goalTime;
+
+    @Enumerated(EnumType.STRING)
     private Status status;
 
     @OneToMany(mappedBy = "dailyChallenge")
