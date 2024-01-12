@@ -161,8 +161,4 @@ public class UserService {
         onboardingInfoRepository.save(onboardingInfo);
         return onboardingInfo;
     }
-
-    public User getUserById(Long userId) {
-        return userRepository.findByIdOrThrowException(userId);
-    }
 }
