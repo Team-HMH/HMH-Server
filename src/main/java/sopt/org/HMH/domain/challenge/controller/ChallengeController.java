@@ -40,11 +40,11 @@ public class ChallengeController {
     @GetMapping
     public ResponseEntity<ApiResponse<ChallengeResponse>> orderGetChallenge(
             Principal principal,
-            @RequestHeader("OS") final String os,
+            @RequestHeader("OS") final String os
     ) {
         return ResponseEntity
                 .status(ChallengeSuccess.GET_CHALLENGE_SUCCESS.getHttpStatus())
                 .body(ApiResponse.success(ChallengeSuccess.GET_CHALLENGE_SUCCESS,
-                        challengeService.getChallenge(IdConverter.getUserId(principal), os)));
+                        challengeService.getChallange(IdConverter.getUserId(principal), os)));
     }
 }
