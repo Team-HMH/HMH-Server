@@ -16,6 +16,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class DailyChallengeService {
 
     private final DailyChallengeRepository dailyChallengeRepository;
@@ -38,5 +39,12 @@ public class DailyChallengeService {
                 dailyChallengeRepository, userId);
 
         return DailyChallengeResponse.of(dailyChallenge);
+    }
+
+    @Transactional
+    public void modifyDailyChallengeStatus(Long userId, String os) {
+        DailyChallenge dailyChallenge = IdConverter.getTodayDailyChallenge(challengeRepository,
+                dailyChallengeRepository, userId);
+        dailyChallenge.modifyDailyChallengeStatusFailure();
     }
 }
