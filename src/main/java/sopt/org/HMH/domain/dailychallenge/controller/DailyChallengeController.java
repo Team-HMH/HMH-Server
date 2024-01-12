@@ -17,7 +17,7 @@ import java.security.Principal;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/dailyChallenge")
+@RequestMapping("/api/v1/dailychallenge")
 public class DailyChallengeController {
 
     private final DailyChallengeService dailyChallengeService;
