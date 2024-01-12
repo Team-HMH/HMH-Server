@@ -11,8 +11,8 @@ import sopt.org.HMH.domain.challenge.domain.exception.ChallengeSuccess;
 import sopt.org.HMH.domain.challenge.dto.request.ChallengeRequest;
 import sopt.org.HMH.domain.challenge.dto.response.AddChallengeResponse;
 import sopt.org.HMH.domain.challenge.service.ChallengeService;
-import sopt.org.HMH.global.common.UserIdConvertor;
 import sopt.org.HMH.global.common.response.ApiResponse;
+import sopt.org.HMH.global.util.IdConverter;
 
 import java.security.Principal;
 
@@ -32,6 +32,6 @@ public class ChallengeController {
         return ResponseEntity
                 .status(ChallengeSuccess.ADD_CHALLENGE_SUCCESS.getHttpStatus())
                 .body(ApiResponse.success(ChallengeSuccess.ADD_CHALLENGE_SUCCESS,
-                        challengeService.addChallenge(UserIdConvertor.getUserId(principal), request, os)));
+                        challengeService.addChallenge(IdConverter.getUserId(principal), request, os)));
     }
 }
