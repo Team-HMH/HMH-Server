@@ -7,18 +7,15 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
-import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import sopt.org.HMH.domain.challenge.domain.Challenge;
 import sopt.org.HMH.global.auth.social.SocialPlatform;
-import sopt.org.HMH.global.common.domain.BaseTimeEntity;
 import sopt.org.HMH.global.common.constant.PointConstants;
+import sopt.org.HMH.global.common.domain.BaseTimeEntity;
 
 @Getter
 @Entity
@@ -43,7 +40,7 @@ public class User extends BaseTimeEntity {
 
     private Long onboardingInfoId;
     private boolean isDeleted = false;
-    private LocalDateTime deleteAt;
+    private LocalDateTime deletedAt;
 
     @Builder
     public User(SocialPlatform socialPlatform, String socialId, String name, Long onboardingInfoId) {
@@ -61,11 +58,12 @@ public class User extends BaseTimeEntity {
 
     public void softDelete() {
         this.isDeleted = true;
-        this.deleteAt = LocalDateTime.now().plusDays(MEMBER_INFO_RETENTION_PERIOD);
+        this.point = 0;
+        this.deletedAt = LocalDateTime.now().plusDays(MEMBER_INFO_RETENTION_PERIOD);
     }
 
     public void recover() {
         this.isDeleted = false;
-        this.deleteAt = null;
+        this.deletedAt = null;
     }
 }
