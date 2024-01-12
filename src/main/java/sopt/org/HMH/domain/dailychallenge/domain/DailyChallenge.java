@@ -41,8 +41,4 @@ public class DailyChallenge extends BaseTimeEntity {
         this.goalTime = goalTime;
         this.status = Status.NONE;
     }
-
-    protected void changeStatusFailure() {
-        this.isSuccess = false;
-    }
 }
