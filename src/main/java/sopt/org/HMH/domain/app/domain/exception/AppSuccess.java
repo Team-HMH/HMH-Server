@@ -1,13 +1,14 @@
-package sopt.org.HMH.domain.challenge.domain.exception;
+package sopt.org.HMH.domain.app.domain.exception;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import sopt.org.HMH.global.common.exception.base.SuccessBase;
 
 @AllArgsConstructor
-public enum ChallengeSuccess implements SuccessBase {
+public enum AppSuccess implements SuccessBase {
 
-    ADD_CHALLENGE_SUCCESS(HttpStatus.OK, "챌린지 생성 성공"),
+    ADD_APP_SUCCESS(HttpStatus.OK, "스크린타임 설정 앱 추가 성공"),
+    DELETE_APP_SUCCESS(HttpStatus.OK,  "스크린타임 설정 앱 삭제 성공")
     ;
 
     private final HttpStatus status;

@@ -5,6 +5,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sopt.org.HMH.domain.challenge.service.ChallengeService;
 import sopt.org.HMH.domain.user.domain.OnboardingInfo;
 import sopt.org.HMH.domain.user.domain.OnboardingProblem;
 import sopt.org.HMH.domain.user.domain.User;
@@ -34,6 +35,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final OnboardingInfoRepository onboardingInfoRepository;
     private final KakaoLoginService kakaoLoginService;
+    private final ChallengeService challengeService;
     private final AppleOAuthProvider appleOAuthProvider;
 
     @Transactional
@@ -49,7 +51,7 @@ public class UserService {
     }
 
     @Transactional
-    public LoginResponse signup(String socialAccessToken, SocialSignUpRequest request) {
+    public LoginResponse signup(String socialAccessToken, SocialSignUpRequest request, String os) {
 
         SocialPlatform socialPlatform = request.socialPlatform();
         String socialId = getSocialIdBySocialAccessToken(socialPlatform, socialAccessToken);
@@ -58,7 +60,9 @@ public class UserService {
         validateDuplicateUser(socialId, socialPlatform);
 
         OnboardingInfo onboardingInfo = registerOnboardingInfo(request);
-        User user = addUser(socialPlatform, socialId, onboardingInfo.getId(), request.name());
+        User user = addUser(socialPlatform, socialId, request.name());
+
+        challengeService.addChallenge(user.getId(), request.challengeRequest(), os);
 
         return performLogin(socialAccessToken, socialPlatform, user);
     }
@@ -130,12 +134,11 @@ public class UserService {
         return LoginResponse.of(loginUser, tokenResponse);
     }
 
-    private User addUser(SocialPlatform socialPlatform, String socialId, Long onboardingInfoId, String name) {
+    private User addUser(SocialPlatform socialPlatform, String socialId, String name) {
         User user = User.builder()
                 .socialPlatform(socialPlatform)
                 .socialId(socialId)
                 .name(name)
-                .onboardingInfoId(onboardingInfoId)
                 .build();
         userRepository.save(user);
         return user;
@@ -153,13 +156,12 @@ public class UserService {
 
         OnboardingInfo onboardingInfo = OnboardingInfo.builder()
                 .averageUseTime(request.onboardingRequest().averageUseTime())
-                .problem(problemList)
                 .build();
         onboardingInfoRepository.save(onboardingInfo);
         return onboardingInfo;
     }
 
-    public User getUserId(Long userId) {
+    public User getUserById(Long userId) {
         return userRepository.findByIdOrThrowException(userId);
     }
 }

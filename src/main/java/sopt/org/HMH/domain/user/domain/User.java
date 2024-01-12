@@ -29,7 +29,6 @@ public class User extends BaseTimeEntity {
     private static final Long MEMBER_INFO_RETENTION_PERIOD = 30L;
 
     @Id
-    @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
@@ -45,9 +44,6 @@ public class User extends BaseTimeEntity {
     private Long onboardingInfoId;
     private boolean isDeleted = false;
     private LocalDateTime deleteAt;
-
-    @OneToMany(mappedBy = "user")
-    private List<Challenge> challenges;
 
     @Builder
     public User(SocialPlatform socialPlatform, String socialId, String name, Long onboardingInfoId) {

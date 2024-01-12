@@ -1,4 +1,4 @@
-package sopt.org.HMH.domain.dayChallenge.domain;
+package sopt.org.HMH.domain.dailychallenge.domain;
 
 import static jakarta.persistence.FetchType.*;
 import static jakarta.persistence.GenerationType.*;
@@ -11,13 +11,13 @@ import sopt.org.HMH.domain.app.domain.App;
 import sopt.org.HMH.global.common.domain.BaseTimeEntity;
 import sopt.org.HMH.domain.challenge.domain.Challenge;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Getter
 @NoArgsConstructor
-@Table(name = "day_challenge")
-public class DayChallenge extends BaseTimeEntity {
+public class DailyChallenge extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
@@ -28,16 +28,17 @@ public class DayChallenge extends BaseTimeEntity {
     private Challenge challenge;
 
     private Long goalTime;
-    private Boolean isSuccess;
-    private Boolean didGettingPoint;
 
-    @OneToMany(mappedBy = "dayChallenge")
-    private List<App> apps;
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
-    public DayChallenge(Challenge challenge, Long goalTime) {
+    @OneToMany(mappedBy = "dailyChallenge")
+    private final List<App> apps = new ArrayList<>();
+
+    @Builder
+    public DailyChallenge(Challenge challenge, Long goalTime) {
         this.challenge = challenge;
         this.goalTime = goalTime;
-        this.isSuccess = true;
-        this.didGettingPoint = false;
+        this.status = Status.NONE;
     }
 }

@@ -4,38 +4,35 @@ import static jakarta.persistence.FetchType.*;
 import static jakarta.persistence.GenerationType.*;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import sopt.org.HMH.domain.user.domain.User;
 import sopt.org.HMH.global.common.domain.BaseTimeEntity;
-import sopt.org.HMH.domain.dayChallenge.domain.DayChallenge;
+import sopt.org.HMH.domain.dailychallenge.domain.DailyChallenge;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Getter
-@NoArgsConstructor
-@Table(name = "challenge")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Challenge extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
-    @Column(name = "challenge_id")
     private Long id;
 
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
-
+    private Long userId;
     private Integer period;
 
     @OneToMany(mappedBy = "challenge")
-    private List<DayChallenge> dayChallenges;
+    private final List<DailyChallenge> dailyChallenges  = new ArrayList<>();
 
-    public Challenge(User user, Integer period) {
-        this.user = user;
+    @Builder
+    private Challenge(Integer period, Long userId) {
         this.period = period;
-        this.dayChallenges = new ArrayList<>();
+        this.userId = userId;
     }
 }
