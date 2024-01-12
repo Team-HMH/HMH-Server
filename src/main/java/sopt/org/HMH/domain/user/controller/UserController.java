@@ -75,7 +75,7 @@ public class UserController {
 
     @DeleteMapping
     public ResponseEntity<ApiResponse<?>> orderWithdraw(Principal principal) {
-        userService.withdraw(UserIdConvertor.getUserId(principal));
+        userService.withdraw(IdConverter.getUserId(principal));
         return ResponseEntity
                 .status(UserSuccess.WITHDRAW_SUCCESS.getHttpStatus())
                 .body(ApiResponse.success(UserSuccess.WITHDRAW_SUCCESS, new EmptyJsonResponse()));

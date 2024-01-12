@@ -79,6 +79,7 @@ public class UserService {
     @Transactional
     public void withdraw(Long userId) {
         User user = userRepository.findByIdOrThrowException(userId);
+        user.softDelete();
     }
 
     public void logout(Long userId) {
