@@ -19,14 +19,15 @@ import lombok.NoArgsConstructor;
 public class OnboardingProblem {
 
     @Id
-    @Column(name = "problem_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private Long onboardingInfoId;
     private String problem;
 
     @Builder
-    public OnboardingProblem(String problem) {
+    public OnboardingProblem(Long onboardingInfoId, String problem) {
+        this.onboardingInfoId = onboardingInfoId;
         this.problem = problem;
     }
 }

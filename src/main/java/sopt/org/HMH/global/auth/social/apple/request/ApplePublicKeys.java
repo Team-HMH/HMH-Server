@@ -1,9 +1,11 @@
 package sopt.org.HMH.global.auth.social.apple.request;
 
 import java.util.List;
+import lombok.Getter;
 import sopt.org.HMH.global.auth.jwt.exception.JwtError;
 import sopt.org.HMH.global.auth.jwt.exception.JwtException;
 
+@Getter
 public class ApplePublicKeys {
     private List<ApplePublicKey> keys;
 

@@ -16,9 +16,9 @@ import sopt.org.HMH.domain.user.dto.response.LoginResponse;
 import sopt.org.HMH.domain.user.dto.response.UserInfoResponse;
 import sopt.org.HMH.domain.user.service.UserService;
 import sopt.org.HMH.global.auth.jwt.TokenResponse;
-import sopt.org.HMH.global.common.UserIdConvertor;
 import sopt.org.HMH.global.common.response.ApiResponse;
 import sopt.org.HMH.global.common.response.EmptyJsonResponse;
+import sopt.org.HMH.global.util.IdConverter;
 
 @RestController
 @RequiredArgsConstructor
@@ -40,11 +40,12 @@ public class UserController {
     @PostMapping("/signup")
     public ResponseEntity<ApiResponse<LoginResponse>> orderSignup(
             @RequestHeader("Authorization") final String socialAccessToken,
+            @RequestHeader("OS") final String os,
             @RequestBody final SocialSignUpRequest request
     ) {
         return ResponseEntity
                 .status(UserSuccess.SIGNUP_SUCCESS.getHttpStatus())
-                .body(ApiResponse.success(UserSuccess.SIGNUP_SUCCESS, userService.signup(socialAccessToken, request)));
+                .body(ApiResponse.success(UserSuccess.SIGNUP_SUCCESS, userService.signup(socialAccessToken, request, os)));
     }
 
     @GetMapping("/reissue")
@@ -58,7 +59,7 @@ public class UserController {
 
     @PostMapping("/logout")
     public ResponseEntity<ApiResponse<?>> orderLogout(Principal principal) {
-        userService.logout(UserIdConvertor.getUserId(principal));
+        userService.logout(IdConverter.getUserId(principal));
         return ResponseEntity
                 .status(UserSuccess.LOGOUT_SUCCESS.getHttpStatus())
                 .body(ApiResponse.success(UserSuccess.LOGOUT_SUCCESS, new EmptyJsonResponse()));
@@ -68,6 +69,6 @@ public class UserController {
     public ResponseEntity<ApiResponse<UserInfoResponse>> orderGetUserInfo(Principal principal) {
         return ResponseEntity
                 .status(UserSuccess.GET_USER_INFO_SUCCESS.getHttpStatus())
-                .body(ApiResponse.success(UserSuccess.GET_USER_INFO_SUCCESS, userService.getUserInfo(UserIdConvertor.getUserId(principal))));
+                .body(ApiResponse.success(UserSuccess.GET_USER_INFO_SUCCESS, userService.getUserInfo(IdConverter.getUserId(principal))));
     }
 }

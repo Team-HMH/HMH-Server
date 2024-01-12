@@ -20,19 +20,15 @@ import lombok.NoArgsConstructor;
 public class OnboardingInfo {
 
     @Id
-    @Column(name = "onboarding_info_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "onboarding_info_id")
-    private List<OnboardingProblem> problem;
-
     private String averageUseTime;
+    private Long userId;
 
     @Builder
-    public OnboardingInfo(List<OnboardingProblem> problem, String averageUseTime) {
-        this.problem = problem;
+    public OnboardingInfo(String averageUseTime, Long userId) {
         this.averageUseTime = averageUseTime;
+        this.userId = userId;
     }
 }

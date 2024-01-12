@@ -14,4 +14,6 @@ public interface ChallengeRepository extends JpaRepository<Challenge, Long> {
                 ChallengeError.CHALLENGE_NOT_FOUND));
     }
     Optional<Challenge> findByUserIdAndCreatedAtBetween(Long userId, LocalDateTime startDate, LocalDateTime endDate);
+
+    Challenge findFirstByUserIdOrderByCreatedAtDesc(Long userId);
 }

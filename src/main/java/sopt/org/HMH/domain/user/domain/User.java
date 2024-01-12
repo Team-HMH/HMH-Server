@@ -28,7 +28,6 @@ import sopt.org.HMH.global.common.domain.PointConstants;
 public class User extends BaseTimeEntity {
 
     @Id
-    @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
@@ -41,19 +40,11 @@ public class User extends BaseTimeEntity {
     @Column(columnDefinition = "TEXT")
     private String profileImageUrl;
 
-    @OneToOne
-    @JoinColumn(name = "onboarding_info_id")
-    private OnboardingInfo onboardingInfo;
-
-    @OneToMany(mappedBy = "user")
-    private List<Challenge> challenges;
-
     @Builder
-    public User(SocialPlatform socialPlatform, String socialId, String name, OnboardingInfo onboardingInfo) {
+    public User(SocialPlatform socialPlatform, String socialId, String name) {
         this.socialPlatform = socialPlatform;
         this.socialId = socialId;
         this.name = name;
-        this.onboardingInfo = onboardingInfo;
         this.point = PointConstants.INITIAL_POINT.getPoint();
     }
 
