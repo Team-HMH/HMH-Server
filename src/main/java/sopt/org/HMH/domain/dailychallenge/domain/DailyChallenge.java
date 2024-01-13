@@ -42,7 +42,7 @@ public class DailyChallenge extends BaseTimeEntity {
         this.status = Status.NONE;
     }
 
-    public void modifyDailyChallengeStatusFailure() {
-        this.status = Status.FAILURE;
+    public void modifyStatus(Status status) {
+        this.status = status;
     }
 }

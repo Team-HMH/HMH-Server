@@ -31,15 +31,14 @@ public class DailyChallengeController {
         return ResponseEntity
                 .status(DailyChallengeSuccess.GET_DAILY_CHALLENGE_SUCCESS.getHttpStatus())
                 .body(ApiResponse.success(DailyChallengeSuccess.GET_DAILY_CHALLENGE_SUCCESS,
-                        dailyChallengeService.getDailyChallenge(IdConverter.getUserId(principal), os)));
+                        dailyChallengeService.getDailyChallenge(IdConverter.getUserId(principal))));
     }
 
     @PatchMapping("/failure")
     public ResponseEntity<ApiResponse<?>> orderChallengeDailyChallenge(
-            Principal principal,
-            @RequestHeader("OS") final String os
+            Principal principal
     ) {
-        dailyChallengeService.modifyDailyChallengeStatus(IdConverter.getUserId(principal), os);
+        dailyChallengeService.modifyDailyChallengeStatus(IdConverter.getUserId(principal));
         return ResponseEntity
                 .status(DailyChallengeSuccess.MODIFY_DAILY_CHALLENGE_STATUS_SUCCESS.getHttpStatus())
                 .body(ApiResponse.success(DailyChallengeSuccess.MODIFY_DAILY_CHALLENGE_STATUS_SUCCESS, new EmptyJsonResponse()));
