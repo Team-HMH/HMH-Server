@@ -34,7 +34,7 @@ public class DailyChallengeService {
     }
 
     public DailyChallengeResponse getDailyChallenge(Long userId, String os) {
-        DailyChallenge dailyChallenge = IdConverter.getTodayDailyChallenge(challengeRepository,
+        DailyChallenge dailyChallenge = IdConverter.getTodayDailyChallengeByUserId(challengeRepository,
                 dailyChallengeRepository, userId);
 
         return DailyChallengeResponse.of(dailyChallenge);

@@ -37,7 +37,7 @@ public class AppService {
 
     @Transactional
     public void removeApp(Long userId, AppDeleteRequest request, String os) {
-        Long todayDailyChallengeId = IdConverter.getTodayDailyChallenge(challengeRepository,
+        Long todayDailyChallengeId = IdConverter.getTodayDailyChallengeByUserId(challengeRepository,
                 dailyChallengeRepository, userId).getId();
         App app = appRepository.findByDailyChallengeIdAndAppCodeAndOs(todayDailyChallengeId, request.appCode(), os);
 
@@ -48,7 +48,7 @@ public class AppService {
     public void addAppsByUserId(Long userId, List<AppGoalTimeRequest> requests, String os) {
         for (AppGoalTimeRequest request : requests) {
             appRepository.save(App.builder()
-                    .dailyChallenge(IdConverter.getTodayDailyChallenge(challengeRepository,
+                    .dailyChallenge(IdConverter.getTodayDailyChallengeByUserId(challengeRepository,
                             dailyChallengeRepository, userId))
                     .appCode(request.appCode())
                     .goalTime(request.goalTime())

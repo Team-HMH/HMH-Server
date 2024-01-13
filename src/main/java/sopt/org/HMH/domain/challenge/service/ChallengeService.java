@@ -15,10 +15,9 @@ import sopt.org.HMH.domain.dailychallenge.domain.DailyChallenge;
 import sopt.org.HMH.domain.dailychallenge.domain.Status;
 import sopt.org.HMH.domain.dailychallenge.repository.DailyChallengeRepository;
 import sopt.org.HMH.domain.dailychallenge.service.DailyChallengeService;
-import sopt.org.HMH.domain.user.domain.User;
-import sopt.org.HMH.domain.user.repository.UserRepository;
-import sopt.org.HMH.global.util.IdConverter;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,16 +39,21 @@ public class ChallengeService {
         return AddChallengeResponse.of(challenge.getId());
     }
 
-    public ChallengeResponse getChallange(Long userId, String os) {
+    public ChallengeResponse getChallenge(Long userId, String os) {
         val challenge = challengeRepository.findFirstByUserIdOrderByCreatedAtDesc(userId);
         val dailyChallenges = challenge.getDailyChallenges();
 
-        val statuses = new ArrayList<>();
+        val statuses = new ArrayList<Status>();
         for (val dailyChallenge : dailyChallenges) {
             statuses.add(dailyChallenge.getStatus());
         }
 
-        val todayIndex = dailyChallengeService.calculateTodayDailyChallengeIndex(challenge.getId());
+        val startDayOfChallenge = challenge.getDailyChallenges().get(0);
+        val todayIndex = calculateTodayDailyChallengeIndex(startDayOfChallenge.getCreatedAt());
         return ChallengeResponse.of(challenge, dailyChallenges.get(todayIndex), statuses, todayIndex);
+    }
+
+    private Integer calculateTodayDailyChallengeIndex(LocalDateTime startDateOfChallenge) {
+        return (int) ChronoUnit.DAYS.between(LocalDateTime.now().toLocalDate(), startDateOfChallenge.toLocalDate());
     }
 }
