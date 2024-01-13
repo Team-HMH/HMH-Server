@@ -23,7 +23,6 @@ public class IdConverter {
     }
 
     public static DailyChallenge getTodayDailyChallengeByUserId(ChallengeRepository challengeRepository,
-                                                        DailyChallengeRepository dailyChallengeRepository,
                                                         final Long userId) {
         val challenge = challengeRepository.findFirstByUserIdOrderByCreatedAtDesc(userId);
         val startDateOfChallenge = challenge.getDailyChallenges().get(0).getCreatedAt().toLocalDate();
