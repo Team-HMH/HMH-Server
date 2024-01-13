@@ -11,6 +11,6 @@ public interface DailyChallengeRepository extends JpaRepository<DailyChallenge, 
 
     default DailyChallenge findByIdOrThrowException(Long dailyChallengeId) {
         return findById(dailyChallengeId).orElseThrow(()
-        -> new DailyChallengeException(DailyChallengeError.CHALLENGE_NOT_FOUND));
+        -> new DailyChallengeException(DailyChallengeError.DAILY_CHALLENGE_NOT_FOUND));
     }
 }
