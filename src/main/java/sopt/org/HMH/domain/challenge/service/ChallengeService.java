@@ -4,8 +4,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sopt.org.HMH.domain.app.domain.App;
-import sopt.org.HMH.domain.app.dto.request.AppGoalTimeRequest;
 import sopt.org.HMH.domain.challenge.domain.Challenge;
 import sopt.org.HMH.domain.challenge.dto.request.ChallengeRequest;
 import sopt.org.HMH.domain.challenge.dto.response.AddChallengeResponse;
@@ -34,7 +32,8 @@ public class ChallengeService {
         Challenge challenge = challengeRepository.save(Challenge.builder()
                         .period(request.period())
                         .userId(userId).build());
-        dailyChallengeService.addDailyChallenge(challenge, request.goalTime(), request.apps(), os);
+        for (int count = 0; count <= request.period(); count++)
+            dailyChallengeService.addDailyChallenge(challenge, request.goalTime(), request.apps(), os);
 
         return AddChallengeResponse.of(challenge.getId());
     }
