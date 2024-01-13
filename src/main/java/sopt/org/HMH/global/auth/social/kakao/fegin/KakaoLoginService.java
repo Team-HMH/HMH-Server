@@ -19,8 +19,8 @@ public class KakaoLoginService {
      */
     public String getSocialIdByKakao(final String socialAccessToken) {
 
-        KakaoUserRequest userResponse = kakaoFeignClient.getUserInformation(socialAccessToken);
-        return String.valueOf(userResponse.id());
+        KakaoUserRequest userRequest = kakaoFeignClient.getUserInformation(socialAccessToken);
+        return String.valueOf(userRequest.id());
     }
 
     /**
