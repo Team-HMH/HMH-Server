@@ -2,7 +2,7 @@ package sopt.org.HMH.domain.dailychallenge.dto.response;
 
 import lombok.AccessLevel;
 import lombok.Builder;
-import sopt.org.HMH.domain.app.domain.App;
+import sopt.org.HMH.domain.app.dto.response.AppGoalTimeResponse;
 import sopt.org.HMH.domain.dailychallenge.domain.DailyChallenge;
 
 import java.util.List;
@@ -19,14 +19,5 @@ public record DailyChallengeResponse(
                 .goalTime(dailyChallenge.getGoalTime())
                 .apps(dailyChallenge.getApps().stream().map(AppGoalTimeResponse::of).toList())
                 .build();
-    }
-
-    public record AppGoalTimeResponse(
-            String appCode,
-            Long goalTime
-    ) {
-        static AppGoalTimeResponse of(App app) {
-            return new AppGoalTimeResponse(app.getAppCode(), app.getGoalTime());
-        }
     }
 }

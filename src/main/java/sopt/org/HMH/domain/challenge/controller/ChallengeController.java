@@ -45,6 +45,6 @@ public class ChallengeController {
         return ResponseEntity
                 .status(ChallengeSuccess.GET_CHALLENGE_SUCCESS.getHttpStatus())
                 .body(ApiResponse.success(ChallengeSuccess.GET_CHALLENGE_SUCCESS,
-                        challengeService.getChallange(IdConverter.getUserId(principal), os)));
+                        challengeService.getChallenge(IdConverter.getUserId(principal), os)));
     }
 }
