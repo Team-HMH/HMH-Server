@@ -1,4 +1,4 @@
-package sopt.org.HMH;
+package sopt.org.HMH.global;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;

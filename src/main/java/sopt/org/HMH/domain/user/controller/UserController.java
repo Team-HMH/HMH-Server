@@ -3,6 +3,7 @@ package sopt.org.HMH.domain.user.controller;
 import java.security.Principal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -70,5 +71,13 @@ public class UserController {
         return ResponseEntity
                 .status(UserSuccess.GET_USER_INFO_SUCCESS.getHttpStatus())
                 .body(ApiResponse.success(UserSuccess.GET_USER_INFO_SUCCESS, userService.getUserInfo(IdConverter.getUserId(principal))));
+    }
+
+    @DeleteMapping
+    public ResponseEntity<ApiResponse<?>> orderWithdraw(Principal principal) {
+        userService.withdraw(IdConverter.getUserId(principal));
+        return ResponseEntity
+                .status(UserSuccess.WITHDRAW_SUCCESS.getHttpStatus())
+                .body(ApiResponse.success(UserSuccess.WITHDRAW_SUCCESS, new EmptyJsonResponse()));
     }
 }
