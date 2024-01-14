@@ -18,7 +18,6 @@ public class JwtValidator {
         } catch (ExpiredJwtException e) {
             throw new JwtException(JwtError.EXPIRED_ACCESS_TOKEN);
         } catch (Exception e) {
-            System.out.println(1);
             throw new JwtException(JwtError.INVALID_ACCESS_TOKEN);
         }
     }
