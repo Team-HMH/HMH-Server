@@ -18,10 +18,11 @@ import sopt.org.HMH.domain.user.dto.response.UserInfoResponse;
 import sopt.org.HMH.domain.user.repository.OnboardingInfoRepository;
 import sopt.org.HMH.domain.user.repository.UserRepository;
 import sopt.org.HMH.global.auth.jwt.JwtProvider;
+import sopt.org.HMH.global.auth.jwt.JwtValidator;
 import sopt.org.HMH.global.auth.jwt.TokenResponse;
 import sopt.org.HMH.global.auth.jwt.exception.JwtError;
 import sopt.org.HMH.global.auth.jwt.exception.JwtException;
-import sopt.org.HMH.global.auth.security.UserAuthentication;
+import sopt.org.HMH.global.auth.redis.TokenService;
 import sopt.org.HMH.global.auth.social.SocialPlatform;
 import sopt.org.HMH.global.auth.social.apple.fegin.AppleOAuthProvider;
 import sopt.org.HMH.global.auth.social.kakao.fegin.KakaoLoginService;
@@ -32,10 +33,12 @@ import sopt.org.HMH.global.auth.social.kakao.fegin.KakaoLoginService;
 public class UserService {
 
     private final JwtProvider jwtProvider;
+    private final JwtValidator jwtValidator;
     private final UserRepository userRepository;
     private final OnboardingInfoRepository onboardingInfoRepository;
     private final KakaoLoginService kakaoLoginService;
     private final ChallengeService challengeService;
+    private final TokenService tokenService;
     private final AppleOAuthProvider appleOAuthProvider;
 
     @Transactional
@@ -74,10 +77,10 @@ public class UserService {
     @Transactional
     public TokenResponse reissueToken(String refreshToken) {
         refreshToken = parseTokenString(refreshToken);
-        Long userId = jwtProvider.validateRefreshToken(refreshToken);
-        validateUserId(userId);  // userId가 DB에 저장된 유효한 값인지 검사
-        jwtProvider.deleteRefreshToken(userId);
-        return jwtProvider.issueToken(new UserAuthentication(userId, null, null));
+        Long userId = jwtProvider.getSubject(refreshToken);
+        validateRefreshToken(refreshToken, userId);
+        tokenService.deleteRefreshToken(userId);
+        return jwtProvider.issueToken(userId);
     }
 
     @Transactional
@@ -87,7 +90,7 @@ public class UserService {
     }
 
     public void logout(Long userId) {
-        jwtProvider.deleteRefreshToken(userId);
+        tokenService.deleteRefreshToken(userId);
     }
 
     public UserInfoResponse getUserInfo(Long userId) {
@@ -98,6 +101,16 @@ public class UserService {
     private void validateUserId(Long userId) {
         if (!userRepository.existsById(userId)) {
             throw new UserException(UserError.NOT_FOUND_USER);
+        }
+    }
+
+    private void validateRefreshToken(String refreshToken, Long userId) {
+        try {
+            jwtValidator.validateRefreshToken(refreshToken);
+            validateUserId(userId);
+        } catch (JwtException jwtException) {
+            logout(userId);
+            throw jwtException;
         }
     }
 
@@ -135,7 +148,7 @@ public class UserService {
         if (socialPlatform == SocialPlatform.KAKAO) {
             kakaoLoginService.updateUserInfoByKakao(loginUser, socialAccessToken);
         }
-        TokenResponse tokenResponse = jwtProvider.issueToken(new UserAuthentication(loginUser.getId(), null, null));
+        TokenResponse tokenResponse = jwtProvider.issueToken(loginUser.getId());
         return LoginResponse.of(loginUser, tokenResponse);
     }
 
