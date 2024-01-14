@@ -7,7 +7,7 @@ import sopt.org.HMH.global.common.exception.base.ErrorBase;
 @AllArgsConstructor
 public enum DailyChallengeError implements ErrorBase {
 
-    CHALLENGE_NOT_FOUND(HttpStatus.NOT_FOUND, "데이챌린지 찾기 불가"),
+    DAILY_CHALLENGE_NOT_FOUND(HttpStatus.NOT_FOUND, "일별 챌린지를 찾을 수 없습니다."),
     ;
 
     private final HttpStatus status;

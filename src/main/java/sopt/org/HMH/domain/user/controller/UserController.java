@@ -3,6 +3,7 @@ package sopt.org.HMH.domain.user.controller;
 import java.security.Principal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,9 +14,9 @@ import sopt.org.HMH.domain.user.domain.exception.UserSuccess;
 import sopt.org.HMH.domain.user.dto.request.SocialPlatformRequest;
 import sopt.org.HMH.domain.user.dto.request.SocialSignUpRequest;
 import sopt.org.HMH.domain.user.dto.response.LoginResponse;
+import sopt.org.HMH.domain.user.dto.response.ReissueResponse;
 import sopt.org.HMH.domain.user.dto.response.UserInfoResponse;
 import sopt.org.HMH.domain.user.service.UserService;
-import sopt.org.HMH.global.auth.jwt.TokenResponse;
 import sopt.org.HMH.global.common.response.ApiResponse;
 import sopt.org.HMH.global.common.response.EmptyJsonResponse;
 import sopt.org.HMH.global.util.IdConverter;
@@ -48,8 +49,8 @@ public class UserController {
                 .body(ApiResponse.success(UserSuccess.SIGNUP_SUCCESS, userService.signup(socialAccessToken, request, os)));
     }
 
-    @GetMapping("/reissue")
-    public ResponseEntity<ApiResponse<TokenResponse>> orderReissue(
+    @PostMapping("/reissue")
+    public ResponseEntity<ApiResponse<ReissueResponse>> orderReissue(
             @RequestHeader("Authorization") final String refreshToken
     ) {
         return ResponseEntity
@@ -70,5 +71,13 @@ public class UserController {
         return ResponseEntity
                 .status(UserSuccess.GET_USER_INFO_SUCCESS.getHttpStatus())
                 .body(ApiResponse.success(UserSuccess.GET_USER_INFO_SUCCESS, userService.getUserInfo(IdConverter.getUserId(principal))));
+    }
+
+    @DeleteMapping
+    public ResponseEntity<ApiResponse<?>> orderWithdraw(Principal principal) {
+        userService.withdraw(IdConverter.getUserId(principal));
+        return ResponseEntity
+                .status(UserSuccess.WITHDRAW_SUCCESS.getHttpStatus())
+                .body(ApiResponse.success(UserSuccess.WITHDRAW_SUCCESS, new EmptyJsonResponse()));
     }
 }

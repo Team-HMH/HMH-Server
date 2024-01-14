@@ -15,7 +15,7 @@ public enum UserError implements ErrorBase {
     NOT_SIGNUP_USER(HttpStatus.FORBIDDEN, "회원가입된 유저가 아닙니다. 회원가입을 진행해주세요."),
 
     // 404 NOT FOUND
-    NOT_FOUND_USER(HttpStatus.NOT_FOUND, "User를 찾을 수 없습니다.");
+    NOT_FOUND_USER(HttpStatus.NOT_FOUND, "유저를 찾을 수 없습니다.");
 
     private final HttpStatus status;
     private final String errorMessage;
