@@ -19,21 +19,7 @@ import java.util.List;
 public class AppService {
 
     private final AppRepository appRepository;
-    private final DailyChallengeRepository dailyChallengeRepository;
     private final ChallengeRepository challengeRepository;
-
-    @Transactional
-    public void addAppByChallengeId(Long dailyChallengeId, List<AppGoalTimeRequest> requests, String os) {
-        val dailyChallenge = dailyChallengeRepository.findByIdOrThrowException(dailyChallengeId);
-
-        for (AppGoalTimeRequest request : requests) {
-            appRepository.save(App.builder()
-                    .dailyChallenge(dailyChallenge)
-                    .appCode(request.appCode())
-                    .goalTime(request.goalTime())
-                    .os(os).build());
-        }
-    }
 
     @Transactional
     public void removeApp(Long userId, AppDeleteRequest request, String os) {

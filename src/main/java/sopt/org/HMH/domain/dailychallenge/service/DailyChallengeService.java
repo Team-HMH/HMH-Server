@@ -20,7 +20,6 @@ import java.util.List;
 public class DailyChallengeService {
 
     private final DailyChallengeRepository dailyChallengeRepository;
-    private final AppService appService;
     private final ChallengeRepository challengeRepository;
 
     @Transactional
@@ -30,7 +29,6 @@ public class DailyChallengeService {
                     .challenge(challenge)
                     .goalTime(request.goalTime())
                     .build());
-            appService.addAppByChallengeId(dailyChallenge.getId(), request.apps(), os);
         }
 
         return challenge.getDailyChallenges();
