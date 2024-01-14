@@ -28,8 +28,8 @@ import sopt.org.HMH.global.auth.redis.TokenRepository;
 @RequiredArgsConstructor
 public class JwtProvider {
 
-    private static final Long ACCESS_TOKEN_EXPIRATION_TIME = 60 * 1000L * 1;  // 릴리즈 전 액세스 토큰 만료 시간: 1분, 릴리즈 이후 2일
-    private static final Long REFRESH_TOKEN_EXPIRATION_TIME = 60 * 1000L * 5;  // 릴리즈 전 리프레시 토큰 만료 시간: 2분, 릴리즈 이후 2주
+    private static final Long ACCESS_TOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 24 * 2L;  // 액세스 토큰 만료 기간 2일
+    private static final Long REFRESH_TOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 24 * 7 * 2L; // 리프레시 토큰 만료 기간 2주
 
     @Value("${jwt.secret}")
     private String JWT_SECRET;
@@ -45,8 +45,9 @@ public class JwtProvider {
      */
     public TokenResponse issueToken(Authentication authentication) {
         return TokenResponse.of(
-                generateAccessToken(authentication),
-                generateRefreshToken(authentication));
+                        generateAccessToken(authentication),
+                        generateRefreshToken(authentication)
+        );
     }
 
     /**
