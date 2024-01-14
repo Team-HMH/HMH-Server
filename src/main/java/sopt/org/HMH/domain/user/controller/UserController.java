@@ -13,9 +13,9 @@ import sopt.org.HMH.domain.user.domain.exception.UserSuccess;
 import sopt.org.HMH.domain.user.dto.request.SocialPlatformRequest;
 import sopt.org.HMH.domain.user.dto.request.SocialSignUpRequest;
 import sopt.org.HMH.domain.user.dto.response.LoginResponse;
+import sopt.org.HMH.domain.user.dto.response.ReissueResponse;
 import sopt.org.HMH.domain.user.dto.response.UserInfoResponse;
 import sopt.org.HMH.domain.user.service.UserService;
-import sopt.org.HMH.global.auth.jwt.TokenResponse;
 import sopt.org.HMH.global.common.response.ApiResponse;
 import sopt.org.HMH.global.common.response.EmptyJsonResponse;
 import sopt.org.HMH.global.util.IdConverter;
@@ -48,8 +48,8 @@ public class UserController {
                 .body(ApiResponse.success(UserSuccess.SIGNUP_SUCCESS, userService.signup(socialAccessToken, request, os)));
     }
 
-    @GetMapping("/reissue")
-    public ResponseEntity<ApiResponse<TokenResponse>> orderReissue(
+    @PostMapping("/reissue")
+    public ResponseEntity<ApiResponse<ReissueResponse>> orderReissue(
             @RequestHeader("Authorization") final String refreshToken
     ) {
         return ResponseEntity
