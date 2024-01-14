@@ -7,7 +7,7 @@ import sopt.org.HMH.global.common.exception.base.SuccessBase;
 @AllArgsConstructor
 public enum DailyChallengeSuccess implements SuccessBase {
 
-    GET_DAILY_CHALLENGE_SUCCESS(HttpStatus.OK, "오늘의 일별 챌린지 이용 통계 조회 성공"),
+    GET_DAILY_CHALLENGE_SUCCESS(HttpStatus.OK, "오늘의 일별 챌린지 이용 통계 조회를 성공하였습니다."),
     MODIFY_DAILY_CHALLENGE_STATUS_SUCCESS(HttpStatus.OK, "오늘의 일별 챌린지 STATUS 실패 처리 성공"),
     ;
 
