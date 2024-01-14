@@ -5,7 +5,6 @@ import java.util.List;
 
 public record ChallengeRequest(
         Integer period,
-        Long goalTime,
-        List<AppGoalTimeRequest> apps
+        Long goalTime
 ) {
 }
