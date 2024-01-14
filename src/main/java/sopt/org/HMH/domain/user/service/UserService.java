@@ -14,6 +14,7 @@ import sopt.org.HMH.domain.user.domain.exception.UserException;
 import sopt.org.HMH.domain.user.dto.request.SocialPlatformRequest;
 import sopt.org.HMH.domain.user.dto.request.SocialSignUpRequest;
 import sopt.org.HMH.domain.user.dto.response.LoginResponse;
+import sopt.org.HMH.domain.user.dto.response.ReissueResponse;
 import sopt.org.HMH.domain.user.dto.response.UserInfoResponse;
 import sopt.org.HMH.domain.user.repository.OnboardingInfoRepository;
 import sopt.org.HMH.domain.user.repository.UserRepository;
@@ -72,12 +73,12 @@ public class UserService {
     }
 
     @Transactional
-    public TokenResponse reissueToken(String refreshToken) {
+    public ReissueResponse reissueToken(String refreshToken) {
         refreshToken = parseTokenString(refreshToken);
         Long userId = jwtProvider.validateRefreshToken(refreshToken);
         validateUserId(userId);  // userId가 DB에 저장된 유효한 값인지 검사
         jwtProvider.deleteRefreshToken(userId);
-        return jwtProvider.issueToken(new UserAuthentication(userId, null, null));
+        return ReissueResponse.of(jwtProvider.issueToken(new UserAuthentication(userId, null, null)));
     }
 
     @Transactional
