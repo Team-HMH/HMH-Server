@@ -32,7 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor // final 필드를 가지는 생성자를 자동으로 생성해주는 어노테이션
+@RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class UserService {
 
@@ -86,7 +86,6 @@ public class UserService {
         Long userId = jwtProvider.getSubject(refreshToken);
         validateRefreshToken(refreshToken, userId);
         tokenService.deleteRefreshToken(userId);
-        validateUserId(userId);  // userId가 DB에 저장된 유효한 값인지 검사
         return ReissueResponse.of(jwtProvider.issueToken(userId));
     }
 
