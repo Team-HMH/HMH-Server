@@ -1,6 +1,5 @@
 package sopt.org.HMH.domain.dailychallenge.domain;
 
-import static jakarta.persistence.FetchType.*;
 import static jakarta.persistence.GenerationType.*;
 import static java.util.Objects.nonNull;
 
@@ -38,12 +37,12 @@ public class DailyChallenge extends BaseTimeEntity {
 
     @Builder
     public DailyChallenge(Challenge challenge, Long goalTime) {
-        setChallenge(challenge);
+        updateChallenge(challenge);
         this.goalTime = goalTime;
         this.status = Status.NONE;
     }
 
-    private void setChallenge(Challenge challenge) {
+    private void updateChallenge(Challenge challenge) {
         if (nonNull(this.challenge)) {
             this.challenge.getDailyChallenges().remove(this);
         }
