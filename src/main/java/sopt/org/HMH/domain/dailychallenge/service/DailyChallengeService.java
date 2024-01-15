@@ -5,7 +5,6 @@ import lombok.val;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sopt.org.HMH.domain.app.domain.App;
-import sopt.org.HMH.domain.app.dto.request.AppGoalTimeRequest;
 import sopt.org.HMH.domain.app.dto.request.AppUsageTimeRequest;
 import sopt.org.HMH.domain.app.repository.AppRepository;
 import sopt.org.HMH.domain.challenge.domain.Challenge;
@@ -52,7 +51,7 @@ public class DailyChallengeService {
     @Transactional
     public void modifyDailyChallengeStatusFailure(Long userId) {
         DailyChallenge dailyChallenge = getTodayDailyChallengeByUserId(userId);
-        dailyChallenge.modifyStatus(Status.FAILURE);
+        dailyChallenge.setStatus(Status.FAILURE);
     }
 
     @Transactional
@@ -68,7 +67,7 @@ public class DailyChallengeService {
                 .filter(Boolean::booleanValue)
                 .count();
         Status status = (successCount == requests.size()) ? Status.UNEARNED : Status.FAILURE;
-        todayDailyChallenge.modifyStatus(status);
+        todayDailyChallenge.setStatus(status);
     }
 
     public DailyChallenge getTodayDailyChallengeByUserId(Long userId) {
