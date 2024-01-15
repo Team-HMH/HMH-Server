@@ -6,7 +6,7 @@ public record AppGoalTimeResponse(
         String appCode,
         Long goalTime
 ) {
-    static AppGoalTimeResponse of(App app) {
+    public static AppGoalTimeResponse of(App app) {
         return new AppGoalTimeResponse(app.getAppCode(), app.getGoalTime());
     }
 }
