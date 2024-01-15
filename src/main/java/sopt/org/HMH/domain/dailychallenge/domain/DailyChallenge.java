@@ -23,7 +23,7 @@ public class DailyChallenge extends BaseTimeEntity {
     @GeneratedValue(strategy = IDENTITY)
     private Long Id;
 
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne
     @JoinColumn(name = "challenge_id")
     private Challenge challenge;
 
@@ -32,8 +32,8 @@ public class DailyChallenge extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    @OneToMany(mappedBy = "dailyChallenge")
-    private final List<App> apps = new ArrayList<>();
+    @OneToMany(mappedBy = "dailyChallenge", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<App> apps = new ArrayList<>();
 
     @Builder
     public DailyChallenge(Challenge challenge, Long goalTime) {

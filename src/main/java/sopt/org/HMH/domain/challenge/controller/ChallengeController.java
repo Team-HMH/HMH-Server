@@ -26,22 +26,17 @@ public class ChallengeController {
     private final ChallengeService challengeService;
 
     @PostMapping
-    public ResponseEntity<ApiResponse<AddChallengeResponse>> orderAddChallenge(
-            Principal principal,
-            @RequestHeader("OS") final String os,
-            @RequestBody final ChallengeRequest request
-    ) {
+    public ResponseEntity<ApiResponse<AddChallengeResponse>> orderAddChallenge(Principal principal,
+                                                                               @RequestBody final ChallengeRequest request) {
         return ResponseEntity
                 .status(ChallengeSuccess.ADD_CHALLENGE_SUCCESS.getHttpStatus())
                 .body(ApiResponse.success(ChallengeSuccess.ADD_CHALLENGE_SUCCESS,
-                        challengeService.addChallenge(IdConverter.getUserId(principal), request, os)));
+                        challengeService.addChallenge(IdConverter.getUserId(principal), request.period(), request.goalTime())));
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<ChallengeResponse>> orderGetChallenge(
-            Principal principal,
-            @RequestHeader("OS") final String os
-    ) {
+    public ResponseEntity<ApiResponse<ChallengeResponse>> orderGetChallenge(Principal principal,
+                                                                            @RequestHeader("OS") final String os) {
         return ResponseEntity
                 .status(ChallengeSuccess.GET_CHALLENGE_SUCCESS.getHttpStatus())
                 .body(ApiResponse.success(ChallengeSuccess.GET_CHALLENGE_SUCCESS,
