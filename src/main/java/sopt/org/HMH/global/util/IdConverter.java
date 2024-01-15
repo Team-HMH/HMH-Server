@@ -25,7 +25,7 @@ public class IdConverter {
     public static DailyChallenge getTodayDailyChallengeByUserId(ChallengeRepository challengeRepository,
                                                         final Long userId) {
         val challenge = challengeRepository.findFirstByUserIdOrderByCreatedAtDesc(userId);
-        val startDateOfChallenge = challenge.getDailyChallenges().get(0).getCreatedAt().toLocalDate();
+        val startDateOfChallenge = challenge.getCreatedAt().toLocalDate();
 
         val todayDailyChallengeIndex = (int) ChronoUnit.DAYS.between(LocalDateTime.now().toLocalDate(), startDateOfChallenge);
         return challenge.getDailyChallenges().get(todayDailyChallengeIndex);
