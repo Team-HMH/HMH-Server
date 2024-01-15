@@ -76,8 +76,8 @@ public class UserService {
         OnboardingInfo onboardingInfo = registerOnboardingInfo(request);
         User user = addUser(socialPlatform, socialId, request.name());
 
-        challengeService.addChallenge(user.getId(), request.challengeSignUpRequest().period(), request.challengeSignUpRequest().goalTime());
-        //appService.addAppsByUserId(user.getId(), request.challengeSignUpRequest().apps(), os);
+        val challenge = challengeService.addChallenge(user.getId(), request.challengeSignUpRequest().period(), request.challengeSignUpRequest().goalTime());
+        appService.addAppsByUserId(user.getId(), request.challengeSignUpRequest().apps(), os);
 
         return performLogin(socialAccessToken, socialPlatform, user);
     }

@@ -50,8 +50,10 @@ public class DailyChallengeService {
     public DailyChallenge getTodayDailyChallengeByUserId(Long userId) {
         val challenge = challengeRepository.findFirstByUserIdOrderByCreatedAtDesc(userId);
         val startDateOfChallenge = challenge.getCreatedAt().toLocalDate();
-
+        System.out.println("challenge.getDailyChallenges() : " + challenge.getDailyChallenges());
+        System.out.println("count of dailyChallenges : " + challenge.getDailyChallenges().stream().count());
         val todayDailyChallengeIndex = (int) ChronoUnit.DAYS.between(LocalDateTime.now().toLocalDate(), startDateOfChallenge);
+        System.out.println("todayDailyChallengeIndex : " + todayDailyChallengeIndex);
         return challenge.getDailyChallenges().get(todayDailyChallengeIndex);
     }
 }
