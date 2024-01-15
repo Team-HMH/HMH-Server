@@ -3,11 +3,11 @@ package sopt.org.HMH.domain.user.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import sopt.org.HMH.domain.app.service.AppService;
 import sopt.org.HMH.domain.challenge.service.ChallengeService;
-import sopt.org.HMH.domain.user.domain.OnboardingInfo;
-import sopt.org.HMH.domain.user.domain.OnboardingProblem;
 import sopt.org.HMH.domain.user.domain.User;
+import sopt.org.HMH.domain.user.domain.UserConstants;
 import sopt.org.HMH.domain.user.domain.exception.UserError;
 import sopt.org.HMH.domain.user.domain.exception.UserException;
 import sopt.org.HMH.domain.user.dto.request.SocialPlatformRequest;
@@ -15,7 +15,6 @@ import sopt.org.HMH.domain.user.dto.request.SocialSignUpRequest;
 import sopt.org.HMH.domain.user.dto.response.LoginResponse;
 import sopt.org.HMH.domain.user.dto.response.ReissueResponse;
 import sopt.org.HMH.domain.user.dto.response.UserInfoResponse;
-import sopt.org.HMH.domain.user.repository.OnboardingInfoRepository;
 import sopt.org.HMH.domain.user.repository.UserRepository;
 import sopt.org.HMH.global.auth.jwt.JwtProvider;
 import sopt.org.HMH.global.auth.jwt.JwtValidator;
@@ -23,13 +22,9 @@ import sopt.org.HMH.global.auth.jwt.TokenResponse;
 import sopt.org.HMH.global.auth.jwt.exception.JwtError;
 import sopt.org.HMH.global.auth.jwt.exception.JwtException;
 import sopt.org.HMH.global.auth.redis.TokenService;
-import sopt.org.HMH.global.auth.security.UserAuthentication;
 import sopt.org.HMH.global.auth.social.SocialPlatform;
 import sopt.org.HMH.global.auth.social.apple.fegin.AppleOAuthProvider;
 import sopt.org.HMH.global.auth.social.kakao.fegin.KakaoLoginService;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -39,7 +34,6 @@ public class UserService {
     private final JwtProvider jwtProvider;
     private final JwtValidator jwtValidator;
     private final UserRepository userRepository;
-    private final OnboardingInfoRepository onboardingInfoRepository;
     private final KakaoLoginService kakaoLoginService;
     private final ChallengeService challengeService;
     private final TokenService tokenService;
@@ -71,7 +65,6 @@ public class UserService {
         // 이미 회원가입된 유저가 있다면 400 Error 발생
         validateDuplicateUser(socialId, socialPlatform);
 
-        OnboardingInfo onboardingInfo = registerOnboardingInfo(request);
         User user = addUser(socialPlatform, socialId, request.name());
 
         challengeService.addChallenge(user.getId(), request.challengeSignUpRequest().period(), request.challengeSignUpRequest().goalTime());
@@ -162,26 +155,16 @@ public class UserService {
         User user = User.builder()
                 .socialPlatform(socialPlatform)
                 .socialId(socialId)
-                .name(name)
+                .name(validateName(name))
                 .build();
         userRepository.save(user);
         return user;
     }
 
-    private OnboardingInfo registerOnboardingInfo(SocialSignUpRequest request) {
-        List<OnboardingProblem> problemList = new ArrayList<>();
-        for (String problem : request.onboardingRequest().problemList()) {
-            problemList.add(
-                    OnboardingProblem.builder()
-                            .problem(problem)
-                            .build()
-            );
+    private String validateName(String name) {
+        if (StringUtils.isEmpty(name)) {
+            return UserConstants.DEFAULT_USER_NAME;
         }
-
-        OnboardingInfo onboardingInfo = OnboardingInfo.builder()
-                .averageUseTime(request.onboardingRequest().averageUseTime())
-                .build();
-        onboardingInfoRepository.save(onboardingInfo);
-        return onboardingInfo;
+        return name;
     }
 }
