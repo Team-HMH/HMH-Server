@@ -17,9 +17,9 @@ import sopt.org.HMH.domain.user.dto.response.LoginResponse;
 import sopt.org.HMH.domain.user.dto.response.ReissueResponse;
 import sopt.org.HMH.domain.user.dto.response.UserInfoResponse;
 import sopt.org.HMH.domain.user.service.UserService;
+import sopt.org.HMH.global.auth.UserId;
 import sopt.org.HMH.global.common.response.ApiResponse;
 import sopt.org.HMH.global.common.response.EmptyJsonResponse;
-import sopt.org.HMH.global.util.IdConverter;
 
 @RestController
 @RequiredArgsConstructor
@@ -60,7 +60,7 @@ public class UserController {
 
     @PostMapping("/logout")
     public ResponseEntity<ApiResponse<?>> orderLogout(Principal principal) {
-        userService.logout(IdConverter.getUserId(principal));
+        userService.logout(UserId.getUserId(principal));
         return ResponseEntity
                 .status(UserSuccess.LOGOUT_SUCCESS.getHttpStatus())
                 .body(ApiResponse.success(UserSuccess.LOGOUT_SUCCESS, new EmptyJsonResponse()));
@@ -70,12 +70,12 @@ public class UserController {
     public ResponseEntity<ApiResponse<UserInfoResponse>> orderGetUserInfo(Principal principal) {
         return ResponseEntity
                 .status(UserSuccess.GET_USER_INFO_SUCCESS.getHttpStatus())
-                .body(ApiResponse.success(UserSuccess.GET_USER_INFO_SUCCESS, userService.getUserInfo(IdConverter.getUserId(principal))));
+                .body(ApiResponse.success(UserSuccess.GET_USER_INFO_SUCCESS, userService.getUserInfo(UserId.getUserId(principal))));
     }
 
     @DeleteMapping
     public ResponseEntity<ApiResponse<?>> orderWithdraw(Principal principal) {
-        userService.withdraw(IdConverter.getUserId(principal));
+        userService.withdraw(UserId.getUserId(principal));
         return ResponseEntity
                 .status(UserSuccess.WITHDRAW_SUCCESS.getHttpStatus())
                 .body(ApiResponse.success(UserSuccess.WITHDRAW_SUCCESS, new EmptyJsonResponse()));

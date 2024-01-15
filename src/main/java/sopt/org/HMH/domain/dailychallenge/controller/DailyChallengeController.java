@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 import sopt.org.HMH.domain.dailychallenge.domain.exception.DailyChallengeSuccess;
 import sopt.org.HMH.domain.dailychallenge.dto.response.DailyChallengeResponse;
 import sopt.org.HMH.domain.dailychallenge.service.DailyChallengeService;
+import sopt.org.HMH.global.auth.UserId;
 import sopt.org.HMH.global.common.response.ApiResponse;
 import sopt.org.HMH.global.common.response.EmptyJsonResponse;
-import sopt.org.HMH.global.util.IdConverter;
 
 import java.security.Principal;
 
@@ -29,12 +29,12 @@ public class DailyChallengeController {
         return ResponseEntity
                 .status(DailyChallengeSuccess.GET_DAILY_CHALLENGE_SUCCESS.getHttpStatus())
                 .body(ApiResponse.success(DailyChallengeSuccess.GET_DAILY_CHALLENGE_SUCCESS,
-                        dailyChallengeService.getDailyChallenge(IdConverter.getUserId(principal), os)));
+                        dailyChallengeService.getDailyChallenge(UserId.getUserId(principal), os)));
     }
 
     @PatchMapping("/failure")
     public ResponseEntity<ApiResponse<?>> orderChallengeDailyChallenge(Principal principal) {
-        dailyChallengeService.modifyDailyChallengeStatus(IdConverter.getUserId(principal));
+        dailyChallengeService.modifyDailyChallengeStatus(UserId.getUserId(principal));
         return ResponseEntity
                 .status(DailyChallengeSuccess.MODIFY_DAILY_CHALLENGE_STATUS_SUCCESS.getHttpStatus())
                 .body(ApiResponse.success(DailyChallengeSuccess.MODIFY_DAILY_CHALLENGE_STATUS_SUCCESS, new EmptyJsonResponse()));
