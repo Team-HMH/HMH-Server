@@ -5,7 +5,6 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Column;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
@@ -39,5 +38,9 @@ public class App {
         this.usageTime = 0L;
         this.goalTime = goalTime;
         this.os = os;
+    }
+
+    public void setUsageTime(Long usageTime) {
+        this.usageTime = usageTime;
     }
 }

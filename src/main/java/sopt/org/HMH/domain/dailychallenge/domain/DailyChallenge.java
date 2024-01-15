@@ -50,7 +50,7 @@ public class DailyChallenge extends BaseTimeEntity {
         challenge.getDailyChallenges().add(this);
     }
 
-    public void modifyStatus(Status status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 }
