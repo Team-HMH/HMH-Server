@@ -13,6 +13,7 @@ import sopt.org.HMH.domain.dailychallenge.repository.DailyChallengeRepository;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -25,14 +26,16 @@ public class DailyChallengeService {
 
     @Transactional
     public List<DailyChallenge> addDailyChallengesForPeriod(Challenge challenge, Integer period, Long goalTime) {
+        List<DailyChallenge> dailyChallenges = new ArrayList<>();
         for (int count = 0; count < period; count++) {
-            dailyChallengeRepository.save(DailyChallenge.builder()
+            dailyChallenges.add(DailyChallenge.builder()
                     .challenge(challenge)
                     .goalTime(goalTime)
                     .build());
         }
+        dailyChallengeRepository.saveAll(dailyChallenges);
 
-        return challenge.getDailyChallenges();
+        return dailyChallenges;
     }
 
     public DailyChallengeResponse getDailyChallenge(Long userId, String os) {
@@ -50,10 +53,7 @@ public class DailyChallengeService {
     public DailyChallenge getTodayDailyChallengeByUserId(Long userId) {
         val challenge = challengeRepository.findFirstByUserIdOrderByCreatedAtDesc(userId);
         val startDateOfChallenge = challenge.getCreatedAt().toLocalDate();
-        System.out.println("challenge.getDailyChallenges() : " + challenge.getDailyChallenges());
-        System.out.println("count of dailyChallenges : " + challenge.getDailyChallenges().stream().count());
         val todayDailyChallengeIndex = (int) ChronoUnit.DAYS.between(LocalDateTime.now().toLocalDate(), startDateOfChallenge);
-        System.out.println("todayDailyChallengeIndex : " + todayDailyChallengeIndex);
         return challenge.getDailyChallenges().get(todayDailyChallengeIndex);
     }
 }
