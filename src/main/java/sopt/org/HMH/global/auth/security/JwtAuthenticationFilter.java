@@ -14,11 +14,11 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
+import sopt.org.HMH.global.auth.jwt.JwtConstants;
 import sopt.org.HMH.global.auth.jwt.JwtProvider;
 import sopt.org.HMH.global.auth.jwt.JwtValidator;
 import sopt.org.HMH.global.auth.jwt.exception.JwtError;
 import sopt.org.HMH.global.auth.jwt.exception.JwtException;
-import sopt.org.HMH.global.common.constant.Constants;
 
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -34,9 +34,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private String getAccessToken(HttpServletRequest request) {
-        String accessToken = request.getHeader(Constants.AUTHORIZATION);
-        if (StringUtils.hasText(accessToken) && accessToken.startsWith(Constants.BEARER)) {
-            return accessToken.substring(Constants.BEARER.length());
+        String accessToken = request.getHeader(JwtConstants.AUTHORIZATION);
+        if (StringUtils.hasText(accessToken) && accessToken.startsWith(JwtConstants.BEARER)) {
+            return accessToken.substring(JwtConstants.BEARER.length());
         }
         throw new JwtException(JwtError.INVALID_ACCESS_TOKEN);
     }

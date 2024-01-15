@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import sopt.org.HMH.global.auth.redis.RefreshToken;
 import sopt.org.HMH.global.auth.redis.TokenRepository;
-import sopt.org.HMH.global.common.constant.Constants;
 
 @Component
 @RequiredArgsConstructor
@@ -40,7 +39,7 @@ public class JwtGenerator {
                     RefreshToken.builder()
                             .userId(userId)
                             .refreshToken(token)
-                            .expiration(Constants.REFRESH_TOKEN_EXPIRATION_TIME / 1000)
+                            .expiration(JwtConstants.REFRESH_TOKEN_EXPIRATION_TIME / 1000)
                             .build());
         }
         return token;
@@ -60,9 +59,9 @@ public class JwtGenerator {
 
     private long calculateExpirationTime(boolean isRefreshToken) {
         if (isRefreshToken) {
-            return Constants.REFRESH_TOKEN_EXPIRATION_TIME;
+            return JwtConstants.REFRESH_TOKEN_EXPIRATION_TIME;
         }
-        return Constants.ACCESS_TOKEN_EXPIRATION_TIME;
+        return JwtConstants.ACCESS_TOKEN_EXPIRATION_TIME;
     }
 
     private String encodeSecretKey() {

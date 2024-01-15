@@ -14,7 +14,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import sopt.org.HMH.global.auth.social.SocialPlatform;
-import sopt.org.HMH.global.common.constant.Constants;
 import sopt.org.HMH.global.common.domain.BaseTimeEntity;
 
 @Getter
@@ -48,7 +47,7 @@ public class User extends BaseTimeEntity {
         this.socialId = socialId;
         this.name = name;
         this.onboardingInfoId = onboardingInfoId;
-        this.point = Constants.INITIAL_POINT;
+        this.point = UserConstants.INITIAL_POINT;
     }
 
     public void updateSocialInfo(String nickname, String profileImageUrl) {

@@ -11,9 +11,9 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import sopt.org.HMH.global.auth.jwt.JwtConstants;
 import sopt.org.HMH.global.auth.jwt.exception.JwtError;
 import sopt.org.HMH.global.auth.jwt.exception.JwtException;
-import sopt.org.HMH.global.common.constant.Constants;
 import sopt.org.HMH.global.common.exception.base.ErrorBase;
 import sopt.org.HMH.global.common.response.ApiResponse;
 
@@ -45,7 +45,7 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
 
     private void setResponse(HttpServletResponse response, HttpStatus httpStatus, ErrorBase errorMessage) throws IOException {
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        response.setCharacterEncoding(Constants.CHARACTER_ENCODING);
+        response.setCharacterEncoding(JwtConstants.CHARACTER_ENCODING);
         response.setStatus(httpStatus.value());
         PrintWriter writer = response.getWriter();
         writer.write(objectMapper.writeValueAsString(ApiResponse.error(errorMessage)));
