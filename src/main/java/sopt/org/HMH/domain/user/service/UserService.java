@@ -19,6 +19,7 @@ import sopt.org.HMH.domain.user.domain.exception.UserException;
 import sopt.org.HMH.domain.user.dto.request.SocialPlatformRequest;
 import sopt.org.HMH.domain.user.dto.request.SocialSignUpRequest;
 import sopt.org.HMH.domain.user.dto.response.LoginResponse;
+import sopt.org.HMH.domain.user.dto.response.ReissueResponse;
 import sopt.org.HMH.domain.user.dto.response.UserInfoResponse;
 import sopt.org.HMH.domain.user.repository.OnboardingInfoRepository;
 import sopt.org.HMH.domain.user.repository.UserRepository;
@@ -56,6 +57,10 @@ public class UserService {
         // 유저를 찾지 못하면 404 Error를 던져 클라이언트에게 회원가입 api를 요구한다.
         User loginUser = getUserBySocialPlatformAndSocialId(socialPlatform, socialId);
 
+        if (loginUser.isDeleted()) {
+            loginUser.recover();
+        }
+
         return performLogin(socialAccessToken, socialPlatform, loginUser);
     }
 
@@ -78,12 +83,18 @@ public class UserService {
     }
 
     @Transactional
-    public TokenResponse reissueToken(String refreshToken) {
+    public ReissueResponse reissueToken(String refreshToken) {
         refreshToken = parseTokenString(refreshToken);
         Long userId = jwtProvider.validateRefreshToken(refreshToken);
         validateUserId(userId);  // userId가 DB에 저장된 유효한 값인지 검사
         jwtProvider.deleteRefreshToken(userId);
-        return jwtProvider.issueToken(new UserAuthentication(userId, null, null));
+        return ReissueResponse.of(jwtProvider.issueToken(new UserAuthentication(userId, null, null)));
+    }
+
+    @Transactional
+    public void withdraw(Long userId) {
+        User user = userRepository.findByIdOrThrowException(userId);
+        user.softDelete();
     }
 
     public void logout(Long userId) {
@@ -164,9 +175,5 @@ public class UserService {
                 .build();
         onboardingInfoRepository.save(onboardingInfo);
         return onboardingInfo;
-    }
-
-    public User getUserById(Long userId) {
-        return userRepository.findByIdOrThrowException(userId);
     }
 }

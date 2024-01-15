@@ -1,6 +1,5 @@
 package sopt.org.HMH.domain.challenge.domain;
 
-import static jakarta.persistence.FetchType.*;
 import static jakarta.persistence.GenerationType.*;
 
 import jakarta.persistence.*;
@@ -8,7 +7,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import sopt.org.HMH.domain.user.domain.User;
 import sopt.org.HMH.global.common.domain.BaseTimeEntity;
 import sopt.org.HMH.domain.dailychallenge.domain.DailyChallenge;
 

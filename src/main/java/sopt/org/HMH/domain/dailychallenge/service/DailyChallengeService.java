@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import sopt.org.HMH.domain.challenge.domain.Challenge;
 import sopt.org.HMH.domain.challenge.repository.ChallengeRepository;
 import sopt.org.HMH.domain.dailychallenge.domain.DailyChallenge;
+import sopt.org.HMH.domain.dailychallenge.domain.Status;
 import sopt.org.HMH.domain.dailychallenge.dto.response.DailyChallengeResponse;
 import sopt.org.HMH.domain.dailychallenge.repository.DailyChallengeRepository;
 
@@ -16,6 +17,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class DailyChallengeService {
 
     private final DailyChallengeRepository dailyChallengeRepository;
@@ -37,6 +39,12 @@ public class DailyChallengeService {
         DailyChallenge dailyChallenge = getTodayDailyChallengeByUserId(userId);
 
         return DailyChallengeResponse.of(dailyChallenge, os);
+    }
+
+    @Transactional
+    public void modifyDailyChallengeStatus(Long userId) {
+        DailyChallenge dailyChallenge = getTodayDailyChallengeByUserId(userId);
+        dailyChallenge.modifyStatus(Status.FAILURE);
     }
 
     public DailyChallenge getTodayDailyChallengeByUserId(Long userId) {
