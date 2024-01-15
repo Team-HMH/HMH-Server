@@ -20,7 +20,7 @@ public record ChallengeResponse(
         Long goalTime,
         List<AppGoalTimeResponse> apps
 ) {
-    public static ChallengeResponse of(Challenge challenge) {
+    public static ChallengeResponse of(Challenge challenge, String os) {
         val dailyChallenges = challenge.getDailyChallenges();
 
         val statuses = new ArrayList<Status>();
@@ -39,6 +39,7 @@ public record ChallengeResponse(
                 .goalTime(todayDailyChallenge.getGoalTime())
                 .apps(todayDailyChallenge.getApps()
                         .stream()
+                        .filter(app -> os.equals(app.getOs()))
                         .map(AppGoalTimeResponse::of)
                         .toList())
                 .build();

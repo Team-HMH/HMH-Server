@@ -9,9 +9,13 @@ import sopt.org.HMH.domain.app.dto.request.AppDeleteRequest;
 import sopt.org.HMH.domain.app.dto.request.AppGoalTimeRequest;
 import sopt.org.HMH.domain.app.repository.AppRepository;
 import sopt.org.HMH.domain.challenge.repository.ChallengeRepository;
+import sopt.org.HMH.domain.dailychallenge.domain.DailyChallenge;
 import sopt.org.HMH.domain.dailychallenge.repository.DailyChallengeRepository;
+import sopt.org.HMH.domain.dailychallenge.service.DailyChallengeService;
 import sopt.org.HMH.global.util.IdConverter;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Service
@@ -19,25 +23,12 @@ import java.util.List;
 public class AppService {
 
     private final AppRepository appRepository;
-    private final DailyChallengeRepository dailyChallengeRepository;
-    private final ChallengeRepository challengeRepository;
 
-    @Transactional
-    public void addAppByChallengeId(Long dailyChallengeId, List<AppGoalTimeRequest> requests, String os) {
-        val dailyChallenge = dailyChallengeRepository.findByIdOrThrowException(dailyChallengeId);
-
-        for (AppGoalTimeRequest request : requests) {
-            appRepository.save(App.builder()
-                    .dailyChallenge(dailyChallenge)
-                    .appCode(request.appCode())
-                    .goalTime(request.goalTime())
-                    .os(os).build());
-        }
-    }
+    private final DailyChallengeService dailyChallengeService;
 
     @Transactional
     public void removeApp(Long userId, AppDeleteRequest request, String os) {
-        Long todayDailyChallengeId = IdConverter.getTodayDailyChallengeByUserId(challengeRepository, userId).getId();
+        Long todayDailyChallengeId = dailyChallengeService.getTodayDailyChallengeByUserId(userId).getId();
         App app = appRepository.findByDailyChallengeIdAndAppCodeAndOs(todayDailyChallengeId, request.appCode(), os);
 
         appRepository.deleteById(app.getId());
@@ -47,7 +38,7 @@ public class AppService {
     public void addAppsByUserId(Long userId, List<AppGoalTimeRequest> requests, String os) {
         for (AppGoalTimeRequest request : requests) {
             appRepository.save(App.builder()
-                    .dailyChallenge(IdConverter.getTodayDailyChallengeByUserId(challengeRepository, userId))
+                    .dailyChallenge(dailyChallengeService.getTodayDailyChallengeByUserId(userId))
                     .appCode(request.appCode())
                     .goalTime(request.goalTime())
                     .os(os).build());

@@ -1,10 +1,12 @@
 package sopt.org.HMH.domain.challenge.dto.request;
 
 import sopt.org.HMH.domain.app.dto.request.AppGoalTimeRequest;
+
 import java.util.List;
 
-public record ChallengeRequest(
+public record ChallengeSignUpRequest(
         Integer period,
-        Long goalTime
+        Long goalTime,
+        List<AppGoalTimeRequest> apps
 ) {
 }

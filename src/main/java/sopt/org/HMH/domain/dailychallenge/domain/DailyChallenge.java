@@ -1,7 +1,7 @@
 package sopt.org.HMH.domain.dailychallenge.domain;
 
-import static jakarta.persistence.FetchType.*;
 import static jakarta.persistence.GenerationType.*;
+import static java.util.Objects.nonNull;
 
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -23,7 +23,7 @@ public class DailyChallenge extends BaseTimeEntity {
     @GeneratedValue(strategy = IDENTITY)
     private Long Id;
 
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "challenge_id")
     private Challenge challenge;
 
@@ -32,14 +32,22 @@ public class DailyChallenge extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    @OneToMany(mappedBy = "dailyChallenge")
-    private final List<App> apps = new ArrayList<>();
+    @OneToMany(mappedBy = "dailyChallenge", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<App> apps = new ArrayList<>();
 
     @Builder
     public DailyChallenge(Challenge challenge, Long goalTime) {
-        this.challenge = challenge;
+        updateChallenge(challenge);
         this.goalTime = goalTime;
         this.status = Status.NONE;
+    }
+
+    private void updateChallenge(Challenge challenge) {
+        if (nonNull(this.challenge)) {
+            this.challenge.getDailyChallenges().remove(this);
+        }
+        this.challenge = challenge;
+        challenge.getDailyChallenges().add(this);
     }
 
     public void modifyStatus(Status status) {
