@@ -31,7 +31,7 @@ public class DailyChallengeController {
         return ResponseEntity
                 .status(DailyChallengeSuccess.GET_DAILY_CHALLENGE_SUCCESS.getHttpStatus())
                 .body(ApiResponse.success(DailyChallengeSuccess.GET_DAILY_CHALLENGE_SUCCESS,
-                        dailyChallengeService.getDailyChallenge(IdConverter.getUserId(principal))));
+                        dailyChallengeService.getDailyChallenge(IdConverter.getUserId(principal), os)));
     }
 
     @PatchMapping("/failure")
