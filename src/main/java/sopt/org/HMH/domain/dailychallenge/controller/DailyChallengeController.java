@@ -24,20 +24,16 @@ public class DailyChallengeController {
     private final DailyChallengeService dailyChallengeService;
 
     @GetMapping
-    public ResponseEntity<ApiResponse<DailyChallengeResponse>> orderDetailDailyChallenge(
-            Principal principal,
-            @RequestHeader("OS") final String os
-    ) {
+    public ResponseEntity<ApiResponse<DailyChallengeResponse>> orderDetailDailyChallenge(Principal principal,
+                                                                                         @RequestHeader("OS") final String os) {
         return ResponseEntity
                 .status(DailyChallengeSuccess.GET_DAILY_CHALLENGE_SUCCESS.getHttpStatus())
                 .body(ApiResponse.success(DailyChallengeSuccess.GET_DAILY_CHALLENGE_SUCCESS,
-                        dailyChallengeService.getDailyChallenge(IdConverter.getUserId(principal))));
+                        dailyChallengeService.getDailyChallenge(IdConverter.getUserId(principal), os)));
     }
 
     @PatchMapping("/failure")
-    public ResponseEntity<ApiResponse<?>> orderChallengeDailyChallenge(
-            Principal principal
-    ) {
+    public ResponseEntity<ApiResponse<?>> orderChallengeDailyChallenge(Principal principal) {
         dailyChallengeService.modifyDailyChallengeStatus(IdConverter.getUserId(principal));
         return ResponseEntity
                 .status(DailyChallengeSuccess.MODIFY_DAILY_CHALLENGE_STATUS_SUCCESS.getHttpStatus())

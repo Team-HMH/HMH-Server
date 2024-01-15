@@ -24,13 +24,15 @@ public class Challenge extends BaseTimeEntity {
 
     private Long userId;
     private Integer period;
+    private Long goalTime;
 
-    @OneToMany(mappedBy = "challenge")
-    private final List<DailyChallenge> dailyChallenges  = new ArrayList<>();
+    @OneToMany(mappedBy = "challenge", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<DailyChallenge> dailyChallenges  = new ArrayList<>();
 
     @Builder
-    private Challenge(Integer period, Long userId) {
+    private Challenge(Integer period, Long userId, Long goalTime) {
         this.period = period;
         this.userId = userId;
+        this.goalTime = goalTime;
     }
 }
