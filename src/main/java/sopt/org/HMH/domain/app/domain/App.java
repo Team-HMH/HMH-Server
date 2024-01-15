@@ -40,4 +40,8 @@ public class App {
         this.goalTime = goalTime;
         this.os = os;
     }
+
+    public void modifyUsageTime(Long usageTime) {
+        this.usageTime = usageTime;
+    }
 }
