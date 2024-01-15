@@ -19,6 +19,7 @@ public enum JwtError implements ErrorBase {
     EXPIRED_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED,  "리프레시 토큰이 만료되었습니다. 다시 로그인해 주세요."),
 
     INVALID_SOCIAL_ACCESS_TOKEN(HttpStatus.UNAUTHORIZED, "유효하지 않은 소셜 엑세스 토큰입니다."),
+    INVALID_SOCIAL_ACCESS_TOKEN_FORMAT(HttpStatus.UNAUTHORIZED, "유효하지 않은 소셜 엑세스 토큰 형식입니다."),
 
     INVALID_IDENTITY_TOKEN(HttpStatus.UNAUTHORIZED, "애플 아이덴티티 토큰의 형식이 올바르지 않습니다."),
     EXPIRED_IDENTITY_TOKEN(HttpStatus.UNAUTHORIZED, "만료된 애플 아이덴티티 토큰입니다."),

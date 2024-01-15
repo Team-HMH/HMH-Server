@@ -1,10 +1,13 @@
 package sopt.org.HMH.global.auth.social.kakao.fegin;
 
+import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import sopt.org.HMH.domain.user.domain.User;
+import sopt.org.HMH.global.auth.jwt.exception.JwtError;
+import sopt.org.HMH.global.auth.jwt.exception.JwtException;
 import sopt.org.HMH.global.auth.social.kakao.request.KakaoUserRequest;
 
 @Service
@@ -18,24 +21,36 @@ public class KakaoLoginService {
      * 카카오 Acess Token으로 유저의 소셜 Id 불러오는 함수
      */
     public String getSocialIdByKakao(final String socialAccessToken) {
-
-        KakaoUserRequest userRequest = kakaoFeignClient.getUserInformation(socialAccessToken);
-        return String.valueOf(userRequest.id());
+        return String.valueOf(getKakaoUserRequest(socialAccessToken).id());
     }
 
     /**
      * 카카오 Access Token으로 유저 정보 업데이트
      */
     public void updateUserInfoByKakao(User loginUser, final String socialAccessToken) {
-        KakaoUserRequest userResponse = kakaoFeignClient.getUserInformation(socialAccessToken);
+        KakaoUserRequest userRequest = getKakaoUserRequest(socialAccessToken);
 
-        String nickname = userResponse.kakaoAccount().profile().nickname();
-        String profileImageUrl = userResponse.kakaoAccount().profile().profileImageUrl();
+        try {
+            String nickname = userRequest.kakaoAccount().profile().nickname();
+            String profileImageUrl = userRequest.kakaoAccount().profile().profileImageUrl();
 
-        if (StringUtils.isEmpty(profileImageUrl)) {
-            profileImageUrl = "";
+            if (StringUtils.isEmpty(profileImageUrl)) {
+                profileImageUrl = "";
+            }
+
+            loginUser.updateSocialInfo(nickname, profileImageUrl);
+
+        } catch (NullPointerException exception) {
+            throw new JwtException(JwtError.INVALID_SOCIAL_ACCESS_TOKEN_FORMAT);
         }
+    }
 
-        loginUser.updateSocialInfo(nickname, profileImageUrl);
+    private KakaoUserRequest getKakaoUserRequest(final String socialAccessToken) {
+        try {
+            KakaoUserRequest userRequest = kakaoFeignClient.getUserInformation(socialAccessToken);
+            return userRequest;
+        } catch (FeignException exception) {
+            throw new JwtException(JwtError.INVALID_SOCIAL_ACCESS_TOKEN);
+        }
     }
 }
