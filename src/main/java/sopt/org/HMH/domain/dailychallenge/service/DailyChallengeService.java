@@ -57,11 +57,11 @@ public class DailyChallengeService {
     @Transactional
     public void modifyDailyChallengeStatus(Long userId, List<AppUsageTimeRequest> requests, String os) {
         DailyChallenge todayDailyChallenge = getTodayDailyChallengeByUserId(userId);
-        int successCount = (int) requests.stream()
+        long successCount =  requests.stream()
                 .map(request -> {
                     App app = appRepository.findByDailyChallengeIdAndAppCodeAndOs(
                             todayDailyChallenge.getId(), request.appCode(), os);
-                    app.modifyUsageTime(request.usageTime());
+                    app.setUsageTime(request.usageTime());
                     return request.usageTime() <= app.getGoalTime();
                 })
                 .filter(Boolean::booleanValue)
