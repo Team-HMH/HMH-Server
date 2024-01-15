@@ -1,16 +1,10 @@
 package sopt.org.HMH.domain.user.service;
 
-import java.util.ArrayList;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
-import lombok.val;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sopt.org.HMH.domain.app.service.AppService;
-import sopt.org.HMH.domain.challenge.dto.response.AddChallengeResponse;
-import sopt.org.HMH.domain.challenge.repository.ChallengeRepository;
 import sopt.org.HMH.domain.challenge.service.ChallengeService;
-import sopt.org.HMH.domain.dailychallenge.service.DailyChallengeService;
 import sopt.org.HMH.domain.user.domain.OnboardingInfo;
 import sopt.org.HMH.domain.user.domain.OnboardingProblem;
 import sopt.org.HMH.domain.user.domain.User;
@@ -31,7 +25,9 @@ import sopt.org.HMH.global.auth.security.UserAuthentication;
 import sopt.org.HMH.global.auth.social.SocialPlatform;
 import sopt.org.HMH.global.auth.social.apple.fegin.AppleOAuthProvider;
 import sopt.org.HMH.global.auth.social.kakao.fegin.KakaoLoginService;
-import sopt.org.HMH.global.util.IdConverter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor // final 필드를 가지는 생성자를 자동으로 생성해주는 어노테이션
@@ -45,8 +41,6 @@ public class UserService {
     private final ChallengeService challengeService;
     private final AppleOAuthProvider appleOAuthProvider;
     private final AppService appService;
-    private final DailyChallengeService dailyChallengeService;
-    private final ChallengeRepository challengeRepository;
 
     @Transactional
     public LoginResponse login(String socialAccessToken, SocialPlatformRequest request) {
@@ -76,7 +70,7 @@ public class UserService {
         OnboardingInfo onboardingInfo = registerOnboardingInfo(request);
         User user = addUser(socialPlatform, socialId, request.name());
 
-        val challenge = challengeService.addChallenge(user.getId(), request.challengeSignUpRequest().period(), request.challengeSignUpRequest().goalTime());
+        challengeService.addChallenge(user.getId(), request.challengeSignUpRequest().period(), request.challengeSignUpRequest().goalTime());
         appService.addAppsByUserId(user.getId(), request.challengeSignUpRequest().apps(), os);
 
         return performLogin(socialAccessToken, socialPlatform, user);
