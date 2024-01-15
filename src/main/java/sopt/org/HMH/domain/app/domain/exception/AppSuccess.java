@@ -7,8 +7,8 @@ import sopt.org.HMH.global.common.exception.base.SuccessBase;
 @AllArgsConstructor
 public enum AppSuccess implements SuccessBase {
 
-    ADD_APP_SUCCESS(HttpStatus.OK, "스크린타임 설정 앱 추가 성공"),
-    DELETE_APP_SUCCESS(HttpStatus.OK,  "스크린타임 설정 앱 삭제 성공")
+    ADD_APP_SUCCESS(HttpStatus.OK, "스크린타임 설정 앱 추가를 성공하였습니다."),
+    DELETE_APP_SUCCESS(HttpStatus.OK,  "스크린타임 설정 앱 삭제를 성공하였습니다.")
     ;
 
     private final HttpStatus status;

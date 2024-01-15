@@ -1,4 +1,4 @@
-package sopt.org.HMH.global.common.domain;
+package sopt.org.HMH.global.common.constant;
 
 public enum PointConstants {
 
