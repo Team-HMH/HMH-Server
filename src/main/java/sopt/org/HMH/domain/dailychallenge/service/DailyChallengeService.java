@@ -50,7 +50,7 @@ public class DailyChallengeService {
     }
 
     @Transactional
-    public void modifyDailyChallengeStatus(Long userId) {
+    public void modifyDailyChallengeStatusFailure(Long userId) {
         DailyChallenge dailyChallenge = getTodayDailyChallengeByUserId(userId);
         dailyChallenge.modifyStatus(Status.FAILURE);
     }
