@@ -8,6 +8,7 @@ import sopt.org.HMH.domain.app.service.AppService;
 import sopt.org.HMH.domain.challenge.domain.Challenge;
 import sopt.org.HMH.domain.challenge.repository.ChallengeRepository;
 import sopt.org.HMH.domain.dailychallenge.domain.DailyChallenge;
+import sopt.org.HMH.domain.dailychallenge.domain.Status;
 import sopt.org.HMH.domain.dailychallenge.dto.response.DailyChallengeResponse;
 import sopt.org.HMH.domain.dailychallenge.repository.DailyChallengeRepository;
 import sopt.org.HMH.global.util.IdConverter;
@@ -16,6 +17,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class DailyChallengeService {
 
     private final DailyChallengeRepository dailyChallengeRepository;
@@ -33,10 +35,17 @@ public class DailyChallengeService {
         return dailyChallenge.getId();
     }
 
-    public DailyChallengeResponse getDailyChallenge(Long userId, String os) {
+    public DailyChallengeResponse getDailyChallenge(Long userId) {
         DailyChallenge dailyChallenge = IdConverter.getTodayDailyChallenge(challengeRepository,
                 dailyChallengeRepository, userId);
 
         return DailyChallengeResponse.of(dailyChallenge);
+    }
+
+    @Transactional
+    public void modifyDailyChallengeStatus(Long userId) {
+        DailyChallenge dailyChallenge = IdConverter.getTodayDailyChallenge(challengeRepository,
+                dailyChallengeRepository, userId);
+        dailyChallenge.modifyStatus(Status.FAILURE);
     }
 }

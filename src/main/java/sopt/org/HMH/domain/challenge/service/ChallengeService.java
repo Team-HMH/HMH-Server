@@ -8,17 +8,14 @@ import sopt.org.HMH.domain.challenge.dto.request.ChallengeRequest;
 import sopt.org.HMH.domain.challenge.dto.response.AddChallengeResponse;
 import sopt.org.HMH.domain.challenge.repository.ChallengeRepository;
 import sopt.org.HMH.domain.dailychallenge.service.DailyChallengeService;
-import sopt.org.HMH.domain.user.domain.User;
-import sopt.org.HMH.domain.user.repository.UserRepository;
 
 @Service
 @RequiredArgsConstructor
 public class ChallengeService {
 
     private final ChallengeRepository challengeRepository;
-    private final UserRepository userRepository;
-
     private final DailyChallengeService dailyChallengeService;
+
 
     @Transactional
     public AddChallengeResponse addChallenge(Long userId,

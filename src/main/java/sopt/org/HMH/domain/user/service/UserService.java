@@ -14,6 +14,7 @@ import sopt.org.HMH.domain.user.domain.exception.UserException;
 import sopt.org.HMH.domain.user.dto.request.SocialPlatformRequest;
 import sopt.org.HMH.domain.user.dto.request.SocialSignUpRequest;
 import sopt.org.HMH.domain.user.dto.response.LoginResponse;
+import sopt.org.HMH.domain.user.dto.response.ReissueResponse;
 import sopt.org.HMH.domain.user.dto.response.UserInfoResponse;
 import sopt.org.HMH.domain.user.repository.OnboardingInfoRepository;
 import sopt.org.HMH.domain.user.repository.UserRepository;
@@ -23,6 +24,7 @@ import sopt.org.HMH.global.auth.jwt.TokenResponse;
 import sopt.org.HMH.global.auth.jwt.exception.JwtError;
 import sopt.org.HMH.global.auth.jwt.exception.JwtException;
 import sopt.org.HMH.global.auth.redis.TokenService;
+import sopt.org.HMH.global.auth.security.UserAuthentication;
 import sopt.org.HMH.global.auth.social.SocialPlatform;
 import sopt.org.HMH.global.auth.social.apple.fegin.AppleOAuthProvider;
 import sopt.org.HMH.global.auth.social.kakao.fegin.KakaoLoginService;
@@ -75,12 +77,13 @@ public class UserService {
     }
 
     @Transactional
-    public TokenResponse reissueToken(String refreshToken) {
+    public ReissueResponse reissueToken(String refreshToken) {
         refreshToken = parseTokenString(refreshToken);
         Long userId = jwtProvider.getSubject(refreshToken);
         validateRefreshToken(refreshToken, userId);
         tokenService.deleteRefreshToken(userId);
-        return jwtProvider.issueToken(userId);
+        validateUserId(userId);  // userId가 DB에 저장된 유효한 값인지 검사
+        return ReissueResponse.of(jwtProvider.issueToken(userId));
     }
 
     @Transactional
