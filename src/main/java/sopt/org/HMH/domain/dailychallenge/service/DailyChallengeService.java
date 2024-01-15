@@ -39,16 +39,14 @@ public class DailyChallengeService {
     }
 
     public DailyChallengeResponse getDailyChallenge(Long userId, String os) {
-        DailyChallenge dailyChallenge = IdConverter.getTodayDailyChallenge(challengeRepository,
-                dailyChallengeRepository, userId);
+        DailyChallenge dailyChallenge = IdConverter.getTodayDailyChallengeByUserId(challengeRepository, userId);
 
         return DailyChallengeResponse.of(dailyChallenge, os);
     }
 
     @Transactional
     public void modifyDailyChallengeStatus(Long userId) {
-        DailyChallenge dailyChallenge = IdConverter.getTodayDailyChallenge(challengeRepository,
-                dailyChallengeRepository, userId);
+        DailyChallenge dailyChallenge = IdConverter.getTodayDailyChallengeByUserId(challengeRepository, userId);
         dailyChallenge.modifyStatus(Status.FAILURE);
     }
 }
