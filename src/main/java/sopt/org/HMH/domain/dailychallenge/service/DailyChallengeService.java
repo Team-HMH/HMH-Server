@@ -16,7 +16,6 @@ import sopt.org.HMH.domain.dailychallenge.repository.DailyChallengeRepository;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -29,17 +28,13 @@ public class DailyChallengeService {
     private final AppRepository appRepository;
 
     @Transactional
-    public List<DailyChallenge> addDailyChallengesForPeriod(Challenge challenge, Integer period, Long goalTime) {
-        List<DailyChallenge> dailyChallenges = new ArrayList<>();
-        for (int count = 0; count < period; count++) {
-            dailyChallenges.add(DailyChallenge.builder()
-                    .challenge(challenge)
-                    .goalTime(goalTime)
-                    .build());
-        }
-        dailyChallengeRepository.saveAll(dailyChallenges);
+    public DailyChallenge addDailyChallenge(Challenge challenge) {
+        DailyChallenge dailyChallenge = dailyChallengeRepository.save(DailyChallenge.builder()
+                .challenge(challenge)
+                .goalTime(challenge.getGoalTime())
+                .build());
 
-        return dailyChallenges;
+        return dailyChallenge;
     }
 
     public DailyChallengeResponse getDailyChallenge(Long userId, String os) {
@@ -57,7 +52,7 @@ public class DailyChallengeService {
     @Transactional
     public void modifyDailyChallengeStatus(Long userId, List<AppUsageTimeRequest> requests, String os) {
         DailyChallenge todayDailyChallenge = getTodayDailyChallengeByUserId(userId);
-        long successCount =  requests.stream()
+        long successCount = requests.stream()
                 .map(request -> {
                     App app = appRepository.findByDailyChallengeIdAndAppCodeAndOs(
                             todayDailyChallenge.getId(), request.appCode(), os);
