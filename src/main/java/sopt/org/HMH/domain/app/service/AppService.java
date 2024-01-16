@@ -8,6 +8,7 @@ import sopt.org.HMH.domain.app.dto.request.AppDeleteRequest;
 import sopt.org.HMH.domain.app.dto.request.AppGoalTimeRequest;
 import sopt.org.HMH.domain.app.repository.AppRepository;
 import sopt.org.HMH.domain.dailychallenge.service.DailyChallengeService;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -28,12 +29,14 @@ public class AppService {
 
     @Transactional
     public void addAppsByUserId(Long userId, List<AppGoalTimeRequest> requests, String os) {
+        List<App> apps = new ArrayList<>();
         for (AppGoalTimeRequest request : requests) {
-            appRepository.save(App.builder()
+            apps.add(App.builder()
                     .dailyChallenge(dailyChallengeService.getTodayDailyChallengeByUserId(userId))
                     .appCode(request.appCode())
                     .goalTime(request.goalTime())
                     .os(os).build());
         }
+        appRepository.saveAll(apps);
     }
 }
