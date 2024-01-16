@@ -68,8 +68,16 @@ public class DailyChallengeService {
     public DailyChallenge getTodayDailyChallengeByUserId(Long userId) {
         val challenge = challengeRepository.findFirstByUserIdOrderByCreatedAtDesc(userId);
         val startDateOfChallenge = challenge.getCreatedAt().toLocalDate();
-        val todayDailyChallengeIndex = (int) ChronoUnit.DAYS.between(LocalDateTime.now().toLocalDate(), startDateOfChallenge);
+        int todayDailyChallengeIndex = (int) ChronoUnit.DAYS.between(LocalDateTime.now().toLocalDate(), startDateOfChallenge);
 
         return challenge.getDailyChallenges().get(todayDailyChallengeIndex);
+    }
+
+    public List<DailyChallenge> getRemainingDailyChallengesByUserId(Long userId) {
+        val challenge = challengeRepository.findFirstByUserIdOrderByCreatedAtDesc(userId);
+        val startDateOfChallenge = challenge.getCreatedAt().toLocalDate();
+        int todayIndex = (int) ChronoUnit.DAYS.between(LocalDateTime.now().toLocalDate(), startDateOfChallenge);
+
+        return challenge.getDailyChallenges().subList(todayIndex, challenge.getDailyChallenges().size());
     }
 }

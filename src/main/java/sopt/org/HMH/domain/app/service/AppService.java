@@ -1,21 +1,15 @@
 package sopt.org.HMH.domain.app.service;
 
 import lombok.RequiredArgsConstructor;
-import lombok.val;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sopt.org.HMH.domain.app.domain.App;
 import sopt.org.HMH.domain.app.dto.request.AppDeleteRequest;
 import sopt.org.HMH.domain.app.dto.request.AppGoalTimeRequest;
 import sopt.org.HMH.domain.app.repository.AppRepository;
-import sopt.org.HMH.domain.challenge.repository.ChallengeRepository;
 import sopt.org.HMH.domain.dailychallenge.domain.DailyChallenge;
-import sopt.org.HMH.domain.dailychallenge.repository.DailyChallengeRepository;
 import sopt.org.HMH.domain.dailychallenge.service.DailyChallengeService;
-import sopt.org.HMH.global.util.IdConverter;
 
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,15 +30,25 @@ public class AppService {
     }
 
     @Transactional
-    public void addAppsByUserId(Long userId, List<AppGoalTimeRequest> requests, String os) {
+    public void addAppsAndUpdateRemainingDailyChallenge(Long userId, List<AppGoalTimeRequest> requests, String os) {
+        List<DailyChallenge> dailyChallenges = dailyChallengeService.getRemainingDailyChallengesByUserId(userId);
+        for (DailyChallenge dailyChallenge : dailyChallenges) {
+            addApps(dailyChallenge, requests, os);
+        }
+    }
+
+    @Transactional
+    public List<App> addApps(DailyChallenge dailyChallenge, List<AppGoalTimeRequest> requests, String os) {
         List<App> apps = new ArrayList<>();
         for (AppGoalTimeRequest request : requests) {
             apps.add(App.builder()
-                    .dailyChallenge(dailyChallengeService.getTodayDailyChallengeByUserId(userId))
+                    .dailyChallenge(dailyChallenge)
                     .appCode(request.appCode())
                     .goalTime(request.goalTime())
                     .os(os).build());
         }
         appRepository.saveAll(apps);
+
+        return apps;
     }
 }

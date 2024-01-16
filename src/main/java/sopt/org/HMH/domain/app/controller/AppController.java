@@ -31,7 +31,7 @@ public class AppController {
             @RequestHeader("OS") final String os,
             @RequestBody final AppArrayGoalTimeRequest request
     ) {
-        appService.addAppsByUserId(IdConverter.getUserId(principal), request.apps(), os);
+        appService.addAppsAndUpdateRemainingDailyChallenge(IdConverter.getUserId(principal), request.apps(), os);
         return ResponseEntity
                 .status(AppSuccess.ADD_APP_SUCCESS.getHttpStatus())
                 .body(ApiResponse.success(AppSuccess.ADD_APP_SUCCESS, new EmptyJsonResponse()));
