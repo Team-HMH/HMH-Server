@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.val;
 import sopt.org.HMH.domain.app.dto.response.AppGoalTimeResponse;
 import sopt.org.HMH.domain.challenge.domain.Challenge;
+import sopt.org.HMH.domain.dailychallenge.domain.DailyChallenge;
 import sopt.org.HMH.domain.dailychallenge.domain.Status;
 
 import java.time.LocalDateTime;
@@ -21,16 +22,19 @@ public record ChallengeResponse(
         List<AppGoalTimeResponse> apps
 ) {
     public static ChallengeResponse of(Challenge challenge, String os) {
-        val dailyChallenges = challenge.getDailyChallenges();
+        List<DailyChallenge> dailyChallenges = challenge.getDailyChallenges();
+        DailyChallenge startDayOfChallenge = challenge.getDailyChallenges().get(0);
 
-        val statuses = new ArrayList<Status>();
+        int daysSinceToday = calculateDaysSinceToday(startDayOfChallenge.getCreatedAt();
+        int todayIndex = daysSinceToday >= challenge.getPeriod() ? -1 : daysSinceToday;
+        int dailyChallengeIndex = todayIndex == -1 ? dailyChallenges.size()-1 : todayIndex;
+
+        DailyChallenge todayDailyChallenge = dailyChallenges.get(dailyChallengeIndex);
+
+        List<Status> statuses = new ArrayList<>();
         for (val dailyChallenge : dailyChallenges) {
             statuses.add(dailyChallenge.getStatus());
         }
-
-        val startDayOfChallenge = challenge.getDailyChallenges().get(0);
-        val todayIndex = calculateDaysSinceToday(startDayOfChallenge.getCreatedAt());
-        val todayDailyChallenge = dailyChallenges.get(todayIndex);
 
         return ChallengeResponse.builder()
                 .period(challenge.getPeriod())
