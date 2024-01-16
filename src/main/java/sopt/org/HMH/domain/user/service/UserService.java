@@ -1,11 +1,15 @@
 package sopt.org.HMH.domain.user.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import sopt.org.HMH.domain.app.service.AppService;
 import sopt.org.HMH.domain.challenge.service.ChallengeService;
+import sopt.org.HMH.domain.user.domain.OnboardingInfo;
+import sopt.org.HMH.domain.user.domain.OnboardingProblem;
 import sopt.org.HMH.domain.user.domain.User;
 import sopt.org.HMH.domain.user.domain.UserConstants;
 import sopt.org.HMH.domain.user.domain.exception.UserError;
@@ -15,6 +19,7 @@ import sopt.org.HMH.domain.user.dto.request.SocialSignUpRequest;
 import sopt.org.HMH.domain.user.dto.response.LoginResponse;
 import sopt.org.HMH.domain.user.dto.response.ReissueResponse;
 import sopt.org.HMH.domain.user.dto.response.UserInfoResponse;
+import sopt.org.HMH.domain.user.repository.OnboardingInfoRepository;
 import sopt.org.HMH.domain.user.repository.UserRepository;
 import sopt.org.HMH.global.auth.jwt.JwtProvider;
 import sopt.org.HMH.global.auth.jwt.JwtValidator;
@@ -34,6 +39,7 @@ public class UserService {
     private final JwtProvider jwtProvider;
     private final JwtValidator jwtValidator;
     private final UserRepository userRepository;
+    private final OnboardingInfoRepository onboardingInfoRepository;
     private final KakaoLoginService kakaoLoginService;
     private final ChallengeService challengeService;
     private final TokenService tokenService;
@@ -46,12 +52,7 @@ public class UserService {
         SocialPlatform socialPlatform = request.socialPlatform();
         String socialId = getSocialIdBySocialAccessToken(socialPlatform, socialAccessToken);
 
-        // 유저를 찾지 못하면 404 Error를 던져 클라이언트에게 회원가입 api를 요구한다.
         User loginUser = getUserBySocialPlatformAndSocialId(socialPlatform, socialId);
-
-        if (loginUser.isDeleted()) {
-            loginUser.recover();
-        }
 
         return performLogin(socialAccessToken, socialPlatform, loginUser);
     }
@@ -62,13 +63,13 @@ public class UserService {
         SocialPlatform socialPlatform = request.socialPlatform();
         String socialId = getSocialIdBySocialAccessToken(socialPlatform, socialAccessToken);
 
-        // 이미 회원가입된 유저가 있다면 400 Error 발생
         validateDuplicateUser(socialId, socialPlatform);
 
         User user = addUser(socialPlatform, socialId, request.name());
 
         challengeService.addChallenge(user.getId(), request.challengeSignUpRequest().period(), request.challengeSignUpRequest().goalTime());
         appService.addAppsByUserId(user.getId(), request.challengeSignUpRequest().apps(), os);
+        registerOnboardingInfo(request);
 
         return performLogin(socialAccessToken, socialPlatform, user);
     }
@@ -84,8 +85,7 @@ public class UserService {
 
     @Transactional
     public void withdraw(Long userId) {
-        User user = userRepository.findByIdOrThrowException(userId);
-        user.softDelete();
+        userRepository.findByIdOrThrowException(userId).softDelete();
     }
 
     public void logout(Long userId) {
@@ -93,8 +93,7 @@ public class UserService {
     }
 
     public UserInfoResponse getUserInfo(Long userId) {
-        User user = userRepository.findByIdOrThrowException(userId);
-        return UserInfoResponse.of(user);
+        return UserInfoResponse.of(userRepository.findByIdOrThrowException(userId));
     }
 
     private void validateUserId(Long userId) {
@@ -114,7 +113,11 @@ public class UserService {
     }
 
     private User getUserBySocialPlatformAndSocialId(SocialPlatform socialPlatform, String socialId) {
-        return userRepository.findBySocialPlatformAndSocialIdOrThrowException(socialPlatform, socialId);
+        User user = userRepository.findBySocialPlatformAndSocialIdOrThrowException(socialPlatform, socialId);
+        if (user.isDeleted()) {
+            user.recover();
+        }
+        return user;
     }
 
     private String getSocialIdBySocialAccessToken(SocialPlatform socialPlatform, String socialAccessToken) {
@@ -133,8 +136,7 @@ public class UserService {
         if (parsedTokens.length != 2) {
             throw new JwtException(JwtError.INVALID_TOKEN_HEADER);
         }
-        String validSocialAccessToken = parsedTokens[1];
-        return validSocialAccessToken;
+        return parsedTokens[1];
     }
 
     private void validateDuplicateUser(String socialId, SocialPlatform socialPlatform) {
@@ -147,18 +149,17 @@ public class UserService {
         if (socialPlatform == SocialPlatform.KAKAO) {
             kakaoLoginService.updateUserInfoByKakao(loginUser, socialAccessToken);
         }
-        TokenResponse tokenResponse = jwtProvider.issueToken(loginUser.getId());
-        return LoginResponse.of(loginUser, tokenResponse);
+        return LoginResponse.of(loginUser, jwtProvider.issueToken(loginUser.getId()));
     }
 
     private User addUser(SocialPlatform socialPlatform, String socialId, String name) {
-        User user = User.builder()
-                .socialPlatform(socialPlatform)
-                .socialId(socialId)
-                .name(validateName(name))
-                .build();
-        userRepository.save(user);
-        return user;
+        return userRepository.save(
+                User.builder()
+                        .socialPlatform(socialPlatform)
+                        .socialId(socialId)
+                        .name(validateName(name))
+                        .build()
+        );
     }
 
     private String validateName(String name) {
@@ -166,5 +167,21 @@ public class UserService {
             return UserConstants.DEFAULT_USER_NAME;
         }
         return name;
+    }
+
+    private void registerOnboardingInfo(SocialSignUpRequest request) {
+        List<OnboardingProblem> problemList = new ArrayList<>();
+        for (String problem : request.onboardingRequest().problemList()) {
+            problemList.add(
+                    OnboardingProblem.builder()
+                            .problem(problem)
+                            .build()
+            );
+        }
+
+        OnboardingInfo onboardingInfo = OnboardingInfo.builder()
+                .averageUseTime(request.onboardingRequest().averageUseTime())
+                .build();
+        onboardingInfoRepository.save(onboardingInfo);
     }
 }
