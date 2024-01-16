@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sopt.org.HMH.domain.app.service.AppService;
 import sopt.org.HMH.domain.challenge.service.ChallengeService;
+import sopt.org.HMH.domain.dailychallenge.service.DailyChallengeService;
 import sopt.org.HMH.domain.user.domain.OnboardingInfo;
 import sopt.org.HMH.domain.user.domain.OnboardingProblem;
 import sopt.org.HMH.domain.user.domain.User;
@@ -40,6 +41,7 @@ public class UserService {
     private final KakaoLoginService kakaoLoginService;
     private final ChallengeService challengeService;
     private final AppleOAuthProvider appleOAuthProvider;
+    private final DailyChallengeService dailyChallengeService;
     private final AppService appService;
 
     @Transactional
@@ -70,8 +72,8 @@ public class UserService {
         OnboardingInfo onboardingInfo = registerOnboardingInfo(request);
         User user = addUser(socialPlatform, socialId, request.name());
 
-        challengeService.addChallenge(user.getId(), request.challengeSignUpRequest().period(), request.challengeSignUpRequest().goalTime());
-        appService.addAppsByUserId(user.getId(), request.challengeSignUpRequest().apps(), os);
+        challengeService.addChallengeWithInfo(user.getId(), request.challengeSignUpRequest().period(),
+                request.challengeSignUpRequest().goalTime(), request.challengeSignUpRequest().apps(), os);
 
         return performLogin(socialAccessToken, socialPlatform, user);
     }
