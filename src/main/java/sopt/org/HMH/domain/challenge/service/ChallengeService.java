@@ -18,13 +18,13 @@ public class ChallengeService {
     private final DailyChallengeService dailyChallengeService;
 
     @Transactional
-    public AddChallengeResponse addChallenge(Long userId, Integer period, Long goalTime) {
+    public Challenge addChallenge(Long userId, Integer period, Long goalTime) {
         Challenge challenge = challengeRepository.save(Challenge.builder()
                         .period(period)
                         .goalTime(goalTime)
                         .userId(userId).build());
         dailyChallengeService.addDailyChallengesForPeriod(challenge, period, goalTime);
-        return AddChallengeResponse.of(challenge.getId());
+        return challenge;
     }
 
     public ChallengeResponse getChallenge(Long userId, String os) {
