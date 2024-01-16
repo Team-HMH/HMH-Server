@@ -14,6 +14,7 @@ import sopt.org.HMH.domain.challenge.dto.response.AddChallengeResponse;
 import sopt.org.HMH.domain.challenge.dto.response.ChallengeResponse;
 import sopt.org.HMH.domain.challenge.service.ChallengeService;
 import sopt.org.HMH.global.common.response.ApiResponse;
+import sopt.org.HMH.global.common.response.EmptyJsonResponse;
 import sopt.org.HMH.global.util.IdConverter;
 
 import java.security.Principal;
@@ -26,12 +27,12 @@ public class ChallengeController {
     private final ChallengeService challengeService;
 
     @PostMapping
-    public ResponseEntity<ApiResponse<AddChallengeResponse>> orderAddChallenge(Principal principal,
-                                                                               @RequestBody final ChallengeRequest request) {
+    public ResponseEntity<ApiResponse<?>> orderAddChallenge(Principal principal,
+                                                            @RequestBody final ChallengeRequest request) {
+        challengeService.addChallenge(IdConverter.getUserId(principal), request.period(), request.goalTime());
         return ResponseEntity
                 .status(ChallengeSuccess.ADD_CHALLENGE_SUCCESS.getHttpStatus())
-                .body(ApiResponse.success(ChallengeSuccess.ADD_CHALLENGE_SUCCESS,
-                        challengeService.addChallenge(IdConverter.getUserId(principal), request.period(), request.goalTime())));
+                .body(ApiResponse.success(ChallengeSuccess.ADD_CHALLENGE_SUCCESS, new EmptyJsonResponse()));
     }
 
     @GetMapping
