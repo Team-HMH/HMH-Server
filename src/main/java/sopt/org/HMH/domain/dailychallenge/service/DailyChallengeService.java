@@ -74,6 +74,7 @@ public class DailyChallengeService {
         Challenge challenge = challengeRepository.findFirstByUserIdOrderByCreatedAtDesc(userId);
         val startDateOfChallenge = challenge.getCreatedAt().toLocalDate();
         val todayDailyChallengeIndex = (int) ChronoUnit.DAYS.between(startDateOfChallenge, LocalDateTime.now().toLocalDate());
+      
         return challenge.getDailyChallenges().get(todayDailyChallengeIndex);
     }
 }
