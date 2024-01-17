@@ -1,6 +1,5 @@
 package sopt.org.HMH.domain.user.controller;
 
-import java.security.Principal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,9 +16,9 @@ import sopt.org.HMH.domain.user.dto.response.LoginResponse;
 import sopt.org.HMH.domain.user.dto.response.ReissueResponse;
 import sopt.org.HMH.domain.user.dto.response.UserInfoResponse;
 import sopt.org.HMH.domain.user.service.UserService;
+import sopt.org.HMH.global.auth.UserId;
 import sopt.org.HMH.global.common.response.ApiResponse;
 import sopt.org.HMH.global.common.response.EmptyJsonResponse;
-import sopt.org.HMH.global.util.IdConverter;
 
 @RestController
 @RequiredArgsConstructor
@@ -59,23 +58,23 @@ public class UserController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<ApiResponse<?>> orderLogout(Principal principal) {
-        userService.logout(IdConverter.getUserId(principal));
+    public ResponseEntity<ApiResponse<?>> orderLogout(@UserId final Long userId) {
+        userService.logout(userId);
         return ResponseEntity
                 .status(UserSuccess.LOGOUT_SUCCESS.getHttpStatus())
                 .body(ApiResponse.success(UserSuccess.LOGOUT_SUCCESS, new EmptyJsonResponse()));
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<UserInfoResponse>> orderGetUserInfo(Principal principal) {
+    public ResponseEntity<ApiResponse<UserInfoResponse>> orderGetUserInfo(@UserId final Long userId) {
         return ResponseEntity
                 .status(UserSuccess.GET_USER_INFO_SUCCESS.getHttpStatus())
-                .body(ApiResponse.success(UserSuccess.GET_USER_INFO_SUCCESS, userService.getUserInfo(IdConverter.getUserId(principal))));
+                .body(ApiResponse.success(UserSuccess.GET_USER_INFO_SUCCESS, userService.getUserInfo(userId)));
     }
 
     @DeleteMapping
-    public ResponseEntity<ApiResponse<?>> orderWithdraw(Principal principal) {
-        userService.withdraw(IdConverter.getUserId(principal));
+    public ResponseEntity<ApiResponse<?>> orderWithdraw(@UserId final Long userId) {
+        userService.withdraw(userId);
         return ResponseEntity
                 .status(UserSuccess.WITHDRAW_SUCCESS.getHttpStatus())
                 .body(ApiResponse.success(UserSuccess.WITHDRAW_SUCCESS, new EmptyJsonResponse()));

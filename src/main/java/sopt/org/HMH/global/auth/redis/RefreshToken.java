@@ -1,6 +1,5 @@
 package sopt.org.HMH.global.auth.redis;
 
-import java.util.concurrent.TimeUnit;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,6 +20,6 @@ public class RefreshToken {
 
     private String refreshToken;
 
-    @TimeToLive(unit = TimeUnit.SECONDS)
+    @TimeToLive
     private Integer expiration;
 }

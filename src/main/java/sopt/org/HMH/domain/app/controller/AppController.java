@@ -12,9 +12,9 @@ import sopt.org.HMH.domain.app.domain.exception.AppSuccess;
 import sopt.org.HMH.domain.app.dto.request.AppArrayGoalTimeRequest;
 import sopt.org.HMH.domain.app.dto.request.AppDeleteRequest;
 import sopt.org.HMH.domain.app.service.AppService;
+import sopt.org.HMH.global.auth.UserId;
 import sopt.org.HMH.global.common.response.ApiResponse;
 import sopt.org.HMH.global.common.response.EmptyJsonResponse;
-import sopt.org.HMH.global.util.IdConverter;
 
 import java.security.Principal;
 
@@ -27,11 +27,11 @@ public class AppController {
 
     @PostMapping
     public ResponseEntity<ApiResponse<?>> orderAddApp(
-            Principal principal,
+            @UserId final Long userId,
             @RequestHeader("OS") final String os,
             @RequestBody final AppArrayGoalTimeRequest request
     ) {
-        appService.addAppsByUserId(IdConverter.getUserId(principal), request.apps(), os);
+        appService.addAppsByUserId(userId, request.apps(), os);
         return ResponseEntity
                 .status(AppSuccess.ADD_APP_SUCCESS.getHttpStatus())
                 .body(ApiResponse.success(AppSuccess.ADD_APP_SUCCESS, new EmptyJsonResponse()));
@@ -39,11 +39,11 @@ public class AppController {
 
     @DeleteMapping
     public ResponseEntity<ApiResponse<?>> orderRemoveApp(
-            Principal principal,
+            @UserId final Long userId,
             @RequestHeader("OS") final String os,
             @RequestBody final AppDeleteRequest request
     ) {
-        appService.removeApp(IdConverter.getUserId(principal), request, os);
+        appService.removeApp(userId, request, os);
         return ResponseEntity
                 .status(AppSuccess.DELETE_APP_SUCCESS.getHttpStatus())
                 .body(ApiResponse.success(AppSuccess.DELETE_APP_SUCCESS, new EmptyJsonResponse()));
