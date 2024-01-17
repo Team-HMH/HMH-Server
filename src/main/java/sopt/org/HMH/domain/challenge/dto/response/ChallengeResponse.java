@@ -1,9 +1,6 @@
 package sopt.org.HMH.domain.challenge.dto.response;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.NonNull;
 import sopt.org.HMH.domain.app.dto.response.AppGoalTimeResponse;
 import sopt.org.HMH.domain.challenge.domain.Challenge;
 import sopt.org.HMH.domain.dailychallenge.domain.DailyChallenge;
@@ -42,5 +39,9 @@ public record ChallengeResponse(
                         .map(app -> new AppGoalTimeResponse(app.getAppCode(), app.getGoalTime()))
                         .toList())
                 .build();
+    }
+
+    private static Integer calculateDaysSinceToday(LocalDateTime dateToCompare) {
+        return (int) ChronoUnit.DAYS.between(dateToCompare.toLocalDate(), LocalDateTime.now().toLocalDate());
     }
 }
