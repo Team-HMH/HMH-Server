@@ -22,8 +22,10 @@ public class AppService {
 
     @Transactional
     public void removeApp(Long userId, AppDeleteRequest request, String os) {
-        Long todayDailyChallengeId = dailyChallengeService.getTodayDailyChallengeByUserId(userId).getId();
-        App app = appRepository.findByDailyChallengeIdAndAppCodeAndOs(todayDailyChallengeId, request.appCode(), os);
+        App app = appRepository.findByDailyChallengeIdAndAppCodeAndOs(
+                dailyChallengeService.getTodayDailyChallengeByUserId(userId).getId(),
+                request.appCode(),
+                os);
 
         appRepository.deleteById(app.getId());
     }

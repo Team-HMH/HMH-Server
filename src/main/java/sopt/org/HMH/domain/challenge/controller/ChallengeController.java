@@ -29,7 +29,14 @@ public class ChallengeController {
     public ResponseEntity<ApiResponse<?>> orderAddChallenge(Principal principal,
                                                             @RequestHeader("OS") final String os,
                                                             @RequestBody final ChallengeRequest request) {
-        challengeService.addChallengeWithPastInfo(IdConverter.getUserId(principal), request.period(), request.goalTime(), os);
+        challengeService.addChallengeForPeriodWithInfo(
+                challengeService.addChallenge(
+                        IdConverter.getUserId(principal),
+                        request.period(),
+                        request.goalTime()),
+                challengeService.getLastApps(IdConverter.getUserId(principal)),
+                os);
+
         return ResponseEntity
                 .status(ChallengeSuccess.ADD_CHALLENGE_SUCCESS.getHttpStatus())
                 .body(ApiResponse.success(ChallengeSuccess.ADD_CHALLENGE_SUCCESS, new EmptyJsonResponse()));

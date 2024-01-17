@@ -1,7 +1,6 @@
 package sopt.org.HMH.domain.dailychallenge.service;
 
 import lombok.RequiredArgsConstructor;
-import lombok.val;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sopt.org.HMH.domain.app.domain.App;
@@ -20,7 +19,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Transactional
 public class DailyChallengeService {
 
     private final DailyChallengeRepository dailyChallengeRepository;
@@ -29,18 +28,14 @@ public class DailyChallengeService {
 
     @Transactional
     public DailyChallenge addDailyChallenge(Challenge challenge) {
-        DailyChallenge dailyChallenge = dailyChallengeRepository.save(DailyChallenge.builder()
+        return dailyChallengeRepository.save(DailyChallenge.builder()
                 .challenge(challenge)
                 .goalTime(challenge.getGoalTime())
                 .build());
-
-        return dailyChallenge;
     }
 
     public DailyChallengeResponse getDailyChallenge(Long userId, String os) {
-        DailyChallenge dailyChallenge = getTodayDailyChallengeByUserId(userId);
-
-        return DailyChallengeResponse.of(dailyChallenge, os);
+        return DailyChallengeResponse.of(getTodayDailyChallengeByUserId(userId), os);
     }
 
     @Transactional
@@ -64,18 +59,19 @@ public class DailyChallengeService {
     }
 
     public DailyChallenge getTodayDailyChallengeByUserId(Long userId) {
-        val challenge = challengeRepository.findFirstByUserIdOrderByCreatedAtDesc(userId);
-        val startDateOfChallenge = challenge.getCreatedAt().toLocalDate();
-        int todayDailyChallengeIndex = (int) ChronoUnit.DAYS.between(LocalDateTime.now().toLocalDate(), startDateOfChallenge);
+        Challenge challenge = challengeRepository.findFirstByUserIdOrderByCreatedAtDesc(userId);
 
-        return challenge.getDailyChallenges().get(todayDailyChallengeIndex);
+        return challenge.getDailyChallenges().get(calculateDaysSinceToday(challenge.getCreatedAt()));
     }
 
     public List<DailyChallenge> getRemainingDailyChallengesByUserId(Long userId) {
-        val challenge = challengeRepository.findFirstByUserIdOrderByCreatedAtDesc(userId);
-        val startDateOfChallenge = challenge.getCreatedAt().toLocalDate();
-        int todayIndex = (int) ChronoUnit.DAYS.between(LocalDateTime.now().toLocalDate(), startDateOfChallenge);
+        Challenge challenge = challengeRepository.findFirstByUserIdOrderByCreatedAtDesc(userId);
 
-        return challenge.getDailyChallenges().subList(todayIndex, challenge.getDailyChallenges().size());
+        return challenge.getDailyChallenges()
+                .subList(calculateDaysSinceToday(challenge.getCreatedAt()), challenge.getDailyChallenges().size());
+    }
+
+    private Integer calculateDaysSinceToday(LocalDateTime dateToCompare) {
+        return (int) ChronoUnit.DAYS.between(LocalDateTime.now().toLocalDate(), dateToCompare.toLocalDate());
     }
 }
