@@ -14,7 +14,7 @@ import sopt.org.HMH.domain.challenge.dto.response.AddChallengeResponse;
 import sopt.org.HMH.domain.challenge.dto.response.ChallengeResponse;
 import sopt.org.HMH.domain.challenge.service.ChallengeService;
 import sopt.org.HMH.global.auth.UserId;
-import sopt.org.HMH.global.common.response.ApiResponse;
+import sopt.org.HMH.global.common.response.BaseResponse;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,20 +24,20 @@ public class ChallengeController {
     private final ChallengeService challengeService;
 
     @PostMapping
-    public ResponseEntity<ApiResponse<AddChallengeResponse>> orderAddChallenge(@UserId final Long userId,
-                                                                               @RequestBody final ChallengeRequest request) {
+    public ResponseEntity<BaseResponse<AddChallengeResponse>> orderAddChallenge(@UserId final Long userId,
+                                                                                @RequestBody final ChallengeRequest request) {
         return ResponseEntity
                 .status(ChallengeSuccess.ADD_CHALLENGE_SUCCESS.getHttpStatus())
-                .body(ApiResponse.success(ChallengeSuccess.ADD_CHALLENGE_SUCCESS,
+                .body(BaseResponse.success(ChallengeSuccess.ADD_CHALLENGE_SUCCESS,
                         challengeService.addChallenge(userId, request.period(), request.goalTime())));
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<ChallengeResponse>> orderGetChallenge(@UserId final Long userId,
-                                                                            @RequestHeader("OS") final String os) {
+    public ResponseEntity<BaseResponse<ChallengeResponse>> orderGetChallenge(@UserId final Long userId,
+                                                                             @RequestHeader("OS") final String os) {
         return ResponseEntity
                 .status(ChallengeSuccess.GET_CHALLENGE_SUCCESS.getHttpStatus())
-                .body(ApiResponse.success(ChallengeSuccess.GET_CHALLENGE_SUCCESS,
+                .body(BaseResponse.success(ChallengeSuccess.GET_CHALLENGE_SUCCESS,
                         challengeService.getChallenge(userId, os)));
     }
 }

@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import sopt.org.HMH.global.common.exception.base.ErrorBase;
 import sopt.org.HMH.global.common.exception.base.ExceptionBase;
-import sopt.org.HMH.global.common.response.ApiResponse;
+import sopt.org.HMH.global.common.response.BaseResponse;
 
 @ControllerAdvice
 @RequiredArgsConstructor
@@ -20,7 +20,7 @@ public class CommonControllerAdvice {
         return ResponseEntity
                 .status(error.getHttpStatus())
                 .body(
-                        ApiResponse.error(error)
+                        BaseResponse.error(error)
                 );
     }
 }
