@@ -10,18 +10,20 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import sopt.org.HMH.global.auth.security.CustomJwtAuthenticationEntryPoint;
+import sopt.org.HMH.global.auth.jwt.JwtProvider;
+import sopt.org.HMH.global.auth.jwt.JwtValidator;
+import sopt.org.HMH.global.auth.security.JwtAuthenticationEntryPoint;
 import sopt.org.HMH.global.auth.security.JwtAuthenticationFilter;
+import sopt.org.HMH.global.auth.security.exception.ExceptionHandlerFilter;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    // JWT 인증을 처리하는 필터
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
-    // JWT에 대한 인증 예외 처리를 담당하는 인증 진입점
-    private final CustomJwtAuthenticationEntryPoint customJwtAuthenticationEntryPoint;
+    private final JwtValidator jwtValidator;
+    private final JwtProvider jwtProvider;
+    private final JwtAuthenticationEntryPoint customJwtAuthenticationEntryPoint;
 
     private static final String[] AUTH_WHITELIST = {
             "/", "/error", "/health",
@@ -52,14 +54,14 @@ public class SecurityConfig {
                                 customJwtAuthenticationEntryPoint)) // 인증되지 않은 사용자의 요청에 대한 응답을 처리
                 .authorizeHttpRequests(authorizationManagerRequestMatcherRegistry -> // HTTP 요청에 대한 권한 설정
                         authorizationManagerRequestMatcherRegistry
-                                .requestMatchers(AUTH_WHITELIST).permitAll() // AUTH_WHITELIST에 속하는 URL 패턴을 모든 사용자에게 허용
                                 .anyRequest().authenticated())
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtAuthenticationFilter(jwtValidator, jwtProvider), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new ExceptionHandlerFilter(), JwtAuthenticationFilter.class)
                 .build();
     }
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring().requestMatchers( "/","/swagger-ui/**", "/v3/api-docs/**");
+        return web -> web.ignoring().requestMatchers(AUTH_WHITELIST);
     }
 }
