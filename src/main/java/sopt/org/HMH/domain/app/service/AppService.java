@@ -1,7 +1,6 @@
 package sopt.org.HMH.domain.app.service;
 
 import lombok.RequiredArgsConstructor;
-import lombok.val;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sopt.org.HMH.domain.app.domain.App;
@@ -12,7 +11,6 @@ import sopt.org.HMH.domain.dailychallenge.domain.DailyChallenge;
 import sopt.org.HMH.domain.dailychallenge.service.DailyChallengeService;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -23,20 +21,24 @@ public class AppService {
     private final DailyChallengeService dailyChallengeService;
 
     @Transactional
-    public void removeApp(Long userId, AppDeleteRequest request, String os) {
-        App app = appRepository.findByDailyChallengeIdAndAppCodeAndOs(
-                dailyChallengeService.getTodayDailyChallengeByUserId(userId).getId(),
-                request.appCode(),
-                os);
-
-        appRepository.deleteById(app.getId());
+    public void addAppsAndUpdateRemainingDailyChallenge(Long userId, List<AppGoalTimeRequest> requests, String os) {
+        dailyChallengeService.getRemainingDailyChallengesByUserId(userId).stream()
+                .forEach(dailyChallenge -> addApps(dailyChallenge, requests, os));
     }
 
     @Transactional
-    public List<List<App>> addAppsAndUpdateRemainingDailyChallenge(Long userId, List<AppGoalTimeRequest> requests, String os) {
-        return dailyChallengeService.getRemainingDailyChallengesByUserId(userId).stream()
-                .map((dailyChallenge -> addApps(dailyChallenge, requests, os)))
-                .collect(Collectors.toList());
+    public void removeAppAndUpdateRemainingDailyChallenge(Long userId, AppDeleteRequest request, String os) {
+        dailyChallengeService.getRemainingDailyChallengesByUserId(userId).stream()
+                .forEach(dailyChallenge -> removeApp(dailyChallenge, request, os));
+    }
+
+
+    @Transactional
+    public void removeApp(DailyChallenge dailyChallenge, AppDeleteRequest request, String os) {
+        appRepository.delete(appRepository.findByDailyChallengeIdAndAppCodeAndOs(
+                dailyChallenge.getId(),
+                request.appCode(),
+                os));
     }
 
     @Transactional

@@ -44,8 +44,6 @@ public class UserService {
     private final ChallengeService challengeService;
     private final TokenService tokenService;
     private final AppleOAuthProvider appleOAuthProvider;
-    private final DailyChallengeService dailyChallengeService;
-    private final AppService appService;
 
     @Transactional
     public LoginResponse login(String socialAccessToken, SocialPlatformRequest request) {
