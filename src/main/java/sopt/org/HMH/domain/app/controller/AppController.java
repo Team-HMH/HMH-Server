@@ -21,7 +21,7 @@ import java.security.Principal;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/app")
-public class AppController {
+public class AppController implements AppApi {
 
     private final AppService appService;
 
