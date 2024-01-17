@@ -1,5 +1,6 @@
 package sopt.org.HMH.global.common.response;
 
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -12,8 +13,9 @@ import sopt.org.HMH.global.common.exception.base.ExceptionBase;
 public class CommonControllerAdvice {
 
     @ExceptionHandler(value = ExceptionBase.class)
-    public ResponseEntity<?> ExceptionHandler(ExceptionBase exception) {
+    public ResponseEntity<?> ExceptionHandler(HttpServletResponse response, ExceptionBase exception) {
         ErrorBase error = exception.getError();
+        response.setStatus(error.getHttpStatusCode());
         return ResponseEntity
                 .status(error.getHttpStatus())
                 .body(
