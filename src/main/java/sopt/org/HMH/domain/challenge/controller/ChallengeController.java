@@ -29,7 +29,7 @@ public class ChallengeController {
     public ResponseEntity<ApiResponse<?>> orderAddChallenge(Principal principal,
                                                             @RequestHeader("OS") final String os,
                                                             @RequestBody final ChallengeRequest request) {
-        challengeService.addChallengeForPeriodWithInfo(
+        challengeService.updateChallengeForPeriodWithInfo(
                 challengeService.addChallenge(
                         IdConverter.getUserId(principal),
                         request.period(),

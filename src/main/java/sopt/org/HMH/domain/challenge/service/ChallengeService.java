@@ -30,7 +30,7 @@ public class ChallengeService {
     }
 
     @Transactional
-    public Challenge addChallengeForPeriodWithInfo(Challenge challenge, List<AppGoalTimeRequest> apps, String os) {
+    public Challenge updateChallengeForPeriodWithInfo(Challenge challenge, List<AppGoalTimeRequest> apps, String os) {
         for (int count = 0; count < challenge.getPeriod(); count++) {
             DailyChallenge dailyChallenge = dailyChallengeService.addDailyChallenge(challenge);
             appService.addApps(dailyChallenge, apps, os);
