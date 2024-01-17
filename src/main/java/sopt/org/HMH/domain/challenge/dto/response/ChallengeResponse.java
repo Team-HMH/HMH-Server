@@ -40,8 +40,4 @@ public record ChallengeResponse(
                         .toList())
                 .build();
     }
-
-    private static Integer calculateDaysSinceToday(LocalDateTime dateToCompare) {
-        return (int) ChronoUnit.DAYS.between(dateToCompare.toLocalDate(), LocalDateTime.now().toLocalDate());
-    }
 }
