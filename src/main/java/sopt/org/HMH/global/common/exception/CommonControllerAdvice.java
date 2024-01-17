@@ -1,4 +1,4 @@
-package sopt.org.HMH.global.common.response;
+package sopt.org.HMH.global.common.exception;
 
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import sopt.org.HMH.global.common.exception.base.ErrorBase;
 import sopt.org.HMH.global.common.exception.base.ExceptionBase;
+import sopt.org.HMH.global.common.response.ApiResponse;
 
 @ControllerAdvice
 @RequiredArgsConstructor
