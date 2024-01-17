@@ -1,5 +1,6 @@
 package sopt.org.HMH.domain.challenge.service;
 
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,6 +13,8 @@ import sopt.org.HMH.domain.dailychallenge.domain.DailyChallenge;
 import sopt.org.HMH.domain.dailychallenge.service.DailyChallengeService;
 
 import java.util.List;
+
+import static java.util.Objects.nonNull;
 
 @Service
 @RequiredArgsConstructor
@@ -33,7 +36,9 @@ public class ChallengeService {
     public Challenge updateChallengeForPeriodWithInfo(Challenge challenge, List<AppGoalTimeRequest> apps, String os) {
         for (int count = 0; count < challenge.getPeriod(); count++) {
             DailyChallenge dailyChallenge = dailyChallengeService.addDailyChallenge(challenge);
-            appService.addApps(dailyChallenge, apps, os);
+            if (nonNull(apps)) {
+                appService.addApps(dailyChallenge, apps, os);
+            }
         }
 
         return challenge;
@@ -41,7 +46,8 @@ public class ChallengeService {
 
     public List<AppGoalTimeRequest> getLastApps(Long userId) {
         List<DailyChallenge> lastDailyChallenges = challengeRepository.findFirstByUserIdOrderByCreatedAtDesc(userId).getDailyChallenges();
-        List<AppGoalTimeRequest> lastApps = lastDailyChallenges.get(lastDailyChallenges.size()-1)
+        if (lastDailyChallenges.size() == 0) { return null; }
+        List<AppGoalTimeRequest> lastApps = lastDailyChallenges.get(lastDailyChallenges.size() - 1)
                 .getApps()
                 .stream()
                 .map(app -> new AppGoalTimeRequest(app.getAppCode(), app.getGoalTime()))
