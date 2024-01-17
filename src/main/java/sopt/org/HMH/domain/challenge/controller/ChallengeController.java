@@ -12,11 +12,9 @@ import sopt.org.HMH.domain.challenge.domain.exception.ChallengeSuccess;
 import sopt.org.HMH.domain.challenge.dto.request.ChallengeRequest;
 import sopt.org.HMH.domain.challenge.dto.response.ChallengeResponse;
 import sopt.org.HMH.domain.challenge.service.ChallengeService;
+import sopt.org.HMH.global.auth.UserId;
 import sopt.org.HMH.global.common.response.ApiResponse;
 import sopt.org.HMH.global.common.response.EmptyJsonResponse;
-import sopt.org.HMH.global.util.IdConverter;
-
-import java.security.Principal;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,15 +24,12 @@ public class ChallengeController {
     private final ChallengeService challengeService;
 
     @PostMapping
-    public ResponseEntity<ApiResponse<?>> orderAddChallenge(Principal principal,
+    public ResponseEntity<ApiResponse<?>> orderAddChallenge(@UserId final Long userId,
                                                             @RequestHeader("OS") final String os,
                                                             @RequestBody final ChallengeRequest request) {
         challengeService.updateChallengeForPeriodWithInfo(
-                challengeService.addChallenge(
-                        IdConverter.getUserId(principal),
-                        request.period(),
-                        request.goalTime()),
-                challengeService.getLastApps(IdConverter.getUserId(principal)),
+                challengeService.addChallenge(userId, request.period(), request.goalTime()),
+                challengeService.getLastApps(userId),
                 os);
 
         return ResponseEntity
@@ -43,11 +38,11 @@ public class ChallengeController {
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<ChallengeResponse>> orderGetChallenge(Principal principal,
+    public ResponseEntity<ApiResponse<ChallengeResponse>> orderGetChallenge(@UserId final Long userId,
                                                                             @RequestHeader("OS") final String os) {
         return ResponseEntity
                 .status(ChallengeSuccess.GET_CHALLENGE_SUCCESS.getHttpStatus())
                 .body(ApiResponse.success(ChallengeSuccess.GET_CHALLENGE_SUCCESS,
-                        challengeService.getChallenge(IdConverter.getUserId(principal), os)));
+                        challengeService.getChallenge(userId, os)));
     }
 }

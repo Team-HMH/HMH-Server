@@ -12,11 +12,9 @@ import sopt.org.HMH.domain.app.dto.request.AppArrayUsageTimeRequest;
 import sopt.org.HMH.domain.dailychallenge.domain.exception.DailyChallengeSuccess;
 import sopt.org.HMH.domain.dailychallenge.dto.response.DailyChallengeResponse;
 import sopt.org.HMH.domain.dailychallenge.service.DailyChallengeService;
+import sopt.org.HMH.global.auth.UserId;
 import sopt.org.HMH.global.common.response.ApiResponse;
 import sopt.org.HMH.global.common.response.EmptyJsonResponse;
-import sopt.org.HMH.global.util.IdConverter;
-
-import java.security.Principal;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,29 +24,29 @@ public class DailyChallengeController {
     private final DailyChallengeService dailyChallengeService;
 
     @GetMapping
-    public ResponseEntity<ApiResponse<DailyChallengeResponse>> orderDetailDailyChallenge(Principal principal,
+    public ResponseEntity<ApiResponse<DailyChallengeResponse>> orderDetailDailyChallenge(@UserId final Long userId,
                                                                                          @RequestHeader("OS") final String os) {
         return ResponseEntity
                 .status(DailyChallengeSuccess.GET_DAILY_CHALLENGE_SUCCESS.getHttpStatus())
                 .body(ApiResponse.success(DailyChallengeSuccess.GET_DAILY_CHALLENGE_SUCCESS,
-                        dailyChallengeService.getDailyChallenge(IdConverter.getUserId(principal), os)));
+                        dailyChallengeService.getDailyChallenge(userId, os)));
     }
 
     @PatchMapping
     public ResponseEntity<ApiResponse<?>> orderModifyDailyChallenge(
-            Principal principal,
+            @UserId final Long userId,
             @RequestHeader("OS") final String os,
             @RequestBody final AppArrayUsageTimeRequest request
     ) {
-        dailyChallengeService.modifyDailyChallengeStatus(IdConverter.getUserId(principal), request.apps(), os);
+        dailyChallengeService.modifyDailyChallengeStatus(userId, request.apps(), os);
         return ResponseEntity
                 .status(DailyChallengeSuccess.MODIFY_DAILY_CHALLENGE_STATUS_SUCCESS.getHttpStatus())
                 .body(ApiResponse.success(DailyChallengeSuccess.MODIFY_DAILY_CHALLENGE_STATUS_SUCCESS, new EmptyJsonResponse()));
     }
 
     @PatchMapping("/failure")
-    public ResponseEntity<ApiResponse<?>> orderModifyDailyChallengeStatusFailure(Principal principal) {
-        dailyChallengeService.modifyDailyChallengeStatusFailure(IdConverter.getUserId(principal));
+    public ResponseEntity<ApiResponse<?>> orderModifyDailyChallengeStatusFailure(@UserId final Long userId) {
+        dailyChallengeService.modifyDailyChallengeStatusFailure(userId);
         return ResponseEntity
                 .status(DailyChallengeSuccess.MODIFY_DAILY_CHALLENGE_STATUS_FAILURE_SUCCESS.getHttpStatus())
                 .body(ApiResponse.success(DailyChallengeSuccess.MODIFY_DAILY_CHALLENGE_STATUS_FAILURE_SUCCESS, new EmptyJsonResponse()));

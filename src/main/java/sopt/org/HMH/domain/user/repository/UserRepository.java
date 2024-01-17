@@ -25,8 +25,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
                 UserError.NOT_FOUND_USER));
     }
 
+    @Modifying
     @Query("DELETE FROM User u WHERE u.isDeleted = true AND u.deletedAt < :currentDate")
-    void deleteUsersScheduledForDeletion(LocalDateTime currentDate);
+    void deleteUsersScheduledForDeletion(@Param("currentDate") LocalDateTime currentDate);
 
     Optional<User> findBySocialPlatformAndSocialId(SocialPlatform socialPlatform, String socialId);
     boolean existsBySocialPlatformAndSocialId(SocialPlatform socialPlatform, String socialId);

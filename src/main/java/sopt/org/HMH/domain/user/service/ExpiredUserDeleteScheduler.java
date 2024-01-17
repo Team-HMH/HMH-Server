@@ -10,7 +10,7 @@ import sopt.org.HMH.domain.user.repository.UserRepository;
 @Component
 @RequiredArgsConstructor
 @Transactional
-public class ExpiredUserDeleteBatch {
+public class ExpiredUserDeleteScheduler {
 
     private final UserRepository userRepository;
 
