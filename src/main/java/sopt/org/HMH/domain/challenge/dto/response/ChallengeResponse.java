@@ -28,8 +28,7 @@ public record ChallengeResponse(
             statuses.add(dailyChallenge.getStatus());
         }
 
-        val startDayOfChallenge = challenge.getDailyChallenges().get(0);
-        val todayIndex = calculateDaysSinceToday(startDayOfChallenge.getCreatedAt());
+        val todayIndex = calculateDaysSinceToday(challenge.getCreatedAt());
         val todayDailyChallenge = dailyChallenges.get(todayIndex);
 
         return ChallengeResponse.builder()
@@ -46,6 +45,6 @@ public record ChallengeResponse(
     }
 
     private static Integer calculateDaysSinceToday(LocalDateTime dateToCompare) {
-        return (int) ChronoUnit.DAYS.between(LocalDateTime.now().toLocalDate(), dateToCompare.toLocalDate());
+        return (int) ChronoUnit.DAYS.between(dateToCompare.toLocalDate(), LocalDateTime.now().toLocalDate());
     }
 }
