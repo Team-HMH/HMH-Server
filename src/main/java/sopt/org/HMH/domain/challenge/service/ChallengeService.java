@@ -1,7 +1,6 @@
 package sopt.org.HMH.domain.challenge.service;
 
 import lombok.RequiredArgsConstructor;
-import lombok.val;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sopt.org.HMH.domain.app.dto.request.AppGoalTimeRequest;
@@ -24,17 +23,14 @@ public class ChallengeService {
 
     @Transactional
     public Challenge addChallenge(Long userId, Integer period, Long goalTime) {
-        Challenge challenge = challengeRepository.save(Challenge.builder()
-                        .period(period)
-                        .goalTime(goalTime)
-                        .userId(userId).build());
-
-        return challenge;
+        return challengeRepository.save(Challenge.builder()
+                .period(period)
+                .goalTime(goalTime)
+                .userId(userId).build());
     }
 
     @Transactional
-    public Challenge addChallengeWithInfo(Long userId, Integer period, Long goalTime, List<AppGoalTimeRequest> apps, String os) {
-        Challenge challenge = addChallenge(userId, period, goalTime);
+    public Challenge addChallengeForPeriodWithInfo(Challenge challenge, List<AppGoalTimeRequest> apps, String os) {
         for (int count = 0; count < challenge.getPeriod(); count++) {
             DailyChallenge dailyChallenge = dailyChallengeService.addDailyChallenge(challenge);
             appService.addApps(dailyChallenge, apps, os);
@@ -43,28 +39,17 @@ public class ChallengeService {
         return challenge;
     }
 
-    @Transactional
-    public Challenge addChallengeWithPastInfo(Long userId, Integer period, Long goalTime, String os) {
-        List<AppGoalTimeRequest> lastApps = getLastApps(userId);
-
-        return addChallengeWithInfo(userId, period, goalTime, lastApps, os);
-    }
-
-    private List<AppGoalTimeRequest> getLastApps(Long userId) {
-        Challenge lastChallenge = challengeRepository.findFirstByUserIdOrderByCreatedAtDesc(userId);
-        int lastIndexOfDailyChallenge = lastChallenge.getDailyChallenges().size()-1;
-        List<AppGoalTimeRequest> lastApps = lastChallenge.getDailyChallenges().get(lastIndexOfDailyChallenge)
+    public List<AppGoalTimeRequest> getLastApps(Long userId) {
+        List<DailyChallenge> lastDailyChallenges = challengeRepository.findFirstByUserIdOrderByCreatedAtDesc(userId).getDailyChallenges();
+        List<AppGoalTimeRequest> lastApps = lastDailyChallenges.get(lastDailyChallenges.size()-1)
                 .getApps()
                 .stream()
-                .map(AppGoalTimeRequest::of)
+                .map(app -> new AppGoalTimeRequest(app.getAppCode(), app.getGoalTime()))
                 .toList();
-
         return lastApps;
     }
 
     public ChallengeResponse getChallenge(Long userId, String os) {
-        val challenge = challengeRepository.findFirstByUserIdOrderByCreatedAtDesc(userId);
-
-        return ChallengeResponse.of(challenge, os);
+        return ChallengeResponse.of(challengeRepository.findFirstByUserIdOrderByCreatedAtDesc(userId), os);
     }
 }

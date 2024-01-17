@@ -72,8 +72,12 @@ public class UserService {
         OnboardingInfo onboardingInfo = registerOnboardingInfo(request);
         User user = addUser(socialPlatform, socialId, request.name());
 
-        challengeService.addChallengeWithInfo(user.getId(), request.challengeSignUpRequest().period(),
-                request.challengeSignUpRequest().goalTime(), request.challengeSignUpRequest().apps(), os);
+        challengeService.addChallengeForPeriodWithInfo(
+                challengeService.addChallenge(user.getId(),
+                        request.challengeSignUpRequest().period(),
+                        request.challengeSignUpRequest().goalTime()),
+                request.challengeSignUpRequest().apps(),
+                os);
 
         return performLogin(socialAccessToken, socialPlatform, user);
     }
