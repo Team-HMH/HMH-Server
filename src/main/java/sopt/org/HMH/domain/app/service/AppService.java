@@ -10,7 +10,6 @@ import sopt.org.HMH.domain.app.repository.AppRepository;
 import sopt.org.HMH.domain.dailychallenge.domain.DailyChallenge;
 import sopt.org.HMH.domain.dailychallenge.service.DailyChallengeService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -31,24 +30,19 @@ public class AppService {
 
     @Transactional
     public void addAppsAndUpdateRemainingDailyChallenge(Long userId, List<AppGoalTimeRequest> requests, String os) {
-        List<DailyChallenge> dailyChallenges = dailyChallengeService.getRemainingDailyChallengesByUserId(userId);
-        for (DailyChallenge dailyChallenge : dailyChallenges) {
-            addApps(dailyChallenge, requests, os);
-        }
+        dailyChallengeService.getRemainingDailyChallengesByUserId(userId).stream()
+                .map((dailyChallenge -> addApps(dailyChallenge, requests, os)));
     }
 
     @Transactional
     public List<App> addApps(DailyChallenge dailyChallenge, List<AppGoalTimeRequest> requests, String os) {
-        List<App> apps = new ArrayList<>();
-        for (AppGoalTimeRequest request : requests) {
-            apps.add(App.builder()
-                    .dailyChallenge(dailyChallenge)
-                    .appCode(request.appCode())
-                    .goalTime(request.goalTime())
-                    .os(os).build());
-        }
-        appRepository.saveAll(apps);
+        List<App> appStream = requests.stream()
+                .map(request -> App.builder().dailyChallenge(dailyChallenge)
+                        .appCode(request.appCode())
+                        .goalTime(request.goalTime())
+                        .os(os).build()
+                ).toList();
 
-        return apps;
+        return appRepository.saveAll(appStream);
     }
 }

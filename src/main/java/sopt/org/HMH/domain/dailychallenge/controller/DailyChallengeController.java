@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import sopt.org.HMH.domain.app.dto.request.AppArrayGoalTimeRequest;
 import sopt.org.HMH.domain.app.dto.request.AppArrayUsageTimeRequest;
 import sopt.org.HMH.domain.dailychallenge.domain.exception.DailyChallengeSuccess;
 import sopt.org.HMH.domain.dailychallenge.dto.response.DailyChallengeResponse;

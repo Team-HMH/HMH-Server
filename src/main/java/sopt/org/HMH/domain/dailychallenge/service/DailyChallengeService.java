@@ -53,14 +53,12 @@ public class DailyChallengeService {
     public void modifyDailyChallengeStatus(Long userId, List<AppUsageTimeRequest> requests, String os) {
         DailyChallenge todayDailyChallenge = getTodayDailyChallengeByUserId(userId);
         long successCount = requests.stream()
-                .map(request -> {
+                .filter(request -> {
                     App app = appRepository.findByDailyChallengeIdAndAppCodeAndOs(
                             todayDailyChallenge.getId(), request.appCode(), os);
                     app.setUsageTime(request.usageTime());
-                    return request.usageTime() <= app.getGoalTime();
-                })
-                .filter(Boolean::booleanValue)
-                .count();
+                    return (request.usageTime() <= app.getGoalTime());
+                }).count();
         Status status = (successCount == requests.size()) ? Status.UNEARNED : Status.FAILURE;
         todayDailyChallenge.setStatus(status);
     }
