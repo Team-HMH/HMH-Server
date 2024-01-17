@@ -21,19 +21,24 @@ public class AppService {
     private final DailyChallengeService dailyChallengeService;
 
     @Transactional
-    public void removeApp(Long userId, AppDeleteRequest request, String os) {
-        App app = appRepository.findByDailyChallengeIdAndAppCodeAndOs(
-                dailyChallengeService.getTodayDailyChallengeByUserId(userId).getId(),
-                request.appCode(),
-                os);
-
-        appRepository.deleteById(app.getId());
+    public void addAppsAndUpdateRemainingDailyChallenge(Long userId, List<AppGoalTimeRequest> requests, String os) {
+        dailyChallengeService.getRemainingDailyChallengesByUserId(userId).stream()
+                .forEach(dailyChallenge -> addApps(dailyChallenge, requests, os));
     }
 
     @Transactional
-    public void addAppsAndUpdateRemainingDailyChallenge(Long userId, List<AppGoalTimeRequest> requests, String os) {
+    public void removeAppAndUpdateRemainingDailyChallenge(Long userId, AppDeleteRequest request, String os) {
         dailyChallengeService.getRemainingDailyChallengesByUserId(userId).stream()
-                .map((dailyChallenge -> addApps(dailyChallenge, requests, os)));
+                .forEach(dailyChallenge -> removeApp(dailyChallenge, request, os));
+    }
+
+
+    @Transactional
+    public void removeApp(DailyChallenge dailyChallenge, AppDeleteRequest request, String os) {
+        appRepository.delete(appRepository.findByDailyChallengeIdAndAppCodeAndOs(
+                dailyChallenge.getId(),
+                request.appCode(),
+                os));
     }
 
     @Transactional
