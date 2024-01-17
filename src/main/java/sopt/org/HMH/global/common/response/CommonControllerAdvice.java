@@ -19,7 +19,7 @@ public class CommonControllerAdvice {
         return ResponseEntity
                 .status(error.getHttpStatus())
                 .body(
-                        ApiResponse.error(error)
+                        BaseResponse.error(error)
                 );
     }
 }
