@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import sopt.org.HMH.domain.app.service.AppService;
 import sopt.org.HMH.domain.challenge.service.ChallengeService;
+import sopt.org.HMH.domain.dailychallenge.service.DailyChallengeService;
 import sopt.org.HMH.domain.user.domain.OnboardingInfo;
 import sopt.org.HMH.domain.user.domain.OnboardingProblem;
 import sopt.org.HMH.domain.user.domain.User;
@@ -43,6 +44,7 @@ public class UserService {
     private final ChallengeService challengeService;
     private final TokenService tokenService;
     private final AppleOAuthProvider appleOAuthProvider;
+    private final DailyChallengeService dailyChallengeService;
     private final AppService appService;
 
     @Transactional
@@ -66,8 +68,12 @@ public class UserService {
 
         User user = addUser(socialPlatform, socialId, request.name());
 
-        challengeService.addChallenge(user.getId(), request.challengeSignUpRequest().period(), request.challengeSignUpRequest().goalTime());
-        appService.addAppsByUserId(user.getId(), request.challengeSignUpRequest().apps(), os);
+        challengeService.updateChallengeForPeriodWithInfo(
+                challengeService.addChallenge(user.getId(),
+                        request.challengeSignUpRequest().period(),
+                        request.challengeSignUpRequest().goalTime()),
+                request.challengeSignUpRequest().apps(),
+                os);
         registerOnboardingInfo(request);
 
         return performLogin(socialAccessToken, socialPlatform, user);
