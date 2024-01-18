@@ -18,13 +18,10 @@ public interface ChallengeRepository extends JpaRepository<Challenge, Long> {
     }
     Optional<Challenge> findByUserIdAndCreatedAtBetween(Long userId, LocalDateTime startDate, LocalDateTime endDate);
 
-    Challenge findFirstByUserIdOrderByCreatedAtDesc(Long userId);
+    Optional<Challenge> findFirstByUserIdOrderByCreatedAtDesc(Long userId);
 
     default Challenge findFirstByUserIdOrderByCreatedAtDescOrElseThrow(Long userId) {
-        Challenge challenge = findFirstByUserIdOrderByCreatedAtDesc(userId);
-        if (challenge == null) {
-            throw new ChallengeException(ChallengeError.CHALLENGE_NOT_FOUND);
-        }
-        return challenge;
+        return findFirstByUserIdOrderByCreatedAtDesc(userId).orElseThrow(() -> new ChallengeException(
+                ChallengeError.CHALLENGE_NOT_FOUND));
     }
 }
