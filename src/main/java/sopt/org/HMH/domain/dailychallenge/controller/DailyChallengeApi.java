@@ -12,10 +12,11 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import sopt.org.HMH.domain.app.dto.request.AppArrayUsageTimeRequest;
 import sopt.org.HMH.domain.dailychallenge.dto.response.DailyChallengeResponse;
 import sopt.org.HMH.global.auth.UserId;
+import sopt.org.HMH.global.auth.jwt.JwtConstants;
 import sopt.org.HMH.global.common.response.BaseResponse;
 
 @Tag(name = "일별챌린지 관련 API")
-@SecurityRequirement(name = "Authorization")
+@SecurityRequirement(name = JwtConstants.AUTHORIZATION)
 public interface DailyChallengeApi {
     @Operation(
             summary = "홈뷰 일별 챌린지 정보 조회하는 API",

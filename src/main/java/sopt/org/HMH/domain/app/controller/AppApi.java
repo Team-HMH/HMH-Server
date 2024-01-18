@@ -12,10 +12,11 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import sopt.org.HMH.domain.app.dto.request.AppArrayGoalTimeRequest;
 import sopt.org.HMH.domain.app.dto.request.AppDeleteRequest;
 import sopt.org.HMH.global.auth.UserId;
+import sopt.org.HMH.global.auth.jwt.JwtConstants;
 import sopt.org.HMH.global.common.response.BaseResponse;
 
 @Tag(name = "스크린타임 앱 관련 API")
-@SecurityRequirement(name = "Authorization")
+@SecurityRequirement(name = JwtConstants.AUTHORIZATION)
 public interface AppApi {
     @Operation(
             summary = "스크린타임 제한 앱 추가 API",

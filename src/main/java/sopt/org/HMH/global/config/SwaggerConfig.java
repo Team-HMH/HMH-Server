@@ -7,10 +7,11 @@ import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import sopt.org.HMH.global.auth.jwt.JwtConstants;
 
 @Configuration
 @SecurityScheme(
-        name = "Authorization",
+        name = JwtConstants.AUTHORIZATION,
         in = SecuritySchemeIn.HEADER,
         type = SecuritySchemeType.APIKEY,
         description = "Bearer 토큰은 Bearer~ 를 붙여주세요."
