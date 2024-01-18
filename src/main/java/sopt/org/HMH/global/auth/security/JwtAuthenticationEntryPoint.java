@@ -11,7 +11,7 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 import sopt.org.HMH.global.auth.jwt.JwtConstants;
 import sopt.org.HMH.global.auth.jwt.exception.JwtError;
-import sopt.org.HMH.global.common.response.ApiResponse;
+import sopt.org.HMH.global.common.response.BaseResponse;
 
 @Slf4j
 @Component
@@ -27,6 +27,6 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding(JwtConstants.CHARACTER_ENCODING);
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        response.getWriter().println(objectMapper.writeValueAsString(ApiResponse.error(JwtError.INVALID_ACCESS_TOKEN)));
+        response.getWriter().println(objectMapper.writeValueAsString(BaseResponse.error(JwtError.INVALID_ACCESS_TOKEN)));
     }
 }
