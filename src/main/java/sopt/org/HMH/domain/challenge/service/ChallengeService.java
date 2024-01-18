@@ -8,6 +8,7 @@ import sopt.org.HMH.domain.app.dto.request.AppGoalTimeRequest;
 import sopt.org.HMH.domain.app.service.AppService;
 import sopt.org.HMH.domain.challenge.domain.Challenge;
 import sopt.org.HMH.domain.challenge.domain.ChallengeConstants;
+import sopt.org.HMH.domain.challenge.domain.ChallengeDay;
 import sopt.org.HMH.domain.challenge.domain.exception.ChallengeError;
 import sopt.org.HMH.domain.challenge.domain.exception.ChallengeException;
 import sopt.org.HMH.domain.challenge.dto.response.ChallengeResponse;
@@ -70,7 +71,7 @@ public class ChallengeService {
         if (period == null) {
             throw new ChallengeException(ChallengeError.INVALID_PERIOD_NULL);
         }
-        if (period != ChallengeConstants.DAY7_CHALLENGE && period != ChallengeConstants.DAY14_CHALLENGE) {
+        if (period != ChallengeDay.DAYS7.getValue() && period != ChallengeDay.DAYS14.getValue()) {
             throw new ChallengeException(ChallengeError.INVALID_PERIOD_NUMERIC);
         }
     }
