@@ -12,10 +12,8 @@ import org.springframework.context.annotation.Configuration;
 @SecurityScheme(
         name = "Authorization",
         in = SecuritySchemeIn.HEADER,
-        type = SecuritySchemeType.HTTP,
-        bearerFormat = "JWT",
-        scheme = "Bearer",
-        description = "Authorization: Bearer ~"
+        type = SecuritySchemeType.APIKEY,
+        description = "Bearer 토큰은 Bearer~ 를 붙여주세요."
 )
 public class SwaggerConfig {
     @Bean
