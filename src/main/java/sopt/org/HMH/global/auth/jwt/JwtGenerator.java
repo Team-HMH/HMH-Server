@@ -20,6 +20,10 @@ public class JwtGenerator {
 
     @Value("${jwt.secret}")
     private String JWT_SECRET;
+    @Value("${jwt.access-token-expiration-time}")
+    private Integer ACCESS_TOKEN_EXPIRATION_TIME;
+    @Value("${jwt.refresh-token-expiration-time}")
+    private Integer REFRESH_TOKEN_EXPIRATION_TIME;
     private final TokenRepository tokenRepository;
 
     public String generateToken(Long userId, boolean isRefreshToken) {
@@ -39,7 +43,7 @@ public class JwtGenerator {
                     RefreshToken.builder()
                             .userId(userId)
                             .refreshToken(token)
-                            .expiration(JwtConstants.REFRESH_TOKEN_EXPIRATION_TIME / 1000)
+                            .expiration(REFRESH_TOKEN_EXPIRATION_TIME / 1000)
                             .build());
         }
         return token;
@@ -59,9 +63,9 @@ public class JwtGenerator {
 
     private long calculateExpirationTime(boolean isRefreshToken) {
         if (isRefreshToken) {
-            return JwtConstants.REFRESH_TOKEN_EXPIRATION_TIME;
+            return REFRESH_TOKEN_EXPIRATION_TIME;
         }
-        return JwtConstants.ACCESS_TOKEN_EXPIRATION_TIME;
+        return ACCESS_TOKEN_EXPIRATION_TIME;
     }
 
     private String encodeSecretKey() {
