@@ -41,7 +41,7 @@ public class AppController implements AppApi {
             @RequestHeader("OS") final String os,
             @RequestBody final AppDeleteRequest request
     ) {
-        appService.removeApp(userId, request, os);
+        appService.removeAppAndUpdateRemainingDailyChallenge(userId, request, os);
         return ResponseEntity
                 .status(AppSuccess.DELETE_APP_SUCCESS.getHttpStatus())
                 .body(BaseResponse.success(AppSuccess.DELETE_APP_SUCCESS, new EmptyJsonResponse()));

@@ -2,54 +2,31 @@
 > 33th DO SOPT APPJAM :: HMH (하면함) <br>
 > 프로젝트 기간 : 2023.12.17 ~ ing<br>
 > <br>
-⏰ 당신의 소중한 시간을 위한 디지털 디톡스<br/>
+⏰ 스마트폰 중독 탈출, 너도 하면 함
+<br>
+
+![HMH](https://github.com/Team-HMH/HMH-Server/assets/69035864/b0c5045e-44a7-4616-b267-316120043558)
+
  <br>
-
-
 ## 📌 Tech Stacks
 
 
 - **Language** : Java (jdk-17)
 - **Web application Framework** : Spring boot (3.2.1), Spring Data JPA
-- **DataBase** : MySql (8.1.0)
+- **DataBase** : MySql (8.1.0), Redis
 - **Cloud/Infra** : Aws EC2, RDS, code deploy
-- **web server** : Tomcat
-- **Collaborative Tool** : Github
+- **web server** : Tomcat, Nginx
+- **Collaborative Tool** : Github, Slack, Notion
 - **Version Control** : Git
 
 <br/>
 
 ## 🖤 Developers
 
-
-
-
 | 임주민                                                | 김승환                                                       |
 | :-----------------------------------------------------: | :------------------------------------------------------------: |
 | <img width="300" alt="image" src="https://github.com/Team-HMH/HMH-Server/assets/76610340/ea57f67f-adcb-4abc-a198-7b962e61a6bc"> | <img width="300" alt="image" src="https://github.com/SOPT-33-iOS-Team-1/SOPKATHON_33-Server/assets/86935274/b1308faa-06cb-4818-878e-aeb8e17ac14c"> |
 | [jumining](https://github.com/jumining)                      | [kseysh](https://github.com/kseysh)                                  |
-
-<br/>
-
-## 🙋🏻‍♀️ 역할 분담
-
-
-<div markdown="1">
-
-- `주민🐹` & `승환🤖`
-
-| 기능명          | 담당자      | 완료 여부 |
-| --------------- | ----------- | --------- |
-| 프로젝트 세팅   | 승환🤖       | 완료      |
-| EC2 세팅        | 주민🐹       | 완료      |
-| RDS 세팅        | 주민🐹       | 완료      |
-| CI/CD 세팅      | 승환🤖       | 완료      |
-| README 작성     | 승환🤖       | 완료      |
-| DB 설계         | 주민🐹 승환🤖 | 완료      |
-| API 명세서 작성 | 주민🐹 승환🤖 | 완료      |
-| API 개발        | 주민🐹 승환🤖 | 진행중    |
-
-</div>
 
 <br/>
 
@@ -59,20 +36,17 @@
 
 ### 🚀Convention
 
-- [💻 협업 컨벤션](https://msmmx.notion.site/6fa22000670d4cf783559f7808c01d1a?pvs=4) <br>
+- [💻 협업 컨벤션](https://hmhteam.notion.site/6fa22000670d4cf783559f7808c01d1a?pvs=4) <br>
 
 ### 🚀 Branch Strategy
 
-- [💻 브랜치 전략](https://msmmx.notion.site/9d8065b238c543b890ceeb9912966dd0?pvs=4)
+- [💻 브랜치 전략](https://hmhteam.notion.site/9d8065b238c543b890ceeb9912966dd0?pvs=4)
 
 <br/>
 
 ## 💾 ERD
 
-![image](https://github.com/Team-HMH/HMH-Server/assets/69035864/899d87a4-9262-47c4-9fc0-dc820a7f7189)
-
-
-
+![image](https://github.com/Team-HMH/HMH-Server/assets/69035864/f4b95b3d-6507-4d33-be41-8a4847bc076f)
 
  <br>
 
@@ -80,10 +54,7 @@
 
 ## ⚙️ Architecture
 
-<img width="700" src="https://github.com/Team-HMH/HMH-Server/assets/76610340/825d260e-5a2e-494e-8abe-7299604b0bed">
-
-
-
+![architecture](https://github.com/Team-HMH/HMH-Server/assets/69035864/e0eefac1-d8be-4a08-a3de-6e9786557042)
 
 
 <br>
