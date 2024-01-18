@@ -37,16 +37,14 @@ public class User extends BaseTimeEntity {
     @Column(columnDefinition = "TEXT")
     private String profileImageUrl;
 
-    private Long onboardingInfoId;
     private boolean isDeleted = false;
     private LocalDateTime deletedAt;
 
     @Builder
-    public User(SocialPlatform socialPlatform, String socialId, String name, Long onboardingInfoId) {
+    public User(SocialPlatform socialPlatform, String socialId, String name) {
         this.socialPlatform = socialPlatform;
         this.socialId = socialId;
         this.name = name;
-        this.onboardingInfoId = onboardingInfoId;
         this.point = UserConstants.INITIAL_POINT;
     }
 

@@ -17,7 +17,7 @@ import sopt.org.HMH.domain.user.dto.response.ReissueResponse;
 import sopt.org.HMH.domain.user.dto.response.UserInfoResponse;
 import sopt.org.HMH.domain.user.service.UserService;
 import sopt.org.HMH.global.auth.UserId;
-import sopt.org.HMH.global.common.response.ApiResponse;
+import sopt.org.HMH.global.common.response.BaseResponse;
 import sopt.org.HMH.global.common.response.EmptyJsonResponse;
 
 @RestController
@@ -28,55 +28,55 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse<LoginResponse>> orderLogin(
+    public ResponseEntity<BaseResponse<LoginResponse>> orderLogin(
             @RequestHeader("Authorization") final String socialAccessToken,
             @RequestBody final SocialPlatformRequest request
     ) {
         return ResponseEntity
                 .status(UserSuccess.LOGIN_SUCCESS.getHttpStatus())
-                .body(ApiResponse.success(UserSuccess.LOGIN_SUCCESS, userService.login(socialAccessToken, request)));
+                .body(BaseResponse.success(UserSuccess.LOGIN_SUCCESS, userService.login(socialAccessToken, request)));
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<ApiResponse<LoginResponse>> orderSignup(
+    public ResponseEntity<BaseResponse<LoginResponse>> orderSignup(
             @RequestHeader("Authorization") final String socialAccessToken,
             @RequestHeader("OS") final String os,
             @RequestBody final SocialSignUpRequest request
     ) {
         return ResponseEntity
                 .status(UserSuccess.SIGNUP_SUCCESS.getHttpStatus())
-                .body(ApiResponse.success(UserSuccess.SIGNUP_SUCCESS, userService.signup(socialAccessToken, request, os)));
+                .body(BaseResponse.success(UserSuccess.SIGNUP_SUCCESS, userService.signup(socialAccessToken, request, os)));
     }
 
     @PostMapping("/reissue")
-    public ResponseEntity<ApiResponse<ReissueResponse>> orderReissue(
+    public ResponseEntity<BaseResponse<ReissueResponse>> orderReissue(
             @RequestHeader("Authorization") final String refreshToken
     ) {
         return ResponseEntity
                 .status(UserSuccess.REISSUE_SUCCESS.getHttpStatus())
-                .body(ApiResponse.success(UserSuccess.REISSUE_SUCCESS, userService.reissueToken(refreshToken)));
+                .body(BaseResponse.success(UserSuccess.REISSUE_SUCCESS, userService.reissueToken(refreshToken)));
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<ApiResponse<?>> orderLogout(@UserId final Long userId) {
+    public ResponseEntity<BaseResponse<?>> orderLogout(@UserId final Long userId) {
         userService.logout(userId);
         return ResponseEntity
                 .status(UserSuccess.LOGOUT_SUCCESS.getHttpStatus())
-                .body(ApiResponse.success(UserSuccess.LOGOUT_SUCCESS, new EmptyJsonResponse()));
+                .body(BaseResponse.success(UserSuccess.LOGOUT_SUCCESS, new EmptyJsonResponse()));
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<UserInfoResponse>> orderGetUserInfo(@UserId final Long userId) {
+    public ResponseEntity<BaseResponse<UserInfoResponse>> orderGetUserInfo(@UserId final Long userId) {
         return ResponseEntity
                 .status(UserSuccess.GET_USER_INFO_SUCCESS.getHttpStatus())
-                .body(ApiResponse.success(UserSuccess.GET_USER_INFO_SUCCESS, userService.getUserInfo(userId)));
+                .body(BaseResponse.success(UserSuccess.GET_USER_INFO_SUCCESS, userService.getUserInfo(userId)));
     }
 
     @DeleteMapping
-    public ResponseEntity<ApiResponse<?>> orderWithdraw(@UserId final Long userId) {
+    public ResponseEntity<BaseResponse<?>> orderWithdraw(@UserId final Long userId) {
         userService.withdraw(userId);
         return ResponseEntity
                 .status(UserSuccess.WITHDRAW_SUCCESS.getHttpStatus())
-                .body(ApiResponse.success(UserSuccess.WITHDRAW_SUCCESS, new EmptyJsonResponse()));
+                .body(BaseResponse.success(UserSuccess.WITHDRAW_SUCCESS, new EmptyJsonResponse()));
     }
 }

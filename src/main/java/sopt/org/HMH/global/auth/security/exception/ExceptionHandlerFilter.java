@@ -15,7 +15,7 @@ import sopt.org.HMH.global.auth.jwt.JwtConstants;
 import sopt.org.HMH.global.auth.jwt.exception.JwtError;
 import sopt.org.HMH.global.auth.jwt.exception.JwtException;
 import sopt.org.HMH.global.common.exception.base.ErrorBase;
-import sopt.org.HMH.global.common.response.ApiResponse;
+import sopt.org.HMH.global.common.response.BaseResponse;
 
 @Slf4j
 public class ExceptionHandlerFilter extends OncePerRequestFilter {
@@ -48,6 +48,6 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
         response.setCharacterEncoding(JwtConstants.CHARACTER_ENCODING);
         response.setStatus(httpStatus.value());
         PrintWriter writer = response.getWriter();
-        writer.write(objectMapper.writeValueAsString(ApiResponse.error(errorMessage)));
+        writer.write(objectMapper.writeValueAsString(BaseResponse.error(errorMessage)));
     }
 }

@@ -13,20 +13,18 @@ import sopt.org.HMH.domain.app.dto.request.AppArrayGoalTimeRequest;
 import sopt.org.HMH.domain.app.dto.request.AppDeleteRequest;
 import sopt.org.HMH.domain.app.service.AppService;
 import sopt.org.HMH.global.auth.UserId;
-import sopt.org.HMH.global.common.response.ApiResponse;
+import sopt.org.HMH.global.common.response.BaseResponse;
 import sopt.org.HMH.global.common.response.EmptyJsonResponse;
-
-import java.security.Principal;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/app")
-public class AppController {
+public class AppController implements AppApi {
 
     private final AppService appService;
 
     @PostMapping
-    public ResponseEntity<ApiResponse<?>> orderAddApp(
+    public ResponseEntity<BaseResponse<?>> orderAddApp(
             @UserId final Long userId,
             @RequestHeader("OS") final String os,
             @RequestBody final AppArrayGoalTimeRequest request
@@ -34,11 +32,11 @@ public class AppController {
         appService.addAppsAndUpdateRemainingDailyChallenge(userId, request.apps(), os);
         return ResponseEntity
                 .status(AppSuccess.ADD_APP_SUCCESS.getHttpStatus())
-                .body(ApiResponse.success(AppSuccess.ADD_APP_SUCCESS, new EmptyJsonResponse()));
+                .body(BaseResponse.success(AppSuccess.ADD_APP_SUCCESS, new EmptyJsonResponse()));
     }
 
     @DeleteMapping
-    public ResponseEntity<ApiResponse<?>> orderRemoveApp(
+    public ResponseEntity<BaseResponse<?>> orderRemoveApp(
             @UserId final Long userId,
             @RequestHeader("OS") final String os,
             @RequestBody final AppDeleteRequest request
@@ -46,6 +44,6 @@ public class AppController {
         appService.removeAppAndUpdateRemainingDailyChallenge(userId, request, os);
         return ResponseEntity
                 .status(AppSuccess.DELETE_APP_SUCCESS.getHttpStatus())
-                .body(ApiResponse.success(AppSuccess.DELETE_APP_SUCCESS, new EmptyJsonResponse()));
+                .body(BaseResponse.success(AppSuccess.DELETE_APP_SUCCESS, new EmptyJsonResponse()));
     }
 }
