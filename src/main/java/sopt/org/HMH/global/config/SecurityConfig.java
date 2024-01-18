@@ -26,12 +26,13 @@ public class SecurityConfig {
     private final JwtAuthenticationEntryPoint customJwtAuthenticationEntryPoint;
 
     private static final String[] AUTH_WHITELIST = {
-            "/", "/error", "/health",
+            "/", "/error", "/health", "/api/v1/dummy/**",
 
             // Swagger
             "/swagger-ui/**",
             "/swagger-resources/**",
             "/api-docs/**",
+            "/v3/api-docs/**",
 
             // Authentication
             "/api/v1/user/login",

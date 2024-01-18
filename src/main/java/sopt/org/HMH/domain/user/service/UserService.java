@@ -1,12 +1,10 @@
 package sopt.org.HMH.domain.user.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
-import sopt.org.HMH.domain.app.service.AppService;
 import sopt.org.HMH.domain.challenge.service.ChallengeService;
 import sopt.org.HMH.domain.user.domain.OnboardingInfo;
 import sopt.org.HMH.domain.user.domain.OnboardingProblem;
@@ -20,6 +18,7 @@ import sopt.org.HMH.domain.user.dto.response.LoginResponse;
 import sopt.org.HMH.domain.user.dto.response.ReissueResponse;
 import sopt.org.HMH.domain.user.dto.response.UserInfoResponse;
 import sopt.org.HMH.domain.user.repository.OnboardingInfoRepository;
+import sopt.org.HMH.domain.user.repository.ProblemRepository;
 import sopt.org.HMH.domain.user.repository.UserRepository;
 import sopt.org.HMH.global.auth.jwt.JwtProvider;
 import sopt.org.HMH.global.auth.jwt.JwtValidator;
@@ -39,11 +38,11 @@ public class UserService {
     private final JwtValidator jwtValidator;
     private final UserRepository userRepository;
     private final OnboardingInfoRepository onboardingInfoRepository;
+    private final ProblemRepository problemRepository;
     private final KakaoLoginService kakaoLoginService;
     private final ChallengeService challengeService;
     private final TokenService tokenService;
     private final AppleOAuthProvider appleOAuthProvider;
-    private final AppService appService;
 
     @Transactional
     public LoginResponse login(String socialAccessToken, SocialPlatformRequest request) {
@@ -66,8 +65,12 @@ public class UserService {
 
         User user = addUser(socialPlatform, socialId, request.name());
 
-        challengeService.addChallenge(user.getId(), request.challengeSignUpRequest().period(), request.challengeSignUpRequest().goalTime());
-        appService.addAppsByUserId(user.getId(), request.challengeSignUpRequest().apps(), os);
+        challengeService.updateChallengeForPeriodWithInfo(
+                challengeService.addChallenge(user.getId(),
+                        request.challengeSignUpRequest().period(),
+                        request.challengeSignUpRequest().goalTime()),
+                request.challengeSignUpRequest().apps(),
+                os);
         registerOnboardingInfo(request);
 
         return performLogin(socialAccessToken, socialPlatform, user);
@@ -169,18 +172,16 @@ public class UserService {
     }
 
     private void registerOnboardingInfo(SocialSignUpRequest request) {
-        List<OnboardingProblem> problemList = new ArrayList<>();
-        for (String problem : request.onboardingRequest().problemList()) {
-            problemList.add(
-                    OnboardingProblem.builder()
-                            .problem(problem)
-                            .build()
-            );
-        }
-
         OnboardingInfo onboardingInfo = OnboardingInfo.builder()
                 .averageUseTime(request.onboardingRequest().averageUseTime())
                 .build();
-        onboardingInfoRepository.save(onboardingInfo);
+        Long onboardingInfoId = onboardingInfoRepository.save(onboardingInfo).getId();
+
+        List<OnboardingProblem> problemList = request.onboardingRequest().problemList().stream()
+                .map(problem ->  OnboardingProblem.builder()
+                        .onboardingInfoId(onboardingInfoId)
+                        .problem(problem).build())
+                .toList();
+        problemRepository.saveAll(problemList);
     }
 }

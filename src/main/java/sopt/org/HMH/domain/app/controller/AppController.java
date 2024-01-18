@@ -19,7 +19,7 @@ import sopt.org.HMH.global.common.response.EmptyJsonResponse;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/app")
-public class AppController {
+public class AppController implements AppApi {
 
     private final AppService appService;
 
@@ -29,7 +29,7 @@ public class AppController {
             @RequestHeader("OS") final String os,
             @RequestBody final AppArrayGoalTimeRequest request
     ) {
-        appService.addAppsByUserId(userId, request.apps(), os);
+        appService.addAppsAndUpdateRemainingDailyChallenge(userId, request.apps(), os);
         return ResponseEntity
                 .status(AppSuccess.ADD_APP_SUCCESS.getHttpStatus())
                 .body(BaseResponse.success(AppSuccess.ADD_APP_SUCCESS, new EmptyJsonResponse()));
@@ -41,7 +41,7 @@ public class AppController {
             @RequestHeader("OS") final String os,
             @RequestBody final AppDeleteRequest request
     ) {
-        appService.removeApp(userId, request, os);
+        appService.removeAppAndUpdateRemainingDailyChallenge(userId, request, os);
         return ResponseEntity
                 .status(AppSuccess.DELETE_APP_SUCCESS.getHttpStatus())
                 .body(BaseResponse.success(AppSuccess.DELETE_APP_SUCCESS, new EmptyJsonResponse()));
