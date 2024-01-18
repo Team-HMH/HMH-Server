@@ -9,4 +9,6 @@ import lombok.Getter;
 public class DummyApp {
     String appName;
     String appImageUrl;
+    Long goalTime;
+    Long usageTime;
 }
