@@ -19,7 +19,7 @@ import sopt.org.HMH.global.common.response.EmptyJsonResponse;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/challenge")
-public class ChallengeController {
+public class ChallengeController implements ChallengeApi {
 
     private final ChallengeService challengeService;
 
