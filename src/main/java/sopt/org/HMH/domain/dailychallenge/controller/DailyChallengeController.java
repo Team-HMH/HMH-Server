@@ -24,6 +24,7 @@ public class DailyChallengeController implements DailyChallengeApi {
     private final DailyChallengeService dailyChallengeService;
 
     @GetMapping
+    @Override
     public ResponseEntity<BaseResponse<DailyChallengeResponse>> orderDetailDailyChallenge(@UserId final Long userId,
                                                                                           @RequestHeader("OS") final String os) {
         return ResponseEntity
@@ -33,6 +34,7 @@ public class DailyChallengeController implements DailyChallengeApi {
     }
 
     @PatchMapping
+    @Override
     public ResponseEntity<BaseResponse<?>> orderModifyDailyChallenge(
             @UserId final Long userId,
             @RequestHeader("OS") final String os,
@@ -45,6 +47,7 @@ public class DailyChallengeController implements DailyChallengeApi {
     }
 
     @PatchMapping("/failure")
+    @Override
     public ResponseEntity<BaseResponse<?>> orderModifyDailyChallengeStatusFailure(@UserId final Long userId) {
         dailyChallengeService.modifyDailyChallengeStatusFailure(userId);
         return ResponseEntity
