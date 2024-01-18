@@ -1,5 +1,6 @@
 package sopt.org.HMH.domain.user.service;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -176,13 +177,11 @@ public class UserService {
                 .build();
         Long onboardingInfoId = onboardingInfoRepository.save(onboardingInfo).getId();
 
-        for (String problem : request.onboardingRequest().problemList()) {
-            problemRepository.save(
-                    OnboardingProblem.builder()
-                            .onboardingInfoId(onboardingInfoId)
-                            .problem(problem)
-                            .build()
-            );
-        }
+        List<OnboardingProblem> problemList = request.onboardingRequest().problemList().stream()
+                .map(problem ->  OnboardingProblem.builder()
+                        .onboardingInfoId(onboardingInfoId)
+                        .problem(problem).build())
+                .toList();
+        problemRepository.saveAll(problemList);
     }
 }
