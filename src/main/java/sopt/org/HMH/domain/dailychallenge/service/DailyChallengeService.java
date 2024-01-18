@@ -60,18 +60,16 @@ public class DailyChallengeService {
 
     public DailyChallenge getTodayDailyChallengeByUserId(Long userId) {
         Challenge challenge = challengeRepository.findFirstByUserIdOrderByCreatedAtDesc(userId);
-
         return challenge.getDailyChallenges().get(calculateDaysSinceToday(challenge.getCreatedAt()));
     }
 
     public List<DailyChallenge> getRemainingDailyChallengesByUserId(Long userId) {
         Challenge challenge = challengeRepository.findFirstByUserIdOrderByCreatedAtDesc(userId);
-
         return challenge.getDailyChallenges()
                 .subList(calculateDaysSinceToday(challenge.getCreatedAt()), challenge.getDailyChallenges().size());
     }
 
     private Integer calculateDaysSinceToday(LocalDateTime dateToCompare) {
-        return (int) ChronoUnit.DAYS.between(LocalDateTime.now().toLocalDate(), dateToCompare.toLocalDate());
+        return (int) ChronoUnit.DAYS.between(dateToCompare.toLocalDate(), LocalDateTime.now().toLocalDate());
     }
 }
