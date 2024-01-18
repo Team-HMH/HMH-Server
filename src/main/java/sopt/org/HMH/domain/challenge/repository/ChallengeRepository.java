@@ -6,9 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import sopt.org.HMH.domain.challenge.domain.Challenge;
 import sopt.org.HMH.domain.challenge.domain.exception.ChallengeError;
 import sopt.org.HMH.domain.challenge.domain.exception.ChallengeException;
-import sopt.org.HMH.domain.dailychallenge.domain.DailyChallenge;
-import sopt.org.HMH.domain.dailychallenge.domain.exception.DailyChallengeError;
-import sopt.org.HMH.domain.dailychallenge.domain.exception.DailyChallengeException;
 
 public interface ChallengeRepository extends JpaRepository<Challenge, Long> {
 

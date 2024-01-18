@@ -72,6 +72,6 @@ public class DailyChallengeService {
     }
 
     private Integer calculateDaysSinceToday(LocalDateTime dateToCompare) {
-        return (int) ChronoUnit.DAYS.between(LocalDateTime.now().toLocalDate(), dateToCompare.toLocalDate());
+        return (int) ChronoUnit.DAYS.between(dateToCompare.toLocalDate(), LocalDateTime.now().toLocalDate());
     }
 }
