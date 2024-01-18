@@ -14,10 +14,10 @@ import sopt.org.HMH.global.auth.jwt.JwtConstants;
 import sopt.org.HMH.global.common.response.BaseResponse;
 
 @Tag(name = "회원 관련 API")
+@SecurityRequirement(name = JwtConstants.AUTHORIZATION)
 public interface UserApi {
 
     @Operation(
-            security = @SecurityRequirement(name = "Authorization"),
             summary = "소셜 로그인")
     ResponseEntity<BaseResponse<?>> orderLogin(
             @Parameter(hidden = true) @RequestHeader(JwtConstants.AUTHORIZATION) final String socialAccessToken,
@@ -25,33 +25,28 @@ public interface UserApi {
     );
 
     @Operation(
-            security = @SecurityRequirement(name = "Authorization"),
             summary = "회원 가입")
     ResponseEntity<BaseResponse<?>> orderSignup(
-            @Parameter(hidden = true) @RequestHeader("Authorization") final String socialAccessToken,
+            @Parameter(hidden = true) @RequestHeader(JwtConstants.AUTHORIZATION) final String socialAccessToken,
             @RequestHeader("OS") final String os,
             @RequestBody final SocialSignUpRequest request
     );
 
     @Operation(
-            security = @SecurityRequirement(name = "Authorization"),
             summary = "토큰 재발급")
     ResponseEntity<BaseResponse<?>> orderReissue(
-            @Parameter(hidden = true) @RequestHeader("Authorization") final String refreshToken
+            @Parameter(hidden = true) @RequestHeader(JwtConstants.AUTHORIZATION) final String refreshToken
     );
 
     @Operation(
-            security = @SecurityRequirement(name = "Authorization"),
             summary = "로그아웃")
     ResponseEntity<BaseResponse<?>> orderLogout(@UserId @Parameter(hidden = true) final Long userId);
 
     @Operation(
-            security = @SecurityRequirement(name = "Authorization"),
             summary = "유저 정보 불러오기")
     ResponseEntity<BaseResponse<?>> orderGetUserInfo(@UserId @Parameter(hidden = true) final Long userId);
 
     @Operation(
-            security = @SecurityRequirement(name = "Authorization"),
             summary = "회원 탈퇴")
     ResponseEntity<BaseResponse<?>> orderWithdraw(@UserId @Parameter(hidden = true) final Long userId);
 }
