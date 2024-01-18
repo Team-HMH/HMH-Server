@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import sopt.org.HMH.global.common.response.ApiResponse;
+import sopt.org.HMH.global.common.response.BaseResponse;
 
 @RestController
 @RequiredArgsConstructor
@@ -13,9 +13,9 @@ import sopt.org.HMH.global.common.response.ApiResponse;
 @Deprecated
 public class DummyAppController {
     @GetMapping("/app")
-    public ResponseEntity<ApiResponse<?>> orderModifyDailyChallenge() {
+    public ResponseEntity<BaseResponse<?>> orderModifyDailyChallenge() {
         return ResponseEntity
                 .status(DummyAppSuccess.GET_DUMMY_SUCCESS.getHttpStatus())
-                .body(ApiResponse.success(DummyAppSuccess.GET_DUMMY_SUCCESS, DummyAppListResponse.of()));
+                .body(BaseResponse.success(DummyAppSuccess.GET_DUMMY_SUCCESS, DummyAppListResponse.of()));
     }
 }
