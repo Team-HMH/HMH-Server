@@ -59,12 +59,14 @@ public class DailyChallengeService {
     }
 
     public DailyChallenge getTodayDailyChallengeByUserId(Long userId) {
-        Challenge challenge = challengeRepository.findFirstByUserIdOrderByCreatedAtDesc(userId);
+        Challenge challenge = challengeRepository.findFirstByUserIdOrderByCreatedAtDescOrElseThrow(userId);
+
         return challenge.getDailyChallenges().get(calculateDaysSinceToday(challenge.getCreatedAt()));
     }
 
     public List<DailyChallenge> getRemainingDailyChallengesByUserId(Long userId) {
-        Challenge challenge = challengeRepository.findFirstByUserIdOrderByCreatedAtDesc(userId);
+        Challenge challenge = challengeRepository.findFirstByUserIdOrderByCreatedAtDescOrElseThrow(userId);
+
         return challenge.getDailyChallenges()
                 .subList(calculateDaysSinceToday(challenge.getCreatedAt()), challenge.getDailyChallenges().size());
     }
