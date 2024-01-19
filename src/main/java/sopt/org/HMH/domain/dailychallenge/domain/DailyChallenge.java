@@ -32,7 +32,7 @@ public class DailyChallenge extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    @OneToMany(mappedBy = "dailyChallenge", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "dailyChallenge", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<App> apps = new ArrayList<>();
 
     @Builder

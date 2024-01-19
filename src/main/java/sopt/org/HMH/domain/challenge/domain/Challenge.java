@@ -26,7 +26,7 @@ public class Challenge extends BaseTimeEntity {
     private Integer period;
     private Long goalTime;
 
-    @OneToMany(mappedBy = "challenge", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "challenge", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<DailyChallenge> dailyChallenges  = new ArrayList<>();
 
     @Builder
