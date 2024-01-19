@@ -14,6 +14,7 @@ import sopt.org.HMH.domain.challenge.dto.response.ChallengeResponse;
 import sopt.org.HMH.domain.challenge.service.ChallengeService;
 import sopt.org.HMH.global.auth.UserId;
 import sopt.org.HMH.global.common.response.BaseResponse;
+import sopt.org.HMH.global.common.response.BaseResponse;
 import sopt.org.HMH.global.common.response.EmptyJsonResponse;
 
 @RestController
@@ -24,6 +25,7 @@ public class ChallengeController implements ChallengeApi {
     private final ChallengeService challengeService;
 
     @PostMapping
+    @Override
     public ResponseEntity<BaseResponse<?>> orderAddChallenge(@UserId final Long userId,
                                                              @RequestHeader("OS") final String os,
                                                              @RequestBody final ChallengeRequest request) {
@@ -38,6 +40,7 @@ public class ChallengeController implements ChallengeApi {
     }
 
     @GetMapping
+    @Override
     public ResponseEntity<BaseResponse<ChallengeResponse>> orderGetChallenge(@UserId final Long userId,
                                                                              @RequestHeader("OS") final String os) {
         return ResponseEntity
