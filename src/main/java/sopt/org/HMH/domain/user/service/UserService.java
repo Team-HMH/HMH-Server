@@ -87,6 +87,7 @@ public class UserService {
 
     @Transactional
     public void withdraw(Long userId) {
+        tokenService.deleteRefreshToken(userId);
         userRepository.findByIdOrThrowException(userId).softDelete();
     }
 
