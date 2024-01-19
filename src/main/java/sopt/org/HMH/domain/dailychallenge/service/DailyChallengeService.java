@@ -4,6 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sopt.org.HMH.domain.app.domain.App;
+import sopt.org.HMH.domain.app.domain.AppConstants;
+import sopt.org.HMH.domain.app.domain.exception.AppError;
+import sopt.org.HMH.domain.app.domain.exception.AppException;
 import sopt.org.HMH.domain.app.dto.request.AppUsageTimeRequest;
 import sopt.org.HMH.domain.app.repository.AppRepository;
 import sopt.org.HMH.domain.challenge.domain.Challenge;
@@ -49,13 +52,25 @@ public class DailyChallengeService {
         DailyChallenge todayDailyChallenge = getTodayDailyChallengeByUserId(userId);
         long successCount = requests.stream()
                 .filter(request -> {
-                    App app = appRepository.findByDailyChallengeIdAndAppCodeAndOs(
+                    validateModifyDailyChallenge(request.appCode(), request.usageTime());
+                    App app = appRepository.findFirstByDailyChallengeIdAndAppCodeAndOsOrElseThrow(
                             todayDailyChallenge.getId(), request.appCode(), os);
                     app.setUsageTime(request.usageTime());
                     return (request.usageTime() <= app.getGoalTime());
                 }).count();
         Status status = (successCount == requests.size()) ? Status.UNEARNED : Status.FAILURE;
         todayDailyChallenge.setStatus(status);
+    }
+
+    private void validateModifyDailyChallenge(String appCode, Long usageTime) {
+        if (appCode == "") {
+            throw new AppException(AppError.INVALID_APP_CODE_NULL);
+        }
+        if (usageTime == null) {
+            throw new AppException(AppError.INVALID_TIME_NULL);
+        }
+        if (usageTime > AppConstants.MAXIMUM_APP_TIME || usageTime < AppConstants.MINIMUM_APP_TIME)
+            throw new AppException(AppError.INVALID_TIME_RANGE);
     }
 
     public DailyChallenge getTodayDailyChallengeByUserId(Long userId) {
