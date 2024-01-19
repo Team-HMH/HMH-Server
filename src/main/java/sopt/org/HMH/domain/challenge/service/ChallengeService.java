@@ -83,4 +83,9 @@ public class ChallengeService {
             throw new ChallengeException(ChallengeError.INVALID_GOAL_TIME_NULL);
         }
     }
+
+    @Transactional
+    public void deleteChallengeRelatedByUserId(List<Long> expiredUserIdList) {
+        challengeRepository.deleteByUserIdIn(expiredUserIdList);
+    }
 }
