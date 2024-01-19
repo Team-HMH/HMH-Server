@@ -1,5 +1,6 @@
 package sopt.org.HMH.domain.user.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -178,10 +179,16 @@ public class UserService {
         Long onboardingInfoId = onboardingInfoRepository.save(onboardingInfo).getId();
 
         List<OnboardingProblem> problemList = request.onboardingRequest().problemList().stream()
-                .map(problem ->  OnboardingProblem.builder()
+                .map(problem -> OnboardingProblem.builder()
                         .onboardingInfoId(onboardingInfoId)
                         .problem(problem).build())
                 .toList();
         problemRepository.saveAll(problemList);
+    }
+
+    public void deleteExpiredUser(LocalDateTime currentDate) {
+        List<Long> expiredUserList = userRepository.findIdByDeletedAtBeforeAndIsDeletedIsTrue(currentDate);
+        userRepository.deleteAllById(expiredUserList);
+        challengeService.deleteChallengeRelatedByUserId(expiredUserList);
     }
 }
