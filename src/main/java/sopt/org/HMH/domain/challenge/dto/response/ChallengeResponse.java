@@ -21,8 +21,8 @@ public record ChallengeResponse(
     public static ChallengeResponse of(Challenge challenge, String os) {
         List<DailyChallenge> dailyChallenges = challenge.getDailyChallenges();
 
-        int daysSinceToday = (int) ChronoUnit.DAYS.between(LocalDateTime.now().toLocalDate(),
-                challenge.getDailyChallenges().get(0).getCreatedAt().toLocalDate());
+        int daysSinceToday = (int) ChronoUnit.DAYS.between(challenge.getCreatedAt().toLocalDate(),
+                LocalDateTime.now().toLocalDate());
         int todayIndex = daysSinceToday >= challenge.getPeriod() ? -1 : daysSinceToday;
         int dailyChallengeIndex = todayIndex == -1 ? dailyChallenges.size()-1 : todayIndex;
 

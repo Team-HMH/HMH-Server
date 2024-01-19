@@ -12,10 +12,11 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import sopt.org.HMH.domain.challenge.dto.request.ChallengeRequest;
 import sopt.org.HMH.domain.challenge.dto.response.ChallengeResponse;
 import sopt.org.HMH.global.auth.UserId;
+import sopt.org.HMH.global.auth.jwt.JwtConstants;
 import sopt.org.HMH.global.common.response.BaseResponse;
 
 @Tag(name = "챌린지 관련 API")
-@SecurityRequirement(name = "Authorization")
+@SecurityRequirement(name = JwtConstants.AUTHORIZATION)
 public interface ChallengeApi {
     @Operation(
             summary = "챌린지가 끝난 후 새 챌린지 생성하는 API",

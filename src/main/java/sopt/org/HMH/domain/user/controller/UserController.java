@@ -23,12 +23,13 @@ import sopt.org.HMH.global.common.response.EmptyJsonResponse;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/user")
-public class UserController {
+public class UserController implements UserApi{
 
     private final UserService userService;
 
     @PostMapping("/login")
-    public ResponseEntity<BaseResponse<LoginResponse>> orderLogin(
+    @Override
+    public ResponseEntity<BaseResponse<?>> orderLogin(
             @RequestHeader("Authorization") final String socialAccessToken,
             @RequestBody final SocialPlatformRequest request
     ) {
@@ -38,7 +39,8 @@ public class UserController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<BaseResponse<LoginResponse>> orderSignup(
+    @Override
+    public ResponseEntity<BaseResponse<?>> orderSignup(
             @RequestHeader("Authorization") final String socialAccessToken,
             @RequestHeader("OS") final String os,
             @RequestBody final SocialSignUpRequest request
@@ -49,7 +51,8 @@ public class UserController {
     }
 
     @PostMapping("/reissue")
-    public ResponseEntity<BaseResponse<ReissueResponse>> orderReissue(
+    @Override
+    public ResponseEntity<BaseResponse<?>> orderReissue(
             @RequestHeader("Authorization") final String refreshToken
     ) {
         return ResponseEntity
@@ -58,6 +61,7 @@ public class UserController {
     }
 
     @PostMapping("/logout")
+    @Override
     public ResponseEntity<BaseResponse<?>> orderLogout(@UserId final Long userId) {
         userService.logout(userId);
         return ResponseEntity
@@ -66,13 +70,15 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<BaseResponse<UserInfoResponse>> orderGetUserInfo(@UserId final Long userId) {
+    @Override
+    public ResponseEntity<BaseResponse<?>> orderGetUserInfo(@UserId final Long userId) {
         return ResponseEntity
                 .status(UserSuccess.GET_USER_INFO_SUCCESS.getHttpStatus())
                 .body(BaseResponse.success(UserSuccess.GET_USER_INFO_SUCCESS, userService.getUserInfo(userId)));
     }
 
     @DeleteMapping
+    @Override
     public ResponseEntity<BaseResponse<?>> orderWithdraw(@UserId final Long userId) {
         userService.withdraw(userId);
         return ResponseEntity
