@@ -13,6 +13,8 @@ import sopt.org.HMH.domain.challenge.domain.Challenge;
 import sopt.org.HMH.domain.challenge.repository.ChallengeRepository;
 import sopt.org.HMH.domain.dailychallenge.domain.DailyChallenge;
 import sopt.org.HMH.domain.dailychallenge.domain.Status;
+import sopt.org.HMH.domain.dailychallenge.domain.exception.DailyChallengeError;
+import sopt.org.HMH.domain.dailychallenge.domain.exception.DailyChallengeException;
 import sopt.org.HMH.domain.dailychallenge.dto.response.DailyChallengeResponse;
 import sopt.org.HMH.domain.dailychallenge.repository.DailyChallengeRepository;
 
@@ -49,17 +51,17 @@ public class DailyChallengeService {
 
     @Transactional
     public void modifyDailyChallengeStatus(Long userId, List<AppUsageTimeRequest> requests, String os) {
-        DailyChallenge todayDailyChallenge = getTodayDailyChallengeByUserId(userId);
+        DailyChallenge yesterdayDailyChallenge = getYesterdayDailyChallengeByUserId(userId);
         long successCount = requests.stream()
                 .filter(request -> {
                     validateModifyDailyChallenge(request.appCode(), request.usageTime());
                     App app = appRepository.findFirstByDailyChallengeIdAndAppCodeAndOsOrElseThrow(
-                            todayDailyChallenge.getId(), request.appCode(), os);
+                            yesterdayDailyChallenge.getId(), request.appCode(), os);
                     app.setUsageTime(request.usageTime());
                     return (request.usageTime() <= app.getGoalTime());
                 }).count();
         Status status = (successCount == requests.size()) ? Status.UNEARNED : Status.FAILURE;
-        todayDailyChallenge.setStatus(status);
+        yesterdayDailyChallenge.setStatus(status);
     }
 
     private void validateModifyDailyChallenge(String appCode, Long usageTime) {
@@ -79,6 +81,13 @@ public class DailyChallengeService {
         return challenge.getDailyChallenges().get(calculateDaysSinceToday(challenge.getCreatedAt()));
     }
 
+    public DailyChallenge getYesterdayDailyChallengeByUserId(Long userId) {
+        Challenge challenge = challengeRepository.findFirstByUserIdOrderByCreatedAtDescOrElseThrow(userId);
+        validateYesterdayIndex(calculateDaysSinceToday(challenge.getCreatedAt()) - 1);
+
+        return challenge.getDailyChallenges().get(calculateDaysSinceToday(challenge.getCreatedAt()) - 1);
+    }
+
     public List<DailyChallenge> getRemainingDailyChallengesByUserId(Long userId) {
         Challenge challenge = challengeRepository.findFirstByUserIdOrderByCreatedAtDescOrElseThrow(userId);
 
@@ -88,5 +97,11 @@ public class DailyChallengeService {
 
     private Integer calculateDaysSinceToday(LocalDateTime dateToCompare) {
         return (int) ChronoUnit.DAYS.between(dateToCompare.toLocalDate(), LocalDateTime.now().toLocalDate());
+    }
+
+    private void validateYesterdayIndex(int index) {
+        if (index < 0) {
+            throw new DailyChallengeException(DailyChallengeError.DAILY_CHALLENGE_YESTERDAY_NOT_FOUND);
+        }
     }
 }
