@@ -31,6 +31,8 @@ public class User extends BaseTimeEntity {
 
     @Enumerated(EnumType.STRING)
     private SocialPlatform socialPlatform;
+
+    @Column(unique = true)
     private String socialId;
     private Integer point;
 
