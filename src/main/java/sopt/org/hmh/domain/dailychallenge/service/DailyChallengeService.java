@@ -65,7 +65,7 @@ public class DailyChallengeService {
     }
 
     private void validateModifyDailyChallenge(String appCode, Long usageTime) {
-        if (appCode == "") {
+        if (appCode.isEmpty()) {
             throw new AppException(AppError.INVALID_APP_CODE_NULL);
         }
         if (usageTime == null) {

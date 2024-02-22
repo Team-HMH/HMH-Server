@@ -68,7 +68,7 @@ public class AppService {
     }
 
     private void validateAppCode(String appCode) {
-        if (appCode == "") {
+        if (appCode.isEmpty()) {
             throw new AppException(AppError.INVALID_APP_CODE_NULL);
         }
     }
