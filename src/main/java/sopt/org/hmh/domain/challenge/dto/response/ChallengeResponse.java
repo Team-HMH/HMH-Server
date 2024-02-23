@@ -29,7 +29,7 @@ public record ChallengeResponse(
         return ChallengeResponse.builder()
                 .period(challenge.getPeriod())
                 .statuses(dailyChallenges.stream()
-                        .map(dailyChallenge -> { return dailyChallenge.getStatus(); })
+                        .map(DailyChallenge::getStatus)
                         .toList())
                 .todayIndex(todayIndex)
                 .goalTime(dailyChallenges.get(dailyChallengeIndex).getGoalTime())
