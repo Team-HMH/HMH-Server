@@ -53,13 +53,12 @@ public class ChallengeService {
         List<DailyChallenge> lastDailyChallenges = challengeRepository
                 .findFirstByUserIdOrderByCreatedAtDescOrElseThrow(userId)
                 .getDailyChallenges();
-        if (lastDailyChallenges.size() == 0) { return null; }
-        List<AppGoalTimeRequest> lastApps = lastDailyChallenges.get(lastDailyChallenges.size() - 1)
+        if (lastDailyChallenges.isEmpty()) { return null; }
+        return lastDailyChallenges.get(lastDailyChallenges.size() - 1)
                 .getApps()
                 .stream()
                 .map(app -> new AppGoalTimeRequest(app.getAppCode(), app.getGoalTime()))
                 .toList();
-        return lastApps;
     }
 
     public ChallengeResponse getChallenge(Long userId, String os) {
