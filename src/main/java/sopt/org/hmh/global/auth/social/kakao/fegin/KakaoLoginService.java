@@ -47,8 +47,7 @@ public class KakaoLoginService {
 
     private KakaoUserRequest getKakaoUserRequest(final String socialAccessToken) {
         try {
-            KakaoUserRequest userRequest = kakaoFeignClient.getUserInformation(socialAccessToken);
-            return userRequest;
+            return kakaoFeignClient.getUserInformation(socialAccessToken);
         } catch (FeignException exception) {
             throw new JwtException(JwtError.INVALID_SOCIAL_ACCESS_TOKEN);
         }
