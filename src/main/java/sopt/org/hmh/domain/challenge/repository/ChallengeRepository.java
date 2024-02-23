@@ -11,7 +11,7 @@ public interface ChallengeRepository extends JpaRepository<Challenge, Long> {
 
     Optional<Challenge> findFirstByUserIdOrderByCreatedAtDesc(Long userId);
 
-    void deleteByUserIdIn(List<Long> UserId);
+    void deleteByUserIdIn(List<Long> userId);
 
     default Challenge findFirstByUserIdOrderByCreatedAtDescOrElseThrow(Long userId) {
         return findFirstByUserIdOrderByCreatedAtDesc(userId).orElseThrow(() -> new ChallengeException(

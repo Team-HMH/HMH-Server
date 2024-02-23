@@ -21,7 +21,7 @@ public class DailyChallenge extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
-    private Long Id;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "challenge_id")

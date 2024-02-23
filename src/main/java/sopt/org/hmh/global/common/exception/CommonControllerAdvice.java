@@ -14,7 +14,7 @@ import sopt.org.hmh.global.common.response.BaseResponse;
 public class CommonControllerAdvice {
 
     @ExceptionHandler(value = ExceptionBase.class)
-    public ResponseEntity<?> ExceptionHandler(HttpServletResponse response, ExceptionBase exception) {
+    public ResponseEntity<?> exceptionHandler(HttpServletResponse response, ExceptionBase exception) {
         ErrorBase error = exception.getError();
         response.setStatus(error.getHttpStatusCode());
         return ResponseEntity
