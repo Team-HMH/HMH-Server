@@ -34,7 +34,7 @@ public class KakaoLoginService {
             String nickname = userRequest.kakaoAccount().profile().nickname();
             String profileImageUrl = userRequest.kakaoAccount().profile().profileImageUrl();
 
-            if (StringUtils.isEmpty(profileImageUrl)) {
+            if (!StringUtils.hasText(profileImageUrl)) {
                 profileImageUrl = "";
             }
 

@@ -167,7 +167,7 @@ public class UserService {
     }
 
     private String validateName(String name) {
-        if (StringUtils.isEmpty(name)) {
+        if (!StringUtils.hasText(name)) {
             return UserConstants.DEFAULT_USER_NAME;
         }
         return name;
