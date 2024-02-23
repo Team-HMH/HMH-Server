@@ -42,7 +42,7 @@ public class JwtGenerator {
             tokenRepository.save(
                     RefreshToken.builder()
                             .userId(userId)
-                            .refreshToken(token)
+                            .token(token)
                             .expiration(REFRESH_TOKEN_EXPIRATION_TIME / 1000)
                             .build());
         }
