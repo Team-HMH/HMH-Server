@@ -20,10 +20,6 @@ public class BaseResponse<T> {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private T data;
 
-    public static BaseResponse<?> success(SuccessBase success) {
-        return new BaseResponse<>(success.getHttpStatusCode(), success.getSuccessMessage());
-    }
-
     public static <T> BaseResponse<T> success(SuccessBase success, T data) {
         return new BaseResponse<>(success.getHttpStatusCode(), success.getSuccessMessage(), data);
     }
