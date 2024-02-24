@@ -7,10 +7,4 @@ import sopt.org.hmh.domain.dailychallenge.domain.exception.DailyChallengeExcepti
 
 public interface DailyChallengeRepository extends JpaRepository<DailyChallenge, Long> {
 
-    DailyChallenge findFirstByChallengeIdOrderByCreatedAtDesc(Long challengeId);
-
-    default DailyChallenge findByIdOrThrowException(Long dailyChallengeId) {
-        return findById(dailyChallengeId).orElseThrow(()
-        -> new DailyChallengeException(DailyChallengeError.DAILY_CHALLENGE_NOT_FOUND));
-    }
 }
