@@ -1,0 +1,6 @@
+package sopt.org.hmh.domain.app.dto.request;
+
+public record AppDeleteRequest(
+        String appCode
+) {
+}
