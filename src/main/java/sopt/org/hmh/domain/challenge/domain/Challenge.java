@@ -7,6 +7,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import sopt.org.hmh.domain.app.domain.AppWithGoalTime;
 import sopt.org.hmh.global.common.domain.BaseTimeEntity;
 import sopt.org.hmh.domain.dailychallenge.domain.DailyChallenge;
 
@@ -27,7 +28,10 @@ public class Challenge extends BaseTimeEntity {
     private Long goalTime;
 
     @OneToMany(mappedBy = "challenge", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<DailyChallenge> dailyChallenges  = new ArrayList<>();
+    private final List<AppWithGoalTime> apps = new ArrayList<>();
+
+    @OneToMany(mappedBy = "challenge", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private final List<DailyChallenge> historyDailyChallenges  = new ArrayList<>();
 
     @Builder
     private Challenge(Integer period, Long userId, Long goalTime) {

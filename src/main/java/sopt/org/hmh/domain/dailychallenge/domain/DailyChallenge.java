@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import sopt.org.hmh.domain.app.domain.App;
+import sopt.org.hmh.domain.app.domain.AppWithUsageGoalTime;
 import sopt.org.hmh.global.common.domain.BaseTimeEntity;
 import sopt.org.hmh.domain.challenge.domain.Challenge;
 
@@ -33,7 +33,7 @@ public class DailyChallenge extends BaseTimeEntity {
     private Status status;
 
     @OneToMany(mappedBy = "dailyChallenge", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<App> apps = new ArrayList<>();
+    private final List<AppWithUsageGoalTime> apps = new ArrayList<>();
 
     @Builder
     public DailyChallenge(Challenge challenge, Long goalTime) {
@@ -44,10 +44,10 @@ public class DailyChallenge extends BaseTimeEntity {
 
     private void updateChallenge(Challenge challenge) {
         if (nonNull(this.challenge)) {
-            this.challenge.getDailyChallenges().remove(this);
+            this.challenge.getHistoryDailyChallenges().remove(this);
         }
         this.challenge = challenge;
-        challenge.getDailyChallenges().add(this);
+        challenge.getHistoryDailyChallenges().add(this);
     }
 
     public void setStatus(Status status) {
