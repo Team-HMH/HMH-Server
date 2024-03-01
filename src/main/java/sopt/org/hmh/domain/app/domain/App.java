@@ -1,46 +1,13 @@
 package sopt.org.hmh.domain.app.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import lombok.AccessLevel;
-import lombok.Builder;
+import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import sopt.org.hmh.domain.dailychallenge.domain.DailyChallenge;
 
-@Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class App {
+@MappedSuperclass
+public abstract class App {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    protected String os;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "daily_challenge_id")
-    private DailyChallenge dailyChallenge;
-
-    private String os;
-    private String appCode;
-    private Long usageTime;
-    private Long goalTime;
-
-    @Builder
-    private App(DailyChallenge dailyChallenge, String appCode, Long goalTime, String os) {
-        this.dailyChallenge = dailyChallenge;
-        this.appCode = appCode;
-        this.usageTime = 0L;
-        this.goalTime = goalTime;
-        this.os = os;
-    }
-
-    public void setUsageTime(Long usageTime) {
-        this.usageTime = usageTime;
-    }
+    protected String appCode;
 }
