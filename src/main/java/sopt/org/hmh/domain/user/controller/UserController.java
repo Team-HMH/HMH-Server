@@ -74,6 +74,14 @@ public class UserController implements UserApi{
                 .body(BaseResponse.success(UserSuccess.GET_USER_INFO_SUCCESS, userService.getUserInfo(userId)));
     }
 
+    @GetMapping("/point")
+    @Override
+    public ResponseEntity<BaseResponse<?>> orderGetUserPoint(@UserId final Long userId) {
+        return ResponseEntity
+                .status(UserSuccess.GET_USER_POINT_SUCCESS.getHttpStatus())
+                .body(BaseResponse.success(UserSuccess.GET_USER_POINT_SUCCESS, userService.getUserPoint(userId)));
+    }
+
     @DeleteMapping
     @Override
     public ResponseEntity<BaseResponse<?>> orderWithdraw(@UserId final Long userId) {
