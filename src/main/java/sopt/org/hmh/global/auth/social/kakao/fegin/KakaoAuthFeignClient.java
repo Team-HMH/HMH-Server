@@ -1,6 +1,6 @@
 package sopt.org.hmh.global.auth.social.kakao.fegin;
 
-import sopt.org.hmh.global.auth.social.kakao.request.KakaoTokenResponse;
+import sopt.org.hmh.global.auth.social.kakao.response.KakaoTokenResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
