@@ -27,6 +27,7 @@ import sopt.org.hmh.global.auth.jwt.exception.JwtError;
 import sopt.org.hmh.global.auth.jwt.exception.JwtException;
 import sopt.org.hmh.global.auth.redis.TokenService;
 import sopt.org.hmh.global.auth.social.SocialPlatform;
+import sopt.org.hmh.global.auth.social.SocialAccessTokenResponse;
 import sopt.org.hmh.global.auth.social.apple.fegin.AppleOAuthProvider;
 import sopt.org.hmh.global.auth.social.kakao.fegin.KakaoLoginService;
 
@@ -192,4 +193,9 @@ public class UserService {
         userRepository.deleteAllById(expiredUserList);
         challengeService.deleteChallengeRelatedByUserId(expiredUserList);
     }
+
+    public SocialAccessTokenResponse getSocialAccessTokenByAuthorizationCode(String code) {
+        return kakaoLoginService.getKakaoAccessToken(code);
+    }
+
 }
