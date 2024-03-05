@@ -1,6 +1,6 @@
-package sopt.org.hmh.global.auth.social.apple.request;
+package sopt.org.hmh.global.auth.social.apple.response;
 
-public record ApplePublicKey(
+public record ApplePublicKeyResponse(
         String kty,
         String kid,
         String use,
