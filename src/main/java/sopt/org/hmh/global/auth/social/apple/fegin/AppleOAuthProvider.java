@@ -7,7 +7,7 @@ import java.security.PublicKey;
 import java.util.Map;
 import sopt.org.hmh.global.auth.jwt.exception.JwtError;
 import sopt.org.hmh.global.auth.jwt.exception.JwtException;
-import sopt.org.hmh.global.auth.social.apple.request.ApplePublicKeys;
+import sopt.org.hmh.global.auth.social.apple.response.ApplePublicKeysResponse;
 
 @RequiredArgsConstructor
 @Component
@@ -19,8 +19,8 @@ public class AppleOAuthProvider {
 
     public String getApplePlatformId(String identityToken) {
         Map<String, String> headers = appleIdentityTokenParser.parseHeaders(identityToken);
-        ApplePublicKeys applePublicKeys = appleFeignClient.getApplePublicKeys();
-        PublicKey publicKey = applePublicKeyGenerator.generatePublicKeyWithApplePublicKeys(headers, applePublicKeys);
+        ApplePublicKeysResponse applePublicKeysResponse = appleFeignClient.getApplePublicKeys();
+        PublicKey publicKey = applePublicKeyGenerator.generatePublicKeyWithApplePublicKeys(headers, applePublicKeysResponse);
         Claims claims = appleIdentityTokenParser.parseWithPublicKeyAndGetClaims(identityToken, publicKey);
         validateClaims(claims);
         return claims.getSubject();
