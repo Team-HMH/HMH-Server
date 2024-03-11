@@ -12,6 +12,7 @@ public enum UserSuccess implements SuccessBase {
     REISSUE_SUCCESS(HttpStatus.OK, "토큰 재발급에 성공했습니다."),
     LOGOUT_SUCCESS(HttpStatus.OK, "로그아웃에 성공했습니다."),
     GET_USER_INFO_SUCCESS(HttpStatus.OK, "유저의 정보를 불러오는데에 성공했습니다."),
+    GET_USER_POINT_SUCCESS(HttpStatus.OK, "유저의 포인트 정보를 불러오는데에 성공했습니다."),
     WITHDRAW_SUCCESS(HttpStatus.OK, "회원 탈퇴를 성공하였습니다."),
 
     // 201 CREATED

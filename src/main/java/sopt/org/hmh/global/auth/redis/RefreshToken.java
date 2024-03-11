@@ -21,5 +21,5 @@ public class RefreshToken {
     private String token;
 
     @TimeToLive
-    private Integer expiration;
+    private Long expiration;
 }
