@@ -70,6 +70,5 @@ public class KakaoLoginService {
         return SocialAccessTokenResponse.builder()
                 .socialAccessToken(kakaoTokenResponse.accessToken())
                 .build();
-
     }
 }
