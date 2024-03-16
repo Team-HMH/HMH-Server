@@ -11,8 +11,8 @@ public class JwtProvider {
     private final JwtGenerator jwtGenerator;
 
     public TokenResponse issueToken(Long userId) {
-        return TokenResponse.of(jwtGenerator.generateToken(userId, true),
-                jwtGenerator.generateToken(userId, false));
+        return TokenResponse.of(jwtGenerator.generateToken(userId, false),
+                jwtGenerator.generateToken(userId, true));
     }
 
     public Long getSubject(String token) {
