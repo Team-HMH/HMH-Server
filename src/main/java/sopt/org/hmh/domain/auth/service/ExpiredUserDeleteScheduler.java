@@ -1,4 +1,4 @@
-package sopt.org.hmh.domain.user.service;
+package sopt.org.hmh.domain.auth.service;
 
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;

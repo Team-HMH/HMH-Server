@@ -1,4 +1,4 @@
-package sopt.org.hmh.domain.user.repository;
+package sopt.org.hmh.domain.auth.repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -6,9 +6,9 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import sopt.org.hmh.domain.user.domain.User;
-import sopt.org.hmh.domain.user.domain.exception.UserError;
-import sopt.org.hmh.domain.user.domain.exception.UserException;
+import sopt.org.hmh.domain.auth.domain.User;
+import sopt.org.hmh.domain.auth.domain.exception.UserError;
+import sopt.org.hmh.domain.auth.domain.exception.UserException;
 import sopt.org.hmh.global.auth.social.SocialPlatform;
 
 public interface UserRepository extends JpaRepository<User, Long> {

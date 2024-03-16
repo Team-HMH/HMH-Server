@@ -1,4 +1,4 @@
-package sopt.org.hmh.domain.user.domain.exception;
+package sopt.org.hmh.domain.auth.domain.exception;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;

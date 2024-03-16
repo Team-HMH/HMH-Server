@@ -1,4 +1,4 @@
-package sopt.org.hmh.domain.user.domain;
+package sopt.org.hmh.domain.auth.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

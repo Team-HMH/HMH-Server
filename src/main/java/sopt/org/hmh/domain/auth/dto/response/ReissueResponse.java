@@ -1,4 +1,4 @@
-package sopt.org.hmh.domain.user.dto.response;
+package sopt.org.hmh.domain.auth.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import sopt.org.hmh.global.auth.jwt.TokenResponse;
