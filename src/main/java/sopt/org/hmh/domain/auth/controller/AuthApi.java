@@ -15,7 +15,7 @@ import sopt.org.hmh.global.common.response.BaseResponse;
 
 @Tag(name = "회원 관련 API")
 @SecurityRequirement(name = JwtConstants.AUTHORIZATION)
-public interface UserApi {
+public interface AuthApi {
 
     @Operation(summary = "소셜 로그인")
     ResponseEntity<BaseResponse<?>> orderLogin(

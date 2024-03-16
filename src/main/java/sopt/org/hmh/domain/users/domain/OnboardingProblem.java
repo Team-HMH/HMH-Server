@@ -1,9 +1,10 @@
-package sopt.org.hmh.domain.auth.domain;
+package sopt.org.hmh.domain.users.domain;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,19 +12,20 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
+@Table(name = "problem")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class OnboardingInfo {
+public class OnboardingProblem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String averageUseTime;
-    private Long userId;
+    private Long onboardingInfoId;
+    private String problem;
 
     @Builder
-    public OnboardingInfo(String averageUseTime, Long userId) {
-        this.averageUseTime = averageUseTime;
-        this.userId = userId;
+    public OnboardingProblem(Long onboardingInfoId, String problem) {
+        this.onboardingInfoId = onboardingInfoId;
+        this.problem = problem;
     }
 }

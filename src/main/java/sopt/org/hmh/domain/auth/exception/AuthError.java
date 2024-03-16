@@ -1,11 +1,11 @@
-package sopt.org.hmh.domain.auth.domain.exception;
+package sopt.org.hmh.domain.auth.exception;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import sopt.org.hmh.global.common.exception.base.ErrorBase;
 
 @AllArgsConstructor
-public enum UserError implements ErrorBase {
+public enum AuthError implements ErrorBase {
 
     // 400 BAD REQUEST
     INVALID_USER(HttpStatus.BAD_REQUEST, "Principle 객체가 없습니다."),

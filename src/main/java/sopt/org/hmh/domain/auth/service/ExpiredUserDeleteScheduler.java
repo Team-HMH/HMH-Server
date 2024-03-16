@@ -11,10 +11,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class ExpiredUserDeleteScheduler {
 
-    private final UserService userService;
+    private final AuthService authService;
 
     @Scheduled(cron = "0 0 4 * * ?")
     public void deleteExpiredUser() {
-        userService.deleteExpiredUser(LocalDateTime.now());
+        authService.deleteExpiredUser(LocalDateTime.now());
     }
 }

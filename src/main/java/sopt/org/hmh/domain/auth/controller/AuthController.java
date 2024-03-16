@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import sopt.org.hmh.domain.auth.domain.exception.UserSuccess;
+import sopt.org.hmh.domain.auth.exception.AuthSuccess;
 import sopt.org.hmh.domain.auth.dto.request.SocialPlatformRequest;
 import sopt.org.hmh.domain.auth.dto.request.SocialSignUpRequest;
-import sopt.org.hmh.domain.auth.service.UserService;
+import sopt.org.hmh.domain.auth.service.AuthService;
 import sopt.org.hmh.global.auth.UserId;
 import sopt.org.hmh.global.auth.social.SocialAccessTokenResponse;
 import sopt.org.hmh.global.common.response.BaseResponse;
@@ -22,9 +22,9 @@ import sopt.org.hmh.global.common.response.EmptyJsonResponse;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/user")
-public class UserController implements UserApi{
+public class AuthController implements AuthApi {
 
-    private final UserService userService;
+    private final AuthService authService;
 
     @PostMapping("/login")
     @Override
@@ -33,8 +33,8 @@ public class UserController implements UserApi{
             @RequestBody final SocialPlatformRequest request
     ) {
         return ResponseEntity
-                .status(UserSuccess.LOGIN_SUCCESS.getHttpStatus())
-                .body(BaseResponse.success(UserSuccess.LOGIN_SUCCESS, userService.login(socialAccessToken, request)));
+                .status(AuthSuccess.LOGIN_SUCCESS.getHttpStatus())
+                .body(BaseResponse.success(AuthSuccess.LOGIN_SUCCESS, authService.login(socialAccessToken, request)));
     }
 
     @PostMapping("/signup")
@@ -45,8 +45,8 @@ public class UserController implements UserApi{
             @RequestBody final SocialSignUpRequest request
     ) {
         return ResponseEntity
-                .status(UserSuccess.SIGNUP_SUCCESS.getHttpStatus())
-                .body(BaseResponse.success(UserSuccess.SIGNUP_SUCCESS, userService.signup(socialAccessToken, request, os)));
+                .status(AuthSuccess.SIGNUP_SUCCESS.getHttpStatus())
+                .body(BaseResponse.success(AuthSuccess.SIGNUP_SUCCESS, authService.signup(socialAccessToken, request, os)));
     }
 
     @PostMapping("/reissue")
@@ -55,42 +55,42 @@ public class UserController implements UserApi{
             @RequestHeader("Authorization") final String refreshToken
     ) {
         return ResponseEntity
-                .status(UserSuccess.REISSUE_SUCCESS.getHttpStatus())
-                .body(BaseResponse.success(UserSuccess.REISSUE_SUCCESS, userService.reissueToken(refreshToken)));
+                .status(AuthSuccess.REISSUE_SUCCESS.getHttpStatus())
+                .body(BaseResponse.success(AuthSuccess.REISSUE_SUCCESS, authService.reissueToken(refreshToken)));
     }
 
     @PostMapping("/logout")
     @Override
     public ResponseEntity<BaseResponse<?>> orderLogout(@UserId final Long userId) {
-        userService.logout(userId);
+        authService.logout(userId);
         return ResponseEntity
-                .status(UserSuccess.LOGOUT_SUCCESS.getHttpStatus())
-                .body(BaseResponse.success(UserSuccess.LOGOUT_SUCCESS, new EmptyJsonResponse()));
+                .status(AuthSuccess.LOGOUT_SUCCESS.getHttpStatus())
+                .body(BaseResponse.success(AuthSuccess.LOGOUT_SUCCESS, new EmptyJsonResponse()));
     }
 
     @GetMapping
     @Override
     public ResponseEntity<BaseResponse<?>> orderGetUserInfo(@UserId final Long userId) {
         return ResponseEntity
-                .status(UserSuccess.GET_USER_INFO_SUCCESS.getHttpStatus())
-                .body(BaseResponse.success(UserSuccess.GET_USER_INFO_SUCCESS, userService.getUserInfo(userId)));
+                .status(AuthSuccess.GET_USER_INFO_SUCCESS.getHttpStatus())
+                .body(BaseResponse.success(AuthSuccess.GET_USER_INFO_SUCCESS, authService.getUserInfo(userId)));
     }
 
     @GetMapping("/point")
     @Override
     public ResponseEntity<BaseResponse<?>> orderGetUserPoint(@UserId final Long userId) {
         return ResponseEntity
-                .status(UserSuccess.GET_USER_POINT_SUCCESS.getHttpStatus())
-                .body(BaseResponse.success(UserSuccess.GET_USER_POINT_SUCCESS, userService.getUserInfo(userId).point()));
+                .status(AuthSuccess.GET_USER_POINT_SUCCESS.getHttpStatus())
+                .body(BaseResponse.success(AuthSuccess.GET_USER_POINT_SUCCESS, authService.getUserInfo(userId).point()));
     }
 
     @DeleteMapping
     @Override
     public ResponseEntity<BaseResponse<?>> orderWithdraw(@UserId final Long userId) {
-        userService.withdraw(userId);
+        authService.withdraw(userId);
         return ResponseEntity
-                .status(UserSuccess.WITHDRAW_SUCCESS.getHttpStatus())
-                .body(BaseResponse.success(UserSuccess.WITHDRAW_SUCCESS, new EmptyJsonResponse()));
+                .status(AuthSuccess.WITHDRAW_SUCCESS.getHttpStatus())
+                .body(BaseResponse.success(AuthSuccess.WITHDRAW_SUCCESS, new EmptyJsonResponse()));
     }
 
     @GetMapping("/social/token/kakao")
@@ -98,7 +98,7 @@ public class UserController implements UserApi{
             @RequestParam("code") final String code
             ) {
         return ResponseEntity
-                .status(UserSuccess.GET_SOCIAL_ACCESS_TOKEN_SUCCESS.getHttpStatus())
-                .body(BaseResponse.success(UserSuccess.GET_SOCIAL_ACCESS_TOKEN_SUCCESS, userService.getSocialAccessTokenByAuthorizationCode(code)));
+                .status(AuthSuccess.GET_SOCIAL_ACCESS_TOKEN_SUCCESS.getHttpStatus())
+                .body(BaseResponse.success(AuthSuccess.GET_SOCIAL_ACCESS_TOKEN_SUCCESS, authService.getSocialAccessTokenByAuthorizationCode(code)));
     }
 }
