@@ -1,4 +1,4 @@
-package sopt.org.hmh.domain.auth.service;
+package sopt.org.hmh.domain.users.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
