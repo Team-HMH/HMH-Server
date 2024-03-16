@@ -1,11 +1,11 @@
-package sopt.org.hmh.domain.auth.domain.exception;
+package sopt.org.hmh.domain.auth.exception;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import sopt.org.hmh.global.common.exception.base.SuccessBase;
 
 @AllArgsConstructor
-public enum UserSuccess implements SuccessBase {
+public enum AuthSuccess implements SuccessBase {
 
     // 200 OK
     LOGIN_SUCCESS(HttpStatus.OK, "로그인에 성공했습니다."),

@@ -7,20 +7,20 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import sopt.org.hmh.domain.challenge.service.ChallengeService;
-import sopt.org.hmh.domain.auth.domain.OnboardingInfo;
-import sopt.org.hmh.domain.auth.domain.OnboardingProblem;
-import sopt.org.hmh.domain.auth.domain.User;
-import sopt.org.hmh.domain.auth.domain.UserConstants;
-import sopt.org.hmh.domain.auth.domain.exception.UserError;
-import sopt.org.hmh.domain.auth.domain.exception.UserException;
+import sopt.org.hmh.domain.users.domain.OnboardingInfo;
+import sopt.org.hmh.domain.users.domain.OnboardingProblem;
+import sopt.org.hmh.domain.users.domain.User;
+import sopt.org.hmh.domain.users.domain.UserConstants;
+import sopt.org.hmh.domain.auth.exception.AuthError;
+import sopt.org.hmh.domain.auth.exception.AuthException;
 import sopt.org.hmh.domain.auth.dto.request.SocialPlatformRequest;
 import sopt.org.hmh.domain.auth.dto.request.SocialSignUpRequest;
 import sopt.org.hmh.domain.auth.dto.response.LoginResponse;
 import sopt.org.hmh.domain.auth.dto.response.ReissueResponse;
-import sopt.org.hmh.domain.auth.dto.response.UserInfoResponse;
+import sopt.org.hmh.domain.users.dto.response.UserInfoResponse;
 import sopt.org.hmh.domain.auth.repository.OnboardingInfoRepository;
 import sopt.org.hmh.domain.auth.repository.ProblemRepository;
-import sopt.org.hmh.domain.auth.repository.UserRepository;
+import sopt.org.hmh.domain.users.repository.UserRepository;
 import sopt.org.hmh.global.auth.jwt.JwtProvider;
 import sopt.org.hmh.global.auth.jwt.JwtValidator;
 import sopt.org.hmh.global.auth.jwt.exception.JwtError;
@@ -34,7 +34,7 @@ import sopt.org.hmh.global.auth.social.kakao.fegin.KakaoLoginService;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class UserService {
+public class AuthService {
 
     private final JwtProvider jwtProvider;
     private final JwtValidator jwtValidator;
@@ -103,7 +103,7 @@ public class UserService {
 
     private void validateUserId(Long userId) {
         if (!userRepository.existsById(userId)) {
-            throw new UserException(UserError.NOT_FOUND_USER);
+            throw new AuthException(AuthError.NOT_FOUND_USER);
         }
     }
 
@@ -146,7 +146,7 @@ public class UserService {
 
     private void validateDuplicateUser(String socialId, SocialPlatform socialPlatform) {
         if (userRepository.existsBySocialPlatformAndSocialId(socialPlatform, socialId)) {
-            throw new UserException(UserError.DUPLICATE_USER);
+            throw new AuthException(AuthError.DUPLICATE_USER);
         }
     }
 

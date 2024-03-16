@@ -1,4 +1,4 @@
-package sopt.org.hmh.domain.auth.domain;
+package sopt.org.hmh.domain.users.domain;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
