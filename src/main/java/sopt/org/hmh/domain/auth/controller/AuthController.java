@@ -2,7 +2,6 @@ package sopt.org.hmh.domain.auth.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -57,40 +56,6 @@ public class AuthController implements AuthApi {
         return ResponseEntity
                 .status(AuthSuccess.REISSUE_SUCCESS.getHttpStatus())
                 .body(BaseResponse.success(AuthSuccess.REISSUE_SUCCESS, authService.reissueToken(refreshToken)));
-    }
-
-    @PostMapping("/logout")
-    @Override
-    public ResponseEntity<BaseResponse<?>> orderLogout(@UserId final Long userId) {
-        authService.logout(userId);
-        return ResponseEntity
-                .status(AuthSuccess.LOGOUT_SUCCESS.getHttpStatus())
-                .body(BaseResponse.success(AuthSuccess.LOGOUT_SUCCESS, new EmptyJsonResponse()));
-    }
-
-    @GetMapping
-    @Override
-    public ResponseEntity<BaseResponse<?>> orderGetUserInfo(@UserId final Long userId) {
-        return ResponseEntity
-                .status(AuthSuccess.GET_USER_INFO_SUCCESS.getHttpStatus())
-                .body(BaseResponse.success(AuthSuccess.GET_USER_INFO_SUCCESS, authService.getUserInfo(userId)));
-    }
-
-    @GetMapping("/point")
-    @Override
-    public ResponseEntity<BaseResponse<?>> orderGetUserPoint(@UserId final Long userId) {
-        return ResponseEntity
-                .status(AuthSuccess.GET_USER_POINT_SUCCESS.getHttpStatus())
-                .body(BaseResponse.success(AuthSuccess.GET_USER_POINT_SUCCESS, authService.getUserInfo(userId).point()));
-    }
-
-    @DeleteMapping
-    @Override
-    public ResponseEntity<BaseResponse<?>> orderWithdraw(@UserId final Long userId) {
-        authService.withdraw(userId);
-        return ResponseEntity
-                .status(AuthSuccess.WITHDRAW_SUCCESS.getHttpStatus())
-                .body(BaseResponse.success(AuthSuccess.WITHDRAW_SUCCESS, new EmptyJsonResponse()));
     }
 
     @GetMapping("/social/token/kakao")

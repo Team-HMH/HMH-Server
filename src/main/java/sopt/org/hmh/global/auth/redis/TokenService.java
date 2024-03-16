@@ -11,9 +11,6 @@ public class TokenService {
 
     private final TokenRepository tokenRepository;
 
-    /**
-     * Refresh 토큰 삭제
-     */
     public void deleteRefreshToken(Long userId) {
         if (tokenRepository.existsById(userId)) {
             tokenRepository.deleteById(userId);

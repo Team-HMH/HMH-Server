@@ -17,7 +17,6 @@ import sopt.org.hmh.domain.auth.dto.request.SocialPlatformRequest;
 import sopt.org.hmh.domain.auth.dto.request.SocialSignUpRequest;
 import sopt.org.hmh.domain.auth.dto.response.LoginResponse;
 import sopt.org.hmh.domain.auth.dto.response.ReissueResponse;
-import sopt.org.hmh.domain.users.dto.response.UserInfoResponse;
 import sopt.org.hmh.domain.auth.repository.OnboardingInfoRepository;
 import sopt.org.hmh.domain.auth.repository.ProblemRepository;
 import sopt.org.hmh.domain.users.repository.UserRepository;
@@ -87,20 +86,6 @@ public class AuthService {
         return ReissueResponse.of(jwtProvider.issueToken(userId));
     }
 
-    @Transactional
-    public void withdraw(Long userId) {
-        tokenService.deleteRefreshToken(userId);
-        userRepository.findByIdOrThrowException(userId).softDelete();
-    }
-
-    public void logout(Long userId) {
-        tokenService.deleteRefreshToken(userId);
-    }
-
-    public UserInfoResponse getUserInfo(Long userId) {
-        return UserInfoResponse.of(userRepository.findByIdOrThrowException(userId));
-    }
-
     private void validateUserId(Long userId) {
         if (!userRepository.existsById(userId)) {
             throw new AuthException(AuthError.NOT_FOUND_USER);
@@ -112,7 +97,7 @@ public class AuthService {
             jwtValidator.validateRefreshToken(refreshToken);
             validateUserId(userId);
         } catch (JwtException jwtException) {
-            logout(userId);
+            tokenService.deleteRefreshToken(userId);
             throw jwtException;
         }
     }

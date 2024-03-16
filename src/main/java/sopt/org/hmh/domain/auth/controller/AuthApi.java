@@ -34,17 +34,4 @@ public interface AuthApi {
     ResponseEntity<BaseResponse<?>> orderReissue(
             @Parameter(hidden = true) @RequestHeader(JwtConstants.AUTHORIZATION) final String refreshToken
     );
-
-    @Operation(summary = "로그아웃")
-    ResponseEntity<BaseResponse<?>> orderLogout(@UserId @Parameter(hidden = true) final Long userId);
-
-    @Operation(summary = "유저 정보 불러오기")
-    ResponseEntity<BaseResponse<?>> orderGetUserInfo(@UserId @Parameter(hidden = true) final Long userId);
-
-    @Operation(summary = "회원 탈퇴")
-    public ResponseEntity<BaseResponse<?>> orderGetUserPoint(@UserId final Long userId);
-
-    @Operation(
-            summary = "회원 탈퇴")
-    ResponseEntity<BaseResponse<?>> orderWithdraw(@UserId @Parameter(hidden = true) final Long userId);
 }
