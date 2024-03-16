@@ -173,11 +173,7 @@ public class AuthService {
         problemRepository.saveAll(problemList);
     }
 
-    public void deleteExpiredUser(LocalDateTime currentDate) {
-        List<Long> expiredUserList = userRepository.findIdByDeletedAtBeforeAndIsDeletedIsTrue(currentDate);
-        userRepository.deleteAllById(expiredUserList);
-        challengeService.deleteChallengeRelatedByUserId(expiredUserList);
-    }
+
 
     public SocialAccessTokenResponse getSocialAccessTokenByAuthorizationCode(String code) {
         return kakaoLoginService.getKakaoAccessToken(code);
