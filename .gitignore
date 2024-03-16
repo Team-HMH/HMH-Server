@@ -171,7 +171,6 @@ application-local.yml
 application-prod.yml
 
 ### Test ###
-/src/test/
 data.sql
 
 # End of https://www.gitignore.io/api/java,macos,gradle,intellij
