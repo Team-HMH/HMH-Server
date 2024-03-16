@@ -9,6 +9,8 @@ import org.springframework.data.repository.query.Param;
 import sopt.org.hmh.domain.users.domain.User;
 import sopt.org.hmh.domain.auth.exception.AuthError;
 import sopt.org.hmh.domain.auth.exception.AuthException;
+import sopt.org.hmh.domain.users.domain.exception.UserError;
+import sopt.org.hmh.domain.users.domain.exception.UserException;
 import sopt.org.hmh.global.auth.social.SocialPlatform;
 
 public interface UserRepository extends JpaRepository<User, Long> {
@@ -19,8 +21,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     }
 
     default User findByIdOrThrowException(Long userId) {
-        return findById(userId).orElseThrow(() -> new AuthException(
-                AuthError.NOT_FOUND_USER));
+        return findById(userId).orElseThrow(() -> new UserException(
+                UserError.NOT_FOUND_USER));
     }
 
     @Query("SELECT u.id FROM User u WHERE u.deletedAt < :now AND u.isDeleted = true")

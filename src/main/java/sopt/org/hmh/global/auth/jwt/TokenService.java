@@ -18,9 +18,9 @@ public class TokenService {
 
     @Transactional
     public ReissueResponse reissueToken(String refreshToken) {
-        refreshToken = parseTokenString(refreshToken);
-        Long userId = jwtProvider.getSubject(refreshToken);
-        jwtValidator.validateRefreshToken(refreshToken);
+        String parsedRefreshToken = parseTokenString(refreshToken);
+        Long userId = jwtProvider.getSubject(parsedRefreshToken);
+        jwtValidator.validateRefreshToken(parsedRefreshToken);
         redisManagerService.deleteRefreshToken(userId);
         return ReissueResponse.of(jwtProvider.issueToken(userId));
     }
