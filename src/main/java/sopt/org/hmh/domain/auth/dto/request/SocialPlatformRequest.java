@@ -1,4 +1,4 @@
-package sopt.org.hmh.domain.user.dto.request;
+package sopt.org.hmh.domain.auth.dto.request;
 
 import sopt.org.hmh.global.auth.social.SocialPlatform;
 

@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
-import sopt.org.hmh.domain.user.domain.User;
+import sopt.org.hmh.domain.auth.domain.User;
 import sopt.org.hmh.global.auth.jwt.exception.JwtError;
 import sopt.org.hmh.global.auth.jwt.exception.JwtException;
 import sopt.org.hmh.global.auth.social.SocialAccessTokenResponse;

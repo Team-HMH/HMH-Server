@@ -1,4 +1,4 @@
-package sopt.org.hmh.domain.user.controller;
+package sopt.org.hmh.domain.auth.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import sopt.org.hmh.domain.user.domain.exception.UserSuccess;
-import sopt.org.hmh.domain.user.dto.request.SocialPlatformRequest;
-import sopt.org.hmh.domain.user.dto.request.SocialSignUpRequest;
-import sopt.org.hmh.domain.user.service.UserService;
+import sopt.org.hmh.domain.auth.domain.exception.UserSuccess;
+import sopt.org.hmh.domain.auth.dto.request.SocialPlatformRequest;
+import sopt.org.hmh.domain.auth.dto.request.SocialSignUpRequest;
+import sopt.org.hmh.domain.auth.service.UserService;
 import sopt.org.hmh.global.auth.UserId;
 import sopt.org.hmh.global.auth.social.SocialAccessTokenResponse;
 import sopt.org.hmh.global.common.response.BaseResponse;
