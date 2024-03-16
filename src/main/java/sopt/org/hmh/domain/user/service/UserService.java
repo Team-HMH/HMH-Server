@@ -18,7 +18,6 @@ import sopt.org.hmh.domain.user.dto.request.SocialSignUpRequest;
 import sopt.org.hmh.domain.user.dto.response.LoginResponse;
 import sopt.org.hmh.domain.user.dto.response.ReissueResponse;
 import sopt.org.hmh.domain.user.dto.response.UserInfoResponse;
-import sopt.org.hmh.domain.user.dto.response.UserPointResponse;
 import sopt.org.hmh.domain.user.repository.OnboardingInfoRepository;
 import sopt.org.hmh.domain.user.repository.ProblemRepository;
 import sopt.org.hmh.domain.user.repository.UserRepository;
@@ -100,10 +99,6 @@ public class UserService {
 
     public UserInfoResponse getUserInfo(Long userId) {
         return UserInfoResponse.of(userRepository.findByIdOrThrowException(userId));
-    }
-
-    public UserPointResponse getUserPoint(Long userId) {
-        return UserPointResponse.of(userRepository.findByIdOrThrowException(userId));
     }
 
     private void validateUserId(Long userId) {
