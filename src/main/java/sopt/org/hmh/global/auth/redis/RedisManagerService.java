@@ -7,7 +7,7 @@ import sopt.org.hmh.global.auth.jwt.exception.JwtException;
 
 @Service
 @RequiredArgsConstructor
-public class TokenService {
+public class RedisManagerService {
 
     private final TokenRepository tokenRepository;
 

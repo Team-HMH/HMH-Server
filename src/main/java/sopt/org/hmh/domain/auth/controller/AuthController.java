@@ -13,10 +13,8 @@ import sopt.org.hmh.domain.auth.exception.AuthSuccess;
 import sopt.org.hmh.domain.auth.dto.request.SocialPlatformRequest;
 import sopt.org.hmh.domain.auth.dto.request.SocialSignUpRequest;
 import sopt.org.hmh.domain.auth.service.AuthService;
-import sopt.org.hmh.global.auth.UserId;
 import sopt.org.hmh.global.auth.social.SocialAccessTokenResponse;
 import sopt.org.hmh.global.common.response.BaseResponse;
-import sopt.org.hmh.global.common.response.EmptyJsonResponse;
 
 @RestController
 @RequiredArgsConstructor
