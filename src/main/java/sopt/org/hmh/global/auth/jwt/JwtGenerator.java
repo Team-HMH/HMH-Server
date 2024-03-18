@@ -24,6 +24,7 @@ public class JwtGenerator {
     private Long ACCESS_TOKEN_EXPIRATION_TIME;
     @Value("${jwt.refresh-token-expiration-time}")
     private Long REFRESH_TOKEN_EXPIRATION_TIME;
+
     private final TokenRepository tokenRepository;
 
     public String generateToken(Long userId, boolean isRefreshToken) {
@@ -49,6 +50,12 @@ public class JwtGenerator {
         return token;
     }
 
+    public JwtParser getJwtParser() {
+        return Jwts.parserBuilder()
+                .setSigningKey(getSigningKey())
+                .build();
+    }
+
     private Date generateNowDate() {
         return new Date();
     }
@@ -57,7 +64,7 @@ public class JwtGenerator {
         return new Date(now.getTime() + calculateExpirationTime(isRefreshToken));
     }
 
-    public SecretKey getSigningKey() {
+    private SecretKey getSigningKey() {
         return Keys.hmacShaKeyFor(encodeSecretKey().getBytes());
     }
 
@@ -73,9 +80,4 @@ public class JwtGenerator {
                 .encodeToString(JWT_SECRET.getBytes(StandardCharsets.UTF_8));
     }
 
-    public JwtParser getJwtParser() {
-        return Jwts.parserBuilder()
-                .setSigningKey(getSigningKey())
-                .build();
-    }
 }
