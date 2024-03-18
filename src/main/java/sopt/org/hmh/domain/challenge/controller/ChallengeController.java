@@ -28,10 +28,7 @@ public class ChallengeController implements ChallengeApi {
     public ResponseEntity<BaseResponse<?>> orderAddChallenge(@UserId final Long userId,
                                                              @RequestHeader("OS") final String os,
                                                              @RequestBody final ChallengeRequest request) {
-        challengeService.updateChallengeForPeriodWithInfo(
-                challengeService.addChallenge(userId, request.period(), request.goalTime()),
-                challengeService.getLastApps(userId),
-                os);
+        challengeService.addChallenge(userId, request.period(), request.goalTime());
 
         return ResponseEntity
                 .status(ChallengeSuccess.ADD_CHALLENGE_SUCCESS.getHttpStatus())
@@ -45,6 +42,6 @@ public class ChallengeController implements ChallengeApi {
         return ResponseEntity
                 .status(ChallengeSuccess.GET_CHALLENGE_SUCCESS.getHttpStatus())
                 .body(BaseResponse.success(ChallengeSuccess.GET_CHALLENGE_SUCCESS,
-                        challengeService.getChallenge(userId, os)));
+                        challengeService.getChallenge(userId)));
     }
 }

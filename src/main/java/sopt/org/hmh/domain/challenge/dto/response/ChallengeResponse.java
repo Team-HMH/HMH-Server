@@ -18,26 +18,4 @@ public record ChallengeResponse(
         Long goalTime,
         List<AppGoalTimeResponse> apps
 ) {
-    public static ChallengeResponse of(Challenge challenge, String os) {
-        List<DailyChallenge> dailyChallenges = challenge.getDailyChallenges();
-
-        int daysSinceToday = (int) ChronoUnit.DAYS.between(challenge.getCreatedAt().toLocalDate(),
-                LocalDateTime.now().toLocalDate());
-        int todayIndex = daysSinceToday >= challenge.getPeriod() ? -1 : daysSinceToday;
-        int dailyChallengeIndex = todayIndex == -1 ? dailyChallenges.size()-1 : todayIndex;
-
-        return ChallengeResponse.builder()
-                .period(challenge.getPeriod())
-                .statuses(dailyChallenges.stream()
-                        .map(DailyChallenge::getStatus)
-                        .toList())
-                .todayIndex(todayIndex)
-                .goalTime(dailyChallenges.get(dailyChallengeIndex).getGoalTime())
-                .apps(dailyChallenges.get(dailyChallengeIndex).getApps()
-                        .stream()
-                        .filter(app -> os.equals(app.getOs()))
-                        .map(app -> new AppGoalTimeResponse(app.getAppCode(), app.getGoalTime()))
-                        .toList())
-                .build();
-    }
 }

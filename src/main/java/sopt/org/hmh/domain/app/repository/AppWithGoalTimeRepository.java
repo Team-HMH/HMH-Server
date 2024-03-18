@@ -18,5 +18,5 @@ public interface AppWithGoalTimeRepository extends JpaRepository<AppWithGoalTime
                 AppError.APP_NOT_FOUND));
     }
 
-    boolean existsByChallengeIdAndAppCodeAndOs(Long ChallengeId, String appCode, String os);
+    boolean existsByChallengeIdAndAppCodeAndOs(Long challengeId, String appCode, String os);
 }

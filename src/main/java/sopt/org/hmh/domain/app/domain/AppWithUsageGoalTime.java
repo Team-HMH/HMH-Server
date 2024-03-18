@@ -27,9 +27,4 @@ public class AppWithUsageGoalTime extends App {
         this.goalTime = goalTime;
         this.usageTime = usageTime;
     }
-
-    // TODO: - 안쓰일듯함
-    public void setUsageTime(Long usageTime) {
-        this.usageTime = usageTime;
-    }
 }

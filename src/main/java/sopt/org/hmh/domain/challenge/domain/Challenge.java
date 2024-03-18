@@ -34,9 +34,10 @@ public class Challenge extends BaseTimeEntity {
     private final List<DailyChallenge> historyDailyChallenges  = new ArrayList<>();
 
     @Builder
-    private Challenge(Integer period, Long userId, Long goalTime) {
+    private Challenge(Integer period, Long userId, Long goalTime, List<AppWithGoalTime> apps) {
         this.period = period;
         this.userId = userId;
         this.goalTime = goalTime;
+        this.apps = apps;
     }
 }

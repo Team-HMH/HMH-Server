@@ -9,8 +9,8 @@ import sopt.org.hmh.domain.app.domain.exception.AppError;
 import sopt.org.hmh.domain.app.domain.exception.AppException;
 import sopt.org.hmh.domain.app.dto.request.AppDeleteRequest;
 import sopt.org.hmh.domain.app.dto.request.AppGoalTimeRequest;
+import sopt.org.hmh.domain.app.dto.response.AppGoalTimeResponse;
 import sopt.org.hmh.domain.app.repository.AppWithGoalTimeRepository;
-import sopt.org.hmh.domain.app.service.AppService;
 import sopt.org.hmh.domain.challenge.domain.Challenge;
 import sopt.org.hmh.domain.challenge.domain.ChallengeConstants;
 import sopt.org.hmh.domain.challenge.domain.ChallengeDay;
@@ -19,54 +19,50 @@ import sopt.org.hmh.domain.challenge.domain.exception.ChallengeException;
 import sopt.org.hmh.domain.challenge.dto.response.ChallengeResponse;
 import sopt.org.hmh.domain.challenge.repository.ChallengeRepository;
 import sopt.org.hmh.domain.dailychallenge.domain.DailyChallenge;
-import sopt.org.hmh.domain.dailychallenge.service.DailyChallengeService;
 
+import java.util.ArrayList;
 import java.util.List;
-
-import static java.util.Objects.nonNull;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class ChallengeService {
 
     private final ChallengeRepository challengeRepository;
-    private final DailyChallengeService dailyChallengeService;
-    private final AppService appService;
     private final AppWithGoalTimeRepository appWithGoalTimeRepository;
 
     @Transactional
     public Challenge addChallenge(Long userId, Integer period, Long goalTime) {
         validateChallengePeriod(period);
         validateChallengeGoalTime(goalTime);
+
+        Optional<Challenge> previousChallenge = challengeRepository.findFirstByUserIdOrderByCreatedAtDesc(userId);
+        List<AppWithGoalTime> previousApps = previousChallenge.isPresent()
+                ? previousChallenge.get().getApps()
+                : new ArrayList<>();
+
         return challengeRepository.save(Challenge.builder()
                 .period(period)
                 .goalTime(goalTime)
+                .apps(previousApps)
                 .userId(userId).build());
     }
 
-    @Transactional
-    public Challenge updateChallengeForPeriodWithInfo(Challenge challenge, List<AppGoalTimeRequest> apps, String os) {
-        for (int count = 0; count < challenge.getPeriod(); count++) {
-            DailyChallenge dailyChallenge = dailyChallengeService.addDailyChallenge(challenge);
-            if (nonNull(apps)) {
-                appService.addApps(dailyChallenge, apps, os);
-            }
-        }
+    public ChallengeResponse getChallenge(Long userId) {
+        Challenge challenge = challengeRepository.findFirstByUserIdOrderByCreatedAtDescOrElseThrow(userId);
 
-        return challenge;
+        return ChallengeResponse.builder()
+                .statuses(challenge.getHistoryDailyChallenges()
+                        .stream()
+                        .map(DailyChallenge::getStatus)
+                        .toList())
+                .apps(challenge.getApps().stream()
+                        .map(app -> new AppGoalTimeResponse(app.getAppCode(), app.getGoalTime())).toList())
+                .todayIndex(challenge.getHistoryDailyChallenges().size()+1)
+                .goalTime(challenge.getGoalTime())
+                .period(challenge.getPeriod())
+                .build();
     }
-
-//    public List<AppGoalTimeRequest> getLastApps(Long userId) {
-//        List<DailyChallenge> lastDailyChallenges = challengeRepository
-//                .findFirstByUserIdOrderByCreatedAtDescOrElseThrow(userId)
-//                .getDailyChallenges();
-//        if (lastDailyChallenges.isEmpty()) { return null; }
-//        return lastDailyChallenges.get(lastDailyChallenges.size() - 1)
-//                .getApps()
-//                .stream()
-//                .map(app -> new AppGoalTimeRequest(app.getAppCode(), app.getGoalTime()))
-//                .toList();
-//    }
 
     @Transactional
     public void removeApp(Challenge challenge, AppDeleteRequest request, String os) {
@@ -91,10 +87,6 @@ public class ChallengeService {
                             .build();
                 }).toList();
         appWithGoalTimeRepository.saveAll(appsToUpdate);
-    }
-
-    public ChallengeResponse getChallenge(Long userId, String os) {
-        return ChallengeResponse.of(challengeRepository.findFirstByUserIdOrderByCreatedAtDescOrElseThrow(userId), os);
     }
 
     private void validateChallengePeriod(Integer period) {
