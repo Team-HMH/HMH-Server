@@ -19,6 +19,7 @@ import sopt.org.hmh.domain.user.dto.request.SocialSignUpRequest;
 import sopt.org.hmh.domain.user.dto.response.LoginResponse;
 import sopt.org.hmh.domain.user.dto.response.ReissueResponse;
 import sopt.org.hmh.domain.user.dto.response.UserInfoResponse;
+import sopt.org.hmh.domain.user.dto.response.UserPointResponse;
 import sopt.org.hmh.domain.user.repository.OnboardingInfoRepository;
 import sopt.org.hmh.domain.user.repository.ProblemRepository;
 import sopt.org.hmh.domain.user.repository.UserRepository;
@@ -28,6 +29,7 @@ import sopt.org.hmh.global.auth.jwt.exception.JwtError;
 import sopt.org.hmh.global.auth.jwt.exception.JwtException;
 import sopt.org.hmh.global.auth.redis.TokenService;
 import sopt.org.hmh.global.auth.social.SocialPlatform;
+import sopt.org.hmh.global.auth.social.SocialAccessTokenResponse;
 import sopt.org.hmh.global.auth.social.apple.fegin.AppleOAuthProvider;
 import sopt.org.hmh.global.auth.social.kakao.fegin.KakaoLoginService;
 
@@ -97,6 +99,10 @@ public class UserService {
 
     public UserInfoResponse getUserInfo(Long userId) {
         return UserInfoResponse.of(userRepository.findByIdOrThrowException(userId));
+    }
+
+    public UserPointResponse getUserPoint(Long userId) {
+        return UserPointResponse.of(userRepository.findByIdOrThrowException(userId));
     }
 
     private void validateUserId(Long userId) {
@@ -191,4 +197,9 @@ public class UserService {
         userRepository.deleteAllById(expiredUserList);
         challengeService.deleteChallengeRelatedByUserId(expiredUserList);
     }
+
+    public SocialAccessTokenResponse getSocialAccessTokenByAuthorizationCode(String code) {
+        return kakaoLoginService.getKakaoAccessToken(code);
+    }
+
 }

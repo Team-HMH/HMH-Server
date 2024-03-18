@@ -21,9 +21,9 @@ public class JwtGenerator {
     @Value("${jwt.secret}")
     private String JWT_SECRET;
     @Value("${jwt.access-token-expiration-time}")
-    private Integer ACCESS_TOKEN_EXPIRATION_TIME;
+    private Long ACCESS_TOKEN_EXPIRATION_TIME;
     @Value("${jwt.refresh-token-expiration-time}")
-    private Integer REFRESH_TOKEN_EXPIRATION_TIME;
+    private Long REFRESH_TOKEN_EXPIRATION_TIME;
     private final TokenRepository tokenRepository;
 
     public String generateToken(Long userId, boolean isRefreshToken) {

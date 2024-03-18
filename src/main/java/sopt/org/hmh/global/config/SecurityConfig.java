@@ -26,7 +26,9 @@ public class SecurityConfig {
     private final JwtAuthenticationEntryPoint customJwtAuthenticationEntryPoint;
 
     private static final String[] AUTH_WHITELIST = {
-            "/", "/error", "/health", "/api/v1/dummy/**",
+            // Global
+            "/health",
+            "/error",
 
             // Swagger
             "/swagger-ui/**",
@@ -38,6 +40,10 @@ public class SecurityConfig {
             "/api/v1/user/login",
             "/api/v1/user/reissue",
             "/api/v1/user/signup",
+            "/api/v1/user/social/token/kakao",
+
+            // etc
+            "/api/v1/dummy/**",
     };
 
     @Bean

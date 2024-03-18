@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +15,7 @@ import sopt.org.hmh.domain.user.dto.request.SocialPlatformRequest;
 import sopt.org.hmh.domain.user.dto.request.SocialSignUpRequest;
 import sopt.org.hmh.domain.user.service.UserService;
 import sopt.org.hmh.global.auth.UserId;
+import sopt.org.hmh.global.auth.social.SocialAccessTokenResponse;
 import sopt.org.hmh.global.common.response.BaseResponse;
 import sopt.org.hmh.global.common.response.EmptyJsonResponse;
 
@@ -74,6 +76,14 @@ public class UserController implements UserApi{
                 .body(BaseResponse.success(UserSuccess.GET_USER_INFO_SUCCESS, userService.getUserInfo(userId)));
     }
 
+    @GetMapping("/point")
+    @Override
+    public ResponseEntity<BaseResponse<?>> orderGetUserPoint(@UserId final Long userId) {
+        return ResponseEntity
+                .status(UserSuccess.GET_USER_POINT_SUCCESS.getHttpStatus())
+                .body(BaseResponse.success(UserSuccess.GET_USER_POINT_SUCCESS, userService.getUserPoint(userId)));
+    }
+
     @DeleteMapping
     @Override
     public ResponseEntity<BaseResponse<?>> orderWithdraw(@UserId final Long userId) {
@@ -81,5 +91,14 @@ public class UserController implements UserApi{
         return ResponseEntity
                 .status(UserSuccess.WITHDRAW_SUCCESS.getHttpStatus())
                 .body(BaseResponse.success(UserSuccess.WITHDRAW_SUCCESS, new EmptyJsonResponse()));
+    }
+
+    @GetMapping("/social/token/kakao")
+    public ResponseEntity<BaseResponse<SocialAccessTokenResponse>> orderGetKakaoAccessToken(
+            @RequestParam("code") final String code
+            ) {
+        return ResponseEntity
+                .status(UserSuccess.GET_SOCIAL_ACCESS_TOKEN_SUCCESS.getHttpStatus())
+                .body(BaseResponse.success(UserSuccess.GET_SOCIAL_ACCESS_TOKEN_SUCCESS, userService.getSocialAccessTokenByAuthorizationCode(code)));
     }
 }
