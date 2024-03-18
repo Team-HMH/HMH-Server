@@ -1,7 +1,6 @@
 package sopt.org.hmh.domain.dailychallenge.domain;
 
 import static jakarta.persistence.GenerationType.*;
-import static java.util.Objects.nonNull;
 
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -36,21 +35,9 @@ public class DailyChallenge extends BaseTimeEntity {
     private final List<AppWithUsageGoalTime> apps = new ArrayList<>();
 
     @Builder
-    public DailyChallenge(Challenge challenge, Long goalTime) {
-        updateChallenge(challenge);
-        this.goalTime = goalTime;
-        this.status = Status.NONE;
-    }
-
-    private void updateChallenge(Challenge challenge) {
-        if (nonNull(this.challenge)) {
-            this.challenge.getHistoryDailyChallenges().remove(this);
-        }
+    public DailyChallenge(Challenge challenge, Long goalTime, Status status) {
         this.challenge = challenge;
-        challenge.getHistoryDailyChallenges().add(this);
-    }
-
-    public void setStatus(Status status) {
+        this.goalTime = goalTime;
         this.status = status;
     }
 }
