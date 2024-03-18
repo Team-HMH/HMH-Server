@@ -38,7 +38,7 @@ public class DailyChallengeController implements DailyChallengeApi {
 
     @PatchMapping("/failure")
     @Override
-    public ResponseEntity<BaseResponse<?>> orderModifyHistoryDailyChallengeStatusFailure(@UserId final Long userId) {
+    public ResponseEntity<BaseResponse<?>> orderModifyDailyChallengeStatusFailure(@UserId final Long userId) {
         dailyChallengeService.modifyDailyChallengeStatusFailure(userId);
         return ResponseEntity
                 .status(DailyChallengeSuccess.MODIFY_DAILY_CHALLENGE_STATUS_FAILURE_SUCCESS.getHttpStatus())

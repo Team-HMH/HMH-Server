@@ -52,7 +52,7 @@ public interface DailyChallengeApi {
                             responseCode = "500",
                             description = "서버 내부 오류입니다.",
                             content = @Content)})
-    ResponseEntity<BaseResponse<?>> orderModifyHistoryDailyChallengeStatusFailure(
+    ResponseEntity<BaseResponse<?>> orderModifyDailyChallengeStatusFailure(
             @UserId @Parameter(hidden = true) final Long userId);
 }
 

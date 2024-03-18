@@ -64,6 +64,7 @@ public class ChallengeService {
                 .build();
     }
 
+    // TODO: - url, controller 수정
     @Transactional
     public void removeApp(Challenge challenge, AppDeleteRequest request, String os) {
         validateAppCode(request.appCode());

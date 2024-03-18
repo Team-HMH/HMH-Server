@@ -23,7 +23,6 @@ import java.util.List;
 @Transactional
 public class DailyChallengeService {
 
-    private final DailyChallengeRepository dailyChallengeRepository;
     private final ChallengeRepository challengeRepository;
     private final AppWithGoalTimeRepository appWithGoalTimeRepository;
     private final AppWithUsageGoalTimeRepository appWithUsageGoalTimeRepository;
