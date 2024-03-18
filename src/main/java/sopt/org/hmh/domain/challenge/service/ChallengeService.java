@@ -3,7 +3,13 @@ package sopt.org.hmh.domain.challenge.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sopt.org.hmh.domain.app.domain.AppConstants;
+import sopt.org.hmh.domain.app.domain.AppWithGoalTime;
+import sopt.org.hmh.domain.app.domain.exception.AppError;
+import sopt.org.hmh.domain.app.domain.exception.AppException;
+import sopt.org.hmh.domain.app.dto.request.AppDeleteRequest;
 import sopt.org.hmh.domain.app.dto.request.AppGoalTimeRequest;
+import sopt.org.hmh.domain.app.repository.AppWithGoalTimeRepository;
 import sopt.org.hmh.domain.app.service.AppService;
 import sopt.org.hmh.domain.challenge.domain.Challenge;
 import sopt.org.hmh.domain.challenge.domain.ChallengeConstants;
@@ -26,6 +32,7 @@ public class ChallengeService {
     private final ChallengeRepository challengeRepository;
     private final DailyChallengeService dailyChallengeService;
     private final AppService appService;
+    private final AppWithGoalTimeRepository appWithGoalTimeRepository;
 
     @Transactional
     public Challenge addChallenge(Long userId, Integer period, Long goalTime) {
@@ -49,16 +56,41 @@ public class ChallengeService {
         return challenge;
     }
 
-    public List<AppGoalTimeRequest> getLastApps(Long userId) {
-        List<DailyChallenge> lastDailyChallenges = challengeRepository
-                .findFirstByUserIdOrderByCreatedAtDescOrElseThrow(userId)
-                .getDailyChallenges();
-        if (lastDailyChallenges.isEmpty()) { return null; }
-        return lastDailyChallenges.get(lastDailyChallenges.size() - 1)
-                .getApps()
-                .stream()
-                .map(app -> new AppGoalTimeRequest(app.getAppCode(), app.getGoalTime()))
-                .toList();
+//    public List<AppGoalTimeRequest> getLastApps(Long userId) {
+//        List<DailyChallenge> lastDailyChallenges = challengeRepository
+//                .findFirstByUserIdOrderByCreatedAtDescOrElseThrow(userId)
+//                .getDailyChallenges();
+//        if (lastDailyChallenges.isEmpty()) { return null; }
+//        return lastDailyChallenges.get(lastDailyChallenges.size() - 1)
+//                .getApps()
+//                .stream()
+//                .map(app -> new AppGoalTimeRequest(app.getAppCode(), app.getGoalTime()))
+//                .toList();
+//    }
+
+    @Transactional
+    public void removeApp(Challenge challenge, AppDeleteRequest request, String os) {
+        validateAppCode(request.appCode());
+        AppWithGoalTime appToRemove = appWithGoalTimeRepository
+                .findFirstByChallengeIdAndAppCodeAndOsOrElseThrow(challenge.getId(), request.appCode(), os);
+        appWithGoalTimeRepository.delete(appToRemove);
+    }
+
+    @Transactional
+    public void addApps(Challenge challenge, List<AppGoalTimeRequest> requests, String os) {
+        List<AppWithGoalTime> appsToUpdate = requests.stream()
+                .map(request -> {
+                    validateAppExist(challenge.getId(), request.appCode(), os);
+                    validateAppCode(request.appCode());
+                    validateAppTime(request.goalTime());
+                    return AppWithGoalTime.builder()
+                            .challenge(challenge)
+                            .appCode(request.appCode())
+                            .goalTime(request.goalTime())
+                            .os(os)
+                            .build();
+                }).toList();
+        appWithGoalTimeRepository.saveAll(appsToUpdate);
     }
 
     public ChallengeResponse getChallenge(Long userId, String os) {
@@ -81,6 +113,26 @@ public class ChallengeService {
         if (goalTime < ChallengeConstants.MINIMUM_GOAL_TIME || goalTime > ChallengeConstants.MAXIMUM_GOAL_TIME) {
             throw new ChallengeException(ChallengeError.INVALID_GOAL_TIME_NULL);
         }
+    }
+
+    private void validateAppExist(Long challengeId, String appCode, String os) {
+        if (appWithGoalTimeRepository.existsByChallengeIdAndAppCodeAndOs(challengeId, appCode, os)) {
+            throw new AppException(AppError.APP_EXIST_ALREADY);
+        }
+    }
+
+    private void validateAppCode(String appCode) {
+        if (appCode.isEmpty()) {
+            throw new AppException(AppError.INVALID_APP_CODE_NULL);
+        }
+    }
+
+    private void validateAppTime(Long appTime) {
+        if (appTime == null) {
+            throw new AppException(AppError.INVALID_TIME_NULL);
+        }
+        if (appTime > AppConstants.MAXIMUM_APP_TIME || appTime < AppConstants.MINIMUM_APP_TIME)
+            throw new AppException(AppError.INVALID_TIME_RANGE);
     }
 
     @Transactional
