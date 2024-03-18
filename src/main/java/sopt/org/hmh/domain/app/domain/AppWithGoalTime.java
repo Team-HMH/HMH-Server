@@ -12,10 +12,6 @@ import sopt.org.hmh.domain.challenge.domain.Challenge;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class AppWithGoalTime extends App {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "challenge_id")
     private Challenge challenge;

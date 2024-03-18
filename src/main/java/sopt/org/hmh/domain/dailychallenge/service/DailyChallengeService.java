@@ -3,7 +3,6 @@ package sopt.org.hmh.domain.dailychallenge.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sopt.org.hmh.domain.app.domain.App;
 import sopt.org.hmh.domain.app.domain.AppConstants;
 import sopt.org.hmh.domain.app.domain.exception.AppError;
 import sopt.org.hmh.domain.app.domain.exception.AppException;

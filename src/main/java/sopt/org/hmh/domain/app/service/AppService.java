@@ -18,6 +18,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class AppService {
+
     private final AppRepository appRepository;
 
     private final DailyChallengeService dailyChallengeService;
