@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+import sopt.org.hmh.domain.challenge.domain.Challenge;
 import sopt.org.hmh.domain.challenge.service.ChallengeService;
 import sopt.org.hmh.domain.user.domain.OnboardingInfo;
 import sopt.org.hmh.domain.user.domain.OnboardingProblem;
@@ -66,12 +67,10 @@ public class UserService {
 
         User user = addUser(socialPlatform, socialId, request.name());
 
-        challengeService.updateChallengeForPeriodWithInfo(
-                challengeService.addChallenge(user.getId(),
-                        request.challengeSignUpRequest().period(),
-                        request.challengeSignUpRequest().goalTime()),
-                request.challengeSignUpRequest().apps(),
-                os);
+        Challenge challenge = challengeService.addChallenge(user.getId(), request.challengeSignUpRequest().period(),
+                request.challengeSignUpRequest().goalTime());
+        challengeService.addApps(challenge, request.challengeSignUpRequest().apps(), os);
+
         registerOnboardingInfo(request);
 
         return performLogin(socialAccessToken, socialPlatform, user);
