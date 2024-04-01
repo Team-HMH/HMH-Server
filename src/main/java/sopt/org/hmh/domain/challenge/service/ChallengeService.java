@@ -90,6 +90,11 @@ public class ChallengeService {
         appWithGoalTimeRepository.saveAll(appsToUpdate);
     }
 
+    @Transactional
+    public void deleteChallengeRelatedByUserId(List<Long> expiredUserIdList) {
+        challengeRepository.deleteByUserIdIn(expiredUserIdList);
+    }
+
     private void validateChallengePeriod(Integer period) {
         if (period == null) {
             throw new ChallengeException(ChallengeError.INVALID_PERIOD_NULL);
@@ -126,10 +131,5 @@ public class ChallengeService {
         }
         if (appTime > AppConstants.MAXIMUM_APP_TIME || appTime < AppConstants.MINIMUM_APP_TIME)
             throw new AppException(AppError.INVALID_TIME_RANGE);
-    }
-
-    @Transactional
-    public void deleteChallengeRelatedByUserId(List<Long> expiredUserIdList) {
-        challengeRepository.deleteByUserIdIn(expiredUserIdList);
     }
 }

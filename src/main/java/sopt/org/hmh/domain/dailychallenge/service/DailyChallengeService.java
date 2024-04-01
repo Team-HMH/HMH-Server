@@ -24,15 +24,21 @@ import java.util.List;
 public class DailyChallengeService {
 
     private final ChallengeRepository challengeRepository;
+    private final DailyChallengeRepository dailyChallengeRepository;
     private final AppWithGoalTimeRepository appWithGoalTimeRepository;
     private final AppWithUsageGoalTimeRepository appWithUsageGoalTimeRepository;
 
     @Transactional
-    public DailyChallenge addHistoryDailyChallenge(Long userId, Status status, List<AppUsageTimeRequest> requests, String os) {
+    public void addHistoryDailyChallenge(Long userId, List<AppUsageTimeRequest> requests, String os) {
         Challenge challenge = challengeRepository.findFirstByUserIdOrderByCreatedAtDescOrElseThrow(userId);
+
+        Status status = challenge.getIsChallengeFailedToday() ? Status.FAILURE : calculateDailyChallengeStatus(userId, requests, os);
         DailyChallenge dailyChallenge = new DailyChallenge(challenge, challenge.getGoalTime(), status);
+
         addHistoryApps(challenge, dailyChallenge, requests, os);
-        return dailyChallenge;
+
+        dailyChallengeRepository.save(dailyChallenge);
+        challenge.setChallengeFailedToday(false);
     }
 
    private void addHistoryApps(Challenge challenge, DailyChallenge dailyChallenge, List<AppUsageTimeRequest> requests, String os) {
@@ -53,11 +59,10 @@ public class DailyChallengeService {
        appWithUsageGoalTimeRepository.saveAll(historyApps);
    }
 
-    // TODO: - 실패 관련 질문한 뒤 자정호출 생각해서 로직 생각하고 수정하기
     @Transactional
     public void modifyDailyChallengeStatusFailure(Long userId) {
         Challenge challenge = challengeRepository.findFirstByUserIdOrderByCreatedAtDescOrElseThrow(userId);
-//        addHistoryDailyChallenge(challenge, Status.FAILURE, challenge.getApps());
+        challenge.setChallengeFailedToday(true);
     }
 
     public Status calculateDailyChallengeStatus(Long userId, List<AppUsageTimeRequest> requests, String os) {

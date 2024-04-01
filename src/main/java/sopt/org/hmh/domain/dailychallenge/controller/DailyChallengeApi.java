@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import sopt.org.hmh.domain.app.dto.request.AppArrayUsageTimeRequest;
-import sopt.org.hmh.domain.dailychallenge.dto.response.DailyChallengeResponse;
 import sopt.org.hmh.global.auth.UserId;
 import sopt.org.hmh.global.auth.jwt.JwtConstants;
 import sopt.org.hmh.global.common.response.BaseResponse;

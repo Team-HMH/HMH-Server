@@ -8,9 +8,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import sopt.org.hmh.domain.app.domain.exception.AppSuccess;
+import sopt.org.hmh.domain.app.dto.request.AppArrayGoalTimeRequest;
+import sopt.org.hmh.domain.app.dto.request.AppRemoveRequest;
+import sopt.org.hmh.domain.challenge.domain.Challenge;
 import sopt.org.hmh.domain.challenge.domain.exception.ChallengeSuccess;
 import sopt.org.hmh.domain.challenge.dto.request.ChallengeRequest;
 import sopt.org.hmh.domain.challenge.dto.response.ChallengeResponse;
+import sopt.org.hmh.domain.challenge.repository.ChallengeRepository;
 import sopt.org.hmh.domain.challenge.service.ChallengeService;
 import sopt.org.hmh.global.auth.UserId;
 import sopt.org.hmh.global.common.response.BaseResponse;
@@ -22,6 +27,7 @@ import sopt.org.hmh.global.common.response.EmptyJsonResponse;
 public class ChallengeController implements ChallengeApi {
 
     private final ChallengeService challengeService;
+    private final ChallengeRepository challengeRepository;
 
     @PostMapping
     @Override
@@ -39,6 +45,16 @@ public class ChallengeController implements ChallengeApi {
     @Override
     public ResponseEntity<BaseResponse<ChallengeResponse>> orderGetChallenge(@UserId final Long userId,
                                                                              @RequestHeader("OS") final String os) {
+        return ResponseEntity
+                .status(ChallengeSuccess.GET_CHALLENGE_SUCCESS.getHttpStatus())
+                .body(BaseResponse.success(ChallengeSuccess.GET_CHALLENGE_SUCCESS,
+                        challengeService.getChallenge(userId)));
+    }
+
+    @GetMapping("/home")
+    @Override
+    public ResponseEntity<BaseResponse<ChallengeResponse>> orderGetDailyChallenge(@UserId final Long userId,
+                                                                                  @RequestHeader("OS") final String os) {
         return ResponseEntity
                 .status(ChallengeSuccess.GET_CHALLENGE_SUCCESS.getHttpStatus())
                 .body(BaseResponse.success(ChallengeSuccess.GET_CHALLENGE_SUCCESS,

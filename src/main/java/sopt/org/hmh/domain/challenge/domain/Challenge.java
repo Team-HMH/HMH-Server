@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import sopt.org.hmh.domain.app.domain.AppWithGoalTime;
+import sopt.org.hmh.domain.dailychallenge.domain.Status;
 import sopt.org.hmh.global.common.domain.BaseTimeEntity;
 import sopt.org.hmh.domain.dailychallenge.domain.DailyChallenge;
 
@@ -27,6 +28,8 @@ public class Challenge extends BaseTimeEntity {
     private Integer period;
     private Long goalTime;
 
+    private Boolean isChallengeFailedToday;
+
     @OneToMany(mappedBy = "challenge", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<AppWithGoalTime> apps = new ArrayList<>();
 
@@ -38,6 +41,11 @@ public class Challenge extends BaseTimeEntity {
         this.period = period;
         this.userId = userId;
         this.goalTime = goalTime;
+        this.isChallengeFailedToday = false;
         this.apps = apps;
+    }
+
+    public void setChallengeFailedToday(Boolean challengeFailedToday) {
+        isChallengeFailedToday = challengeFailedToday;
     }
 }
