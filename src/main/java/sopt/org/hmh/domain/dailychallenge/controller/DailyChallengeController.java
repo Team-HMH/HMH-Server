@@ -16,7 +16,7 @@ import sopt.org.hmh.global.common.response.EmptyJsonResponse;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/dailychallenge")
+@RequestMapping("/api/v1/challenge/daily")
 public class DailyChallengeController implements DailyChallengeApi {
 
     private final DailyChallengeService dailyChallengeService;
