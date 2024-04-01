@@ -7,7 +7,7 @@ import sopt.org.hmh.domain.app.domain.AppConstants;
 import sopt.org.hmh.domain.app.domain.AppWithGoalTime;
 import sopt.org.hmh.domain.app.domain.exception.AppError;
 import sopt.org.hmh.domain.app.domain.exception.AppException;
-import sopt.org.hmh.domain.app.dto.request.AppDeleteRequest;
+import sopt.org.hmh.domain.app.dto.request.AppRemoveRequest;
 import sopt.org.hmh.domain.app.dto.request.AppGoalTimeRequest;
 import sopt.org.hmh.domain.app.dto.response.AppGoalTimeResponse;
 import sopt.org.hmh.domain.app.repository.AppWithGoalTimeRepository;
@@ -52,21 +52,20 @@ public class ChallengeService {
         Challenge challenge = challengeRepository.findFirstByUserIdOrderByCreatedAtDescOrElseThrow(userId);
 
         return ChallengeResponse.builder()
+                .period(challenge.getPeriod())
                 .statuses(challenge.getHistoryDailyChallenges()
                         .stream()
                         .map(DailyChallenge::getStatus)
                         .toList())
-                .apps(challenge.getApps().stream()
-                        .map(app -> new AppGoalTimeResponse(app.getAppCode(), app.getGoalTime())).toList())
                 .todayIndex(challenge.getHistoryDailyChallenges().size()+1)
                 .goalTime(challenge.getGoalTime())
-                .period(challenge.getPeriod())
+                .apps(challenge.getApps().stream()
+                        .map(app -> new AppGoalTimeResponse(app.getAppCode(), app.getGoalTime())).toList())
                 .build();
     }
 
-    // TODO: - url, controller 수정
     @Transactional
-    public void removeApp(Challenge challenge, AppDeleteRequest request, String os) {
+    public void removeApp(Challenge challenge, AppRemoveRequest request, String os) {
         validateAppCode(request.appCode());
         AppWithGoalTime appToRemove = appWithGoalTimeRepository
                 .findFirstByChallengeIdAndAppCodeAndOsOrElseThrow(challenge.getId(), request.appCode(), os);
@@ -109,7 +108,7 @@ public class ChallengeService {
             throw new ChallengeException(ChallengeError.INVALID_GOAL_TIME_NULL);
         }
         if (goalTime < ChallengeConstants.MINIMUM_GOAL_TIME || goalTime > ChallengeConstants.MAXIMUM_GOAL_TIME) {
-            throw new ChallengeException(ChallengeError.INVALID_GOAL_TIME_NULL);
+            throw new ChallengeException(ChallengeError.INVALID_GOAL_TIME_NUMERIC);
         }
     }
 

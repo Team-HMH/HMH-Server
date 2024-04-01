@@ -7,8 +7,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.*;
+import sopt.org.hmh.domain.app.dto.request.AppArrayGoalTimeRequest;
+import sopt.org.hmh.domain.app.dto.request.AppRemoveRequest;
 import sopt.org.hmh.domain.challenge.dto.request.ChallengeRequest;
 import sopt.org.hmh.domain.challenge.dto.response.ChallengeResponse;
 import sopt.org.hmh.global.auth.UserId;
@@ -54,5 +55,61 @@ public interface ChallengeApi {
     ResponseEntity<BaseResponse<ChallengeResponse>> orderGetChallenge(
             @UserId @Parameter(hidden = true) final Long userId,
             @RequestHeader("OS") final String os);
+
+    @Operation(
+            summary = "이용시간 통계 정보를 불러오는 API",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "챌린지 정보 조회에 성공했습니다."),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "잘못된 요청입니다.",
+                            content = @Content),
+                    @ApiResponse(
+                            responseCode = "500",
+                            description = "서버 내부 오류입니다.",
+                            content = @Content)})
+    ResponseEntity<BaseResponse<ChallengeResponse>> orderGetDailyChallenge(
+            @UserId @Parameter(hidden = true) final Long userId,
+            @RequestHeader("OS") final String os);
+
+    @PostMapping("/app")
+    @Operation(
+            summary = "스크린타임 설정할 앱을 추가하는 API",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "챌린지 정보 조회에 성공했습니다."),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "잘못된 요청입니다.",
+                            content = @Content),
+                    @ApiResponse(
+                            responseCode = "500",
+                            description = "서버 내부 오류입니다.",
+                            content = @Content)})
+    ResponseEntity<BaseResponse<?>> orderAddApps(@UserId Long userId,
+                                                 @RequestHeader("OS") String os,
+                                                 @RequestBody AppArrayGoalTimeRequest requests);
+
+    @GetMapping("/app")
+    @Operation(
+            summary = "스크린타임 설정한 앱을 삭제하는 API",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "챌린지 정보 조회에 성공했습니다."),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "잘못된 요청입니다.",
+                            content = @Content),
+                    @ApiResponse(
+                            responseCode = "500",
+                            description = "서버 내부 오류입니다.",
+                            content = @Content)})
+    ResponseEntity<BaseResponse<?>> orderRemoveApp(@UserId Long userId,
+                                                   @RequestHeader("OS") String os,
+                                                   @RequestBody AppRemoveRequest request);
 }
 

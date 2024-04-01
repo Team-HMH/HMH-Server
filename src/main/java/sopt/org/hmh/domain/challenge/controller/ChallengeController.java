@@ -60,4 +60,31 @@ public class ChallengeController implements ChallengeApi {
                 .body(BaseResponse.success(ChallengeSuccess.GET_CHALLENGE_SUCCESS,
                         challengeService.getChallenge(userId)));
     }
+
+    @PostMapping("/app")
+    @Override
+    public ResponseEntity<BaseResponse<?>> orderAddApps(@UserId final Long userId,
+                                                        @RequestHeader("OS") final String os,
+                                                        @RequestBody final AppArrayGoalTimeRequest requests) {
+        Challenge challenge = challengeRepository.findFirstByUserIdOrderByCreatedAtDescOrElseThrow(userId);
+        challengeService.addApps(challenge, requests.apps(), os);
+
+        return ResponseEntity
+                .status(AppSuccess.ADD_APP_SUCCESS.getHttpStatus())
+                .body(BaseResponse.success(AppSuccess.ADD_APP_SUCCESS, new EmptyJsonResponse()));
+
+    }
+
+    @GetMapping("/app")
+    @Override
+    public ResponseEntity<BaseResponse<?>> orderRemoveApp(@UserId final Long userId,
+                                                          @RequestHeader("OS") final String os,
+                                                          @RequestBody final AppRemoveRequest request) {
+        Challenge challenge = challengeRepository.findFirstByUserIdOrderByCreatedAtDescOrElseThrow(userId);
+        challengeService.removeApp(challenge, request, os);
+
+        return ResponseEntity
+                .status(AppSuccess.REMOVE_APP_SUCCESS.getHttpStatus())
+                .body(BaseResponse.success(AppSuccess.REMOVE_APP_SUCCESS, new EmptyJsonResponse()));
+    }
 }
