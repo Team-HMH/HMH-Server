@@ -17,8 +17,10 @@ import sopt.org.hmh.domain.challenge.domain.ChallengeDay;
 import sopt.org.hmh.domain.challenge.domain.exception.ChallengeError;
 import sopt.org.hmh.domain.challenge.domain.exception.ChallengeException;
 import sopt.org.hmh.domain.challenge.dto.response.ChallengeResponse;
+import sopt.org.hmh.domain.challenge.dto.response.DailyChallengeResponse;
 import sopt.org.hmh.domain.challenge.repository.ChallengeRepository;
 import sopt.org.hmh.domain.dailychallenge.domain.DailyChallenge;
+import sopt.org.hmh.domain.dailychallenge.domain.Status;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,20 +34,25 @@ public class ChallengeService {
     private final AppWithGoalTimeRepository appWithGoalTimeRepository;
 
     @Transactional
-    public Challenge addChallenge(Long userId, Integer period, Long goalTime) {
+    public Challenge addChallenge(Long userId, Integer period, Long goalTime, String os) {
         validateChallengePeriod(period);
         validateChallengeGoalTime(goalTime);
 
         Optional<Challenge> previousChallenge = challengeRepository.findFirstByUserIdOrderByCreatedAtDesc(userId);
-        List<AppWithGoalTime> previousApps = previousChallenge.isPresent()
-                ? previousChallenge.get().getApps()
-                : new ArrayList<>();
 
-        return challengeRepository.save(Challenge.builder()
+        Challenge challenge = challengeRepository.save(Challenge.builder()
+                .userId(userId)
                 .period(period)
                 .goalTime(goalTime)
-                .apps(previousApps)
-                .userId(userId).build());
+                .build());
+
+        if (previousChallenge.isPresent()) {
+            List<AppGoalTimeRequest> previousApps = previousChallenge.get().getApps().stream()
+                    .map(app -> new AppGoalTimeRequest(app.getAppCode(), app.getGoalTime()))
+                    .toList();
+            addApps(challenge, previousApps, os);
+        }
+        return challenge;
     }
 
     public ChallengeResponse getChallenge(Long userId) {
@@ -58,6 +65,19 @@ public class ChallengeService {
                         .map(DailyChallenge::getStatus)
                         .toList())
                 .todayIndex(challenge.getHistoryDailyChallenges().size())
+                .goalTime(challenge.getGoalTime())
+                .apps(challenge.getApps().stream()
+                        .map(app -> new AppGoalTimeResponse(app.getAppCode(), app.getGoalTime())).toList())
+                .build();
+    }
+
+    public DailyChallengeResponse getDailyChallenge(Long userId) {
+        Challenge challenge = challengeRepository.findFirstByUserIdOrderByCreatedAtDescOrElseThrow(userId);
+
+        return DailyChallengeResponse.builder()
+                .status(Boolean.TRUE.equals(challenge.getIsChallengeFailedToday())
+                        ? Status.FAILURE
+                        : Status.NONE)
                 .goalTime(challenge.getGoalTime())
                 .apps(challenge.getApps().stream()
                         .map(app -> new AppGoalTimeResponse(app.getAppCode(), app.getGoalTime())).toList())
