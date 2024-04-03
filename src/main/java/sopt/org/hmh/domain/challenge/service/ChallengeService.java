@@ -22,6 +22,8 @@ import sopt.org.hmh.domain.challenge.repository.ChallengeRepository;
 import sopt.org.hmh.domain.dailychallenge.domain.DailyChallenge;
 import sopt.org.hmh.domain.dailychallenge.domain.Status;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -57,6 +59,9 @@ public class ChallengeService {
 
     public ChallengeResponse getChallenge(Long userId) {
         Challenge challenge = challengeRepository.findFirstByUserIdOrderByCreatedAtDescOrElseThrow(userId);
+        Integer todayIndex = Boolean.TRUE.equals(hasChallengePeriodEnded(challenge.getCreatedAt(), challenge.getPeriod()))
+                ? -1
+                : challenge.getHistoryDailyChallenges().size();
 
         return ChallengeResponse.builder()
                 .period(challenge.getPeriod())
@@ -64,7 +69,7 @@ public class ChallengeService {
                         .stream()
                         .map(DailyChallenge::getStatus)
                         .toList())
-                .todayIndex(challenge.getHistoryDailyChallenges().size())
+                .todayIndex(todayIndex)
                 .goalTime(challenge.getGoalTime())
                 .apps(challenge.getApps().stream()
                         .map(app -> new AppGoalTimeResponse(app.getAppCode(), app.getGoalTime())).toList())
@@ -112,6 +117,12 @@ public class ChallengeService {
     @Transactional
     public void deleteChallengeRelatedByUserId(List<Long> expiredUserIdList) {
         challengeRepository.deleteByUserIdIn(expiredUserIdList);
+    }
+
+    private Boolean hasChallengePeriodEnded(LocalDateTime challengeCreatedAt, Integer period) {
+        Duration duration = Duration.between(LocalDateTime.now(), challengeCreatedAt);
+        long daysDifference = duration.toDays();
+        return daysDifference >= period;
     }
 
     private void validateChallengePeriod(Integer period) {
