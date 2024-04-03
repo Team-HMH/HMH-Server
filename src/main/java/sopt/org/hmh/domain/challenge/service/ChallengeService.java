@@ -57,7 +57,7 @@ public class ChallengeService {
                         .stream()
                         .map(DailyChallenge::getStatus)
                         .toList())
-                .todayIndex(challenge.getHistoryDailyChallenges().size()+1)
+                .todayIndex(challenge.getHistoryDailyChallenges().size())
                 .goalTime(challenge.getGoalTime())
                 .apps(challenge.getApps().stream()
                         .map(app -> new AppGoalTimeResponse(app.getAppCode(), app.getGoalTime())).toList())
