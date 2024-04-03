@@ -70,7 +70,7 @@ public class UserService {
         User user = addUser(socialPlatform, socialId, request.name());
 
         Challenge challenge = challengeService.addChallenge(user.getId(), request.challengeSignUpRequest().period(),
-                request.challengeSignUpRequest().goalTime());
+                request.challengeSignUpRequest().goalTime(), os);
         challengeService.addApps(challenge, request.challengeSignUpRequest().apps(), os);
 
         registerOnboardingInfo(request);

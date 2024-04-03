@@ -2,11 +2,7 @@ package sopt.org.hmh.domain.dailychallenge.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import sopt.org.hmh.domain.app.dto.request.AppArrayUsageTimeRequest;
 import sopt.org.hmh.domain.dailychallenge.domain.exception.DailyChallengeSuccess;
 import sopt.org.hmh.domain.dailychallenge.service.DailyChallengeService;
@@ -21,7 +17,7 @@ public class DailyChallengeController implements DailyChallengeApi {
 
     private final DailyChallengeService dailyChallengeService;
 
-    @PatchMapping
+    @PostMapping
     @Override
     public ResponseEntity<BaseResponse<?>> orderAddHistoryDailyChallenge(
             @UserId final Long userId,
@@ -30,8 +26,8 @@ public class DailyChallengeController implements DailyChallengeApi {
     ) {
         dailyChallengeService.addHistoryDailyChallenge(userId, request.apps(), os);
         return ResponseEntity
-                .status(DailyChallengeSuccess.MODIFY_DAILY_CHALLENGE_STATUS_SUCCESS.getHttpStatus())
-                .body(BaseResponse.success(DailyChallengeSuccess.MODIFY_DAILY_CHALLENGE_STATUS_SUCCESS, new EmptyJsonResponse()));
+                .status(DailyChallengeSuccess.ADD_HISTORY_DAILY_CHALLENGE_SUCCESS.getHttpStatus())
+                .body(BaseResponse.success(DailyChallengeSuccess.ADD_HISTORY_DAILY_CHALLENGE_SUCCESS, new EmptyJsonResponse()));
     }
 
     @PatchMapping("/failure")

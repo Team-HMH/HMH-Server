@@ -12,6 +12,7 @@ import sopt.org.hmh.domain.app.dto.request.AppArrayGoalTimeRequest;
 import sopt.org.hmh.domain.app.dto.request.AppRemoveRequest;
 import sopt.org.hmh.domain.challenge.dto.request.ChallengeRequest;
 import sopt.org.hmh.domain.challenge.dto.response.ChallengeResponse;
+import sopt.org.hmh.domain.challenge.dto.response.DailyChallengeResponse;
 import sopt.org.hmh.global.auth.UserId;
 import sopt.org.hmh.global.auth.jwt.JwtConstants;
 import sopt.org.hmh.global.common.response.BaseResponse;
@@ -70,7 +71,7 @@ public interface ChallengeApi {
                             responseCode = "500",
                             description = "서버 내부 오류입니다.",
                             content = @Content)})
-    ResponseEntity<BaseResponse<ChallengeResponse>> orderGetDailyChallenge(
+    ResponseEntity<BaseResponse<DailyChallengeResponse>> orderGetDailyChallenge(
             @UserId @Parameter(hidden = true) final Long userId,
             @RequestHeader("OS") final String os);
 
