@@ -8,6 +8,7 @@ import sopt.org.hmh.global.common.exception.base.SuccessBase;
 public enum ChallengeSuccess implements SuccessBase {
 
     GET_CHALLENGE_SUCCESS(HttpStatus.OK, "챌린지 달성현황 조회 성공하였습니다."),
+    GET_DAILY_CHALLENGE_SUCCESS(HttpStatus.OK, "일별 챌린지 달성현황 조회 성공하였습니다."),
     ADD_CHALLENGE_SUCCESS(HttpStatus.OK, "챌린지 생성을 성공하였습니다."),
     ;
 
