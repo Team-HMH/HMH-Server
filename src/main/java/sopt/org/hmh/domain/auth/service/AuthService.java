@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sopt.org.hmh.domain.auth.dto.response.ReissueResponse;
+import sopt.org.hmh.domain.challenge.domain.Challenge;
 import sopt.org.hmh.domain.challenge.service.ChallengeService;
 import sopt.org.hmh.domain.users.domain.User;
 import sopt.org.hmh.domain.auth.dto.request.SocialPlatformRequest;
@@ -51,12 +52,10 @@ public class AuthService {
 
         User user = userService.addUser(socialPlatform, socialId, request.name());
 
-        challengeService.updateChallengeForPeriodWithInfo(
-                challengeService.addChallenge(user.getId(),
-                        request.challengeSignUpRequest().period(),
-                        request.challengeSignUpRequest().goalTime()),
-                request.challengeSignUpRequest().apps(),
-                os);
+        Challenge challenge = challengeService.addChallenge(user.getId(), request.challengeSignUpRequest().period(),
+                request.challengeSignUpRequest().goalTime(), os);
+        challengeService.addApps(challenge, request.challengeSignUpRequest().apps(), os);
+        
         userService.registerOnboardingInfo(request);
 
         return performLogin(socialAccessToken, socialPlatform, user);
