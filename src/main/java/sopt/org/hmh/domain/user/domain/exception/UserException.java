@@ -1,4 +1,4 @@
-package sopt.org.hmh.domain.users.domain.exception;
+package sopt.org.hmh.domain.user.domain.exception;
 
 import sopt.org.hmh.global.common.exception.base.ExceptionBase;
 

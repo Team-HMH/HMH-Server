@@ -1,4 +1,4 @@
-package sopt.org.hmh.domain.users.service;
+package sopt.org.hmh.domain.user.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -7,7 +7,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import sopt.org.hmh.domain.challenge.service.ChallengeService;
-import sopt.org.hmh.domain.users.repository.UserRepository;
+import sopt.org.hmh.domain.user.repository.UserRepository;
 
 @Component
 @RequiredArgsConstructor
