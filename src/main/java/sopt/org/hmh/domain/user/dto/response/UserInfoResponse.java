@@ -1,6 +1,6 @@
-package sopt.org.hmh.domain.users.dto.response;
+package sopt.org.hmh.domain.user.dto.response;
 
-import sopt.org.hmh.domain.users.domain.User;
+import sopt.org.hmh.domain.user.domain.User;
 
 public record UserInfoResponse(
         String name,
