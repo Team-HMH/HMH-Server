@@ -3,6 +3,7 @@ package sopt.org.hmh.domain.dailychallenge.domain;
 import static jakarta.persistence.GenerationType.*;
 
 import jakarta.persistence.*;
+import java.time.LocalDate;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,6 +34,8 @@ public class DailyChallenge extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "dailyChallenge", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private final List<AppWithUsageGoalTime> apps = new ArrayList<>();
+
+    private LocalDate challengeDate;
 
     @Builder
     public DailyChallenge(Challenge challenge, Long goalTime, Status status) {
