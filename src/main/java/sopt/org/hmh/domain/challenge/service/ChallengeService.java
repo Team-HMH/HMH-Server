@@ -18,6 +18,7 @@ import sopt.org.hmh.domain.challenge.domain.exception.ChallengeError;
 import sopt.org.hmh.domain.challenge.domain.exception.ChallengeException;
 import sopt.org.hmh.domain.challenge.dto.response.ChallengeResponse;
 import sopt.org.hmh.domain.challenge.dto.response.DailyChallengeResponse;
+import sopt.org.hmh.domain.challenge.dto.response.PointUsageResponse;
 import sopt.org.hmh.domain.challenge.repository.ChallengeRepository;
 import sopt.org.hmh.domain.dailychallenge.domain.DailyChallenge;
 import sopt.org.hmh.domain.dailychallenge.domain.Status;
@@ -26,6 +27,8 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import sopt.org.hmh.domain.users.domain.User;
+import sopt.org.hmh.domain.users.repository.UserRepository;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +36,7 @@ public class ChallengeService {
 
     private final ChallengeRepository challengeRepository;
     private final AppWithGoalTimeRepository appWithGoalTimeRepository;
+    private final UserRepository userRepository;
 
     @Transactional
     public Challenge addChallenge(Long userId, Integer period, Long goalTime, String os) {
@@ -79,7 +83,7 @@ public class ChallengeService {
         Challenge challenge = challengeRepository.findFirstByUserIdOrderByCreatedAtDescOrElseThrow(userId);
 
         return DailyChallengeResponse.builder()
-                .status(Boolean.TRUE.equals(challenge.getIsChallengeFailedToday())
+                .status(Boolean.TRUE.equals(challenge.isChallengeFailedToday())
                         ? Status.FAILURE
                         : Status.NONE)
                 .goalTime(challenge.getGoalTime())
@@ -116,6 +120,17 @@ public class ChallengeService {
     @Transactional
     public void deleteChallengeRelatedByUserId(List<Long> expiredUserIdList) {
         challengeRepository.deleteByUserIdIn(expiredUserIdList);
+    }
+
+    @Transactional
+    public PointUsageResponse failChallengeByUsagePoint(Long userId) {
+        User user = userRepository.findByIdOrThrowException(userId);
+        Challenge challenge = challengeRepository.findFirstByUserIdOrderByCreatedAtDescOrElseThrow(userId);
+        challenge.setChallengeFailedToday(true);
+        return new PointUsageResponse(
+                ChallengeConstants.USAGE_POINT,
+                user.decreasePoint(ChallengeConstants.USAGE_POINT)
+        );
     }
 
     private Boolean hasChallengePeriodEnded(LocalDateTime challengeCreatedAt, Integer period) {
