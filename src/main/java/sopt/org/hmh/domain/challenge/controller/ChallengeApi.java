@@ -20,6 +20,8 @@ import sopt.org.hmh.global.common.response.BaseResponse;
 @Tag(name = "챌린지 관련 API")
 @SecurityRequirement(name = JwtConstants.AUTHORIZATION)
 public interface ChallengeApi {
+
+    @PostMapping
     @Operation(
             summary = "챌린지가 끝난 후 새 챌린지 생성하는 API",
             responses = {
@@ -39,6 +41,7 @@ public interface ChallengeApi {
             @RequestHeader("OS") final String os,
             @RequestBody final ChallengeRequest request);
 
+    @GetMapping
     @Operation(
             summary = "달성현황뷰 챌린지 정보를 불러오는 API",
             responses = {
@@ -57,6 +60,7 @@ public interface ChallengeApi {
             @UserId @Parameter(hidden = true) final Long userId,
             @RequestHeader("OS") final String os);
 
+    @GetMapping("/home")
     @Operation(
             summary = "이용시간 통계 정보를 불러오는 API",
             responses = {
@@ -90,7 +94,7 @@ public interface ChallengeApi {
                             responseCode = "500",
                             description = "서버 내부 오류입니다.",
                             content = @Content)})
-    ResponseEntity<BaseResponse<?>> orderAddApps(@UserId Long userId,
+    ResponseEntity<BaseResponse<?>> orderAddApps(@UserId @Parameter(hidden = true) Long userId,
                                                  @RequestHeader("OS") String os,
                                                  @RequestBody AppArrayGoalTimeRequest requests);
 
@@ -112,5 +116,23 @@ public interface ChallengeApi {
     ResponseEntity<BaseResponse<?>> orderRemoveApp(@UserId Long userId,
                                                    @RequestHeader("OS") String os,
                                                    @RequestBody AppRemoveRequest request);
+
+    @PostMapping("/failure")
+    @Operation(
+            summary = "스크린타임 연장 시 챌린지 실패 처리하는 API",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "챌린지 실패 요청 성공했습니다."),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "잘못된 요청입니다.",
+                            content = @Content),
+                    @ApiResponse(
+                            responseCode = "500",
+                            description = "서버 내부 오류입니다.",
+                            content = @Content)})
+    ResponseEntity<BaseResponse<?>> orderChallengeFailureByUsagePoint(
+            @UserId @Parameter(hidden = true) Long userId);
 }
 

@@ -9,6 +9,7 @@ public enum UserError implements ErrorBase {
 
     // 404 NOT FOUND
     NOT_FOUND_USER(HttpStatus.NOT_FOUND, "유저를 찾을 수 없습니다."),
+    NOT_ENOUGH_POINTS(HttpStatus.BAD_REQUEST, "유저의 포인트가 부족합니다."),
     ;
 
     private final HttpStatus status;

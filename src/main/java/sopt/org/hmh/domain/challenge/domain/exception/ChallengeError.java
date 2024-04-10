@@ -12,6 +12,7 @@ public enum ChallengeError implements ErrorBase {
     INVALID_PERIOD_NUMERIC(HttpStatus.BAD_REQUEST, "유효한 숫자의 챌린지 기간을 입력해주세요."),
     INVALID_GOAL_TIME_NULL(HttpStatus.BAD_REQUEST, "목표시간은 null일 수 없습니다."),
     INVALID_GOAL_TIME_NUMERIC(HttpStatus.BAD_REQUEST, "유효한 숫자의 목표 시간을 입력해주세요."),
+    CHALLENGE_ALREADY_FAILED_TODAY(HttpStatus.BAD_REQUEST, "이미 실패 처리 된 챌린지입니다."),
     ;
 
     private final HttpStatus status;
