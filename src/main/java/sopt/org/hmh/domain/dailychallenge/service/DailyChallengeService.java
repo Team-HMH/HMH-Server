@@ -15,7 +15,6 @@ import sopt.org.hmh.domain.challenge.repository.ChallengeRepository;
 import sopt.org.hmh.domain.dailychallenge.domain.DailyChallenge;
 import sopt.org.hmh.domain.dailychallenge.domain.Status;
 import sopt.org.hmh.domain.dailychallenge.repository.DailyChallengeRepository;
-
 import java.util.List;
 
 @Service
@@ -31,8 +30,8 @@ public class DailyChallengeService {
     @Transactional
     public void addHistoryDailyChallenge(Long userId, List<AppUsageTimeRequest> requests, String os) {
         Challenge challenge = challengeRepository.findFirstByUserIdOrderByCreatedAtDescOrElseThrow(userId);
-
-        Status status = challenge.getIsChallengeFailedToday() ? Status.FAILURE : calculateDailyChallengeStatus(userId, requests, os);
+        Status status = challenge.isChallengeFailedToday() ? Status.FAILURE
+                : calculateDailyChallengeStatus(userId, requests, os);
         DailyChallenge dailyChallenge = new DailyChallenge(challenge, challenge.getGoalTime(), status);
 
         addHistoryApps(challenge, dailyChallenge, requests, os);
@@ -58,12 +57,6 @@ public class DailyChallengeService {
                }).toList();
        appWithUsageGoalTimeRepository.saveAll(historyApps);
    }
-
-    @Transactional
-    public void modifyDailyChallengeStatusFailure(Long userId) {
-        Challenge challenge = challengeRepository.findFirstByUserIdOrderByCreatedAtDescOrElseThrow(userId);
-        challenge.setChallengeFailedToday(true);
-    }
 
     public Status calculateDailyChallengeStatus(Long userId, List<AppUsageTimeRequest> requests, String os) {
         Challenge challenge = challengeRepository.findFirstByUserIdOrderByCreatedAtDescOrElseThrow(userId);
