@@ -13,6 +13,7 @@ import sopt.org.hmh.domain.challenge.dto.response.ChallengeResponse;
 import sopt.org.hmh.domain.challenge.dto.response.DailyChallengeResponse;
 import sopt.org.hmh.domain.challenge.repository.ChallengeRepository;
 import sopt.org.hmh.domain.challenge.service.ChallengeService;
+import sopt.org.hmh.domain.dailychallenge.domain.exception.DailyChallengeSuccess;
 import sopt.org.hmh.global.auth.UserId;
 import sopt.org.hmh.global.common.response.BaseResponse;
 import sopt.org.hmh.global.common.response.EmptyJsonResponse;
@@ -82,5 +83,15 @@ public class ChallengeController implements ChallengeApi {
         return ResponseEntity
                 .status(AppSuccess.REMOVE_APP_SUCCESS.getHttpStatus())
                 .body(BaseResponse.success(AppSuccess.REMOVE_APP_SUCCESS, new EmptyJsonResponse()));
+    }
+
+    @PatchMapping("/failure")
+    @Override
+    public ResponseEntity<BaseResponse<?>> orderChallengeFailureByUsagePoint(
+            @UserId final Long userId
+    ) {
+        return ResponseEntity
+                .status(DailyChallengeSuccess.MODIFY_DAILY_CHALLENGE_STATUS_FAILURE_SUCCESS.getHttpStatus())
+                .body(BaseResponse.success(DailyChallengeSuccess.MODIFY_DAILY_CHALLENGE_STATUS_FAILURE_SUCCESS, challengeService.failChallengeByUsagePoint(userId)));
     }
 }

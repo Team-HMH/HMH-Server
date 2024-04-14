@@ -13,6 +13,8 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import sopt.org.hmh.domain.user.domain.exception.UserError;
+import sopt.org.hmh.domain.user.domain.exception.UserException;
 import sopt.org.hmh.global.auth.social.SocialPlatform;
 import sopt.org.hmh.global.common.domain.BaseTimeEntity;
 
@@ -64,5 +66,13 @@ public class User extends BaseTimeEntity {
     public void recover() {
         this.isDeleted = false;
         this.deletedAt = null;
+    }
+
+    public Integer decreasePoint(Integer usagePoint) {
+        if (this.point < usagePoint) {
+            throw new UserException(UserError.NOT_ENOUGH_POINTS);
+        }
+        this.point -= usagePoint;
+        return this.point;
     }
 }
