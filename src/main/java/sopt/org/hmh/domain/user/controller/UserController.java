@@ -1,4 +1,4 @@
-package sopt.org.hmh.domain.users.controller;
+package sopt.org.hmh.domain.user.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import sopt.org.hmh.domain.users.domain.exception.UserSuccess;
-import sopt.org.hmh.domain.users.service.UserService;
+import sopt.org.hmh.domain.user.domain.exception.UserSuccess;
+import sopt.org.hmh.domain.user.service.UserService;
 import sopt.org.hmh.global.auth.UserId;
 import sopt.org.hmh.global.common.response.BaseResponse;
 import sopt.org.hmh.global.common.response.EmptyJsonResponse;

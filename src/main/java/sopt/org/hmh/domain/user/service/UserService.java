@@ -1,4 +1,4 @@
-package sopt.org.hmh.domain.users.service;
+package sopt.org.hmh.domain.user.service;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -10,12 +10,12 @@ import sopt.org.hmh.domain.auth.exception.AuthError;
 import sopt.org.hmh.domain.auth.exception.AuthException;
 import sopt.org.hmh.domain.auth.repository.OnboardingInfoRepository;
 import sopt.org.hmh.domain.auth.repository.ProblemRepository;
-import sopt.org.hmh.domain.users.domain.OnboardingInfo;
-import sopt.org.hmh.domain.users.domain.OnboardingProblem;
-import sopt.org.hmh.domain.users.domain.User;
-import sopt.org.hmh.domain.users.domain.UserConstants;
-import sopt.org.hmh.domain.users.dto.response.UserInfoResponse;
-import sopt.org.hmh.domain.users.repository.UserRepository;
+import sopt.org.hmh.domain.user.domain.OnboardingInfo;
+import sopt.org.hmh.domain.user.domain.OnboardingProblem;
+import sopt.org.hmh.domain.user.domain.User;
+import sopt.org.hmh.domain.user.domain.UserConstants;
+import sopt.org.hmh.domain.user.dto.response.UserInfoResponse;
+import sopt.org.hmh.domain.user.repository.UserRepository;
 import sopt.org.hmh.global.auth.redis.RedisManagerService;
 import sopt.org.hmh.global.auth.social.SocialPlatform;
 
