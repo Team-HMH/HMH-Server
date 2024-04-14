@@ -13,8 +13,8 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import sopt.org.hmh.domain.users.domain.exception.UserError;
-import sopt.org.hmh.domain.users.domain.exception.UserException;
+import sopt.org.hmh.domain.user.domain.exception.UserError;
+import sopt.org.hmh.domain.user.domain.exception.UserException;
 import sopt.org.hmh.global.auth.social.SocialPlatform;
 import sopt.org.hmh.global.common.domain.BaseTimeEntity;
 

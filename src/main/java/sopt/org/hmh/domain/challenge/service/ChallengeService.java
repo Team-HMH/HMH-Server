@@ -27,8 +27,8 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import sopt.org.hmh.domain.users.domain.User;
-import sopt.org.hmh.domain.users.repository.UserRepository;
+import sopt.org.hmh.domain.user.domain.User;
+import sopt.org.hmh.domain.user.repository.UserRepository;
 
 @Service
 @RequiredArgsConstructor
