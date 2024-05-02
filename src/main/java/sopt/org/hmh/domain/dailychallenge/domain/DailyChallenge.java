@@ -37,10 +37,16 @@ public class DailyChallenge extends BaseTimeEntity {
 
     private LocalDate challengeDate;
 
+    private Long userId;
+
     @Builder
     public DailyChallenge(Challenge challenge, Long goalTime, Status status) {
         this.challenge = challenge;
         this.goalTime = goalTime;
+        this.status = status;
+    }
+
+    public void changeStatus(Status status) {
         this.status = status;
     }
 }
