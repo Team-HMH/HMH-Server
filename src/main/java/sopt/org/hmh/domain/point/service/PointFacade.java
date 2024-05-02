@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sopt.org.hmh.domain.challenge.domain.ChallengeConstants;
-import sopt.org.hmh.domain.challenge.dto.response.PointUsageResponse;
+import sopt.org.hmh.domain.point.dto.response.PointUsageResponse;
 import sopt.org.hmh.domain.dailychallenge.domain.DailyChallenge;
 import sopt.org.hmh.domain.dailychallenge.domain.Status;
 import sopt.org.hmh.domain.dailychallenge.domain.exception.DailyChallengeError;
