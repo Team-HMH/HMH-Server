@@ -6,16 +6,16 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.time.LocalDate;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import sopt.org.hmh.global.auth.UserId;
+import sopt.org.hmh.domain.point.dto.response.PointUsageResponse;
 import sopt.org.hmh.global.auth.jwt.JwtConstants;
 import sopt.org.hmh.global.common.response.BaseResponse;
 
 @Tag(name = "포인트 관련 API")
 @SecurityRequirement(name = JwtConstants.AUTHORIZATION)
 public interface PointApi {
-    @PostMapping("/failure")
+
     @Operation(
             summary = "스크린타임 연장 시 챌린지 실패 처리하는 API",
             responses = {
@@ -30,6 +30,6 @@ public interface PointApi {
                             responseCode = "500",
                             description = "서버 내부 오류입니다.",
                             content = @Content)})
-    ResponseEntity<BaseResponse<?>> orderChallengeFailureByUsagePoint(
-            @UserId @Parameter(hidden = true) Long userId);
+    ResponseEntity<BaseResponse<PointUsageResponse>> orderChallengeFailureByUsagePoint(
+            @Parameter(hidden = true) Long userId, LocalDate challengeDate);
 }
