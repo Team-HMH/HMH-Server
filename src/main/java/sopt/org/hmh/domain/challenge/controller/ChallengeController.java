@@ -11,9 +11,7 @@ import sopt.org.hmh.domain.challenge.domain.exception.ChallengeSuccess;
 import sopt.org.hmh.domain.challenge.dto.request.ChallengeRequest;
 import sopt.org.hmh.domain.challenge.dto.response.ChallengeResponse;
 import sopt.org.hmh.domain.challenge.dto.response.DailyChallengeResponse;
-import sopt.org.hmh.domain.challenge.repository.ChallengeRepository;
 import sopt.org.hmh.domain.challenge.service.ChallengeService;
-import sopt.org.hmh.domain.dailychallenge.domain.exception.DailyChallengeSuccess;
 import sopt.org.hmh.global.auth.UserId;
 import sopt.org.hmh.global.common.response.BaseResponse;
 import sopt.org.hmh.global.common.response.EmptyJsonResponse;
@@ -24,7 +22,6 @@ import sopt.org.hmh.global.common.response.EmptyJsonResponse;
 public class ChallengeController implements ChallengeApi {
 
     private final ChallengeService challengeService;
-    private final ChallengeRepository challengeRepository;
 
     @PostMapping
     @Override
@@ -63,7 +60,7 @@ public class ChallengeController implements ChallengeApi {
     public ResponseEntity<BaseResponse<?>> orderAddApps(@UserId final Long userId,
                                                         @RequestHeader("OS") final String os,
                                                         @RequestBody final AppArrayGoalTimeRequest requests) {
-        Challenge challenge = challengeRepository.findFirstByUserIdOrderByCreatedAtDescOrElseThrow(userId);
+        Challenge challenge = challengeService.findFirstByUserIdOrderByCreatedAtDescOrElseThrow(userId);
         challengeService.addApps(challenge, requests.apps(), os);
 
         return ResponseEntity
@@ -77,21 +74,11 @@ public class ChallengeController implements ChallengeApi {
     public ResponseEntity<BaseResponse<?>> orderRemoveApp(@UserId final Long userId,
                                                           @RequestHeader("OS") final String os,
                                                           @RequestBody final AppRemoveRequest request) {
-        Challenge challenge = challengeRepository.findFirstByUserIdOrderByCreatedAtDescOrElseThrow(userId);
+        Challenge challenge = challengeService.findFirstByUserIdOrderByCreatedAtDescOrElseThrow(userId);
         challengeService.removeApp(challenge, request, os);
 
         return ResponseEntity
                 .status(AppSuccess.REMOVE_APP_SUCCESS.getHttpStatus())
                 .body(BaseResponse.success(AppSuccess.REMOVE_APP_SUCCESS, new EmptyJsonResponse()));
-    }
-
-    @PatchMapping("/failure")
-    @Override
-    public ResponseEntity<BaseResponse<?>> orderChallengeFailureByUsagePoint(
-            @UserId final Long userId
-    ) {
-        return ResponseEntity
-                .status(DailyChallengeSuccess.MODIFY_DAILY_CHALLENGE_STATUS_FAILURE_SUCCESS.getHttpStatus())
-                .body(BaseResponse.success(DailyChallengeSuccess.MODIFY_DAILY_CHALLENGE_STATUS_FAILURE_SUCCESS, challengeService.failChallengeByUsagePoint(userId)));
     }
 }

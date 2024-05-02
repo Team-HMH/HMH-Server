@@ -116,23 +116,5 @@ public interface ChallengeApi {
     ResponseEntity<BaseResponse<?>> orderRemoveApp(@UserId Long userId,
                                                    @RequestHeader("OS") String os,
                                                    @RequestBody AppRemoveRequest request);
-
-    @PostMapping("/failure")
-    @Operation(
-            summary = "스크린타임 연장 시 챌린지 실패 처리하는 API",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "챌린지 실패 요청 성공했습니다."),
-                    @ApiResponse(
-                            responseCode = "400",
-                            description = "잘못된 요청입니다.",
-                            content = @Content),
-                    @ApiResponse(
-                            responseCode = "500",
-                            description = "서버 내부 오류입니다.",
-                            content = @Content)})
-    ResponseEntity<BaseResponse<?>> orderChallengeFailureByUsagePoint(
-            @UserId @Parameter(hidden = true) Long userId);
 }
 

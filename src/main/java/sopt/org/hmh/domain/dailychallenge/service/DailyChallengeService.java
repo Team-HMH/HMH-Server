@@ -11,7 +11,7 @@ import sopt.org.hmh.domain.app.dto.request.AppUsageTimeRequest;
 import sopt.org.hmh.domain.app.repository.AppWithGoalTimeRepository;
 import sopt.org.hmh.domain.app.repository.AppWithUsageGoalTimeRepository;
 import sopt.org.hmh.domain.challenge.domain.Challenge;
-import sopt.org.hmh.domain.challenge.repository.ChallengeRepository;
+import sopt.org.hmh.domain.challenge.service.ChallengeService;
 import sopt.org.hmh.domain.dailychallenge.domain.DailyChallenge;
 import sopt.org.hmh.domain.dailychallenge.domain.Status;
 import sopt.org.hmh.domain.dailychallenge.repository.DailyChallengeRepository;
@@ -22,14 +22,14 @@ import java.util.List;
 @Transactional
 public class DailyChallengeService {
 
-    private final ChallengeRepository challengeRepository;
+    private final ChallengeService challengeService;
     private final DailyChallengeRepository dailyChallengeRepository;
     private final AppWithGoalTimeRepository appWithGoalTimeRepository;
     private final AppWithUsageGoalTimeRepository appWithUsageGoalTimeRepository;
 
     @Transactional
     public void addHistoryDailyChallenge(Long userId, List<AppUsageTimeRequest> requests, String os) {
-        Challenge challenge = challengeRepository.findFirstByUserIdOrderByCreatedAtDescOrElseThrow(userId);
+        Challenge challenge = challengeService.findFirstByUserIdOrderByCreatedAtDescOrElseThrow(userId);
         Status status = challenge.isChallengeFailedToday() ? Status.FAILURE
                 : calculateDailyChallengeStatus(userId, requests, os);
         DailyChallenge dailyChallenge = new DailyChallenge(challenge, challenge.getGoalTime(), status);
@@ -59,7 +59,7 @@ public class DailyChallengeService {
    }
 
     public Status calculateDailyChallengeStatus(Long userId, List<AppUsageTimeRequest> requests, String os) {
-        Challenge challenge = challengeRepository.findFirstByUserIdOrderByCreatedAtDescOrElseThrow(userId);
+        Challenge challenge = challengeService.findFirstByUserIdOrderByCreatedAtDescOrElseThrow(userId);
         long successCount = requests.stream()
                 .filter(request -> {
                     validateModifyDailyChallenge(request.appCode(), request.usageTime());
