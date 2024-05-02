@@ -1,5 +1,6 @@
 package sopt.org.hmh.domain.dailychallenge.service;
 
+import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +15,8 @@ import sopt.org.hmh.domain.challenge.domain.Challenge;
 import sopt.org.hmh.domain.challenge.service.ChallengeService;
 import sopt.org.hmh.domain.dailychallenge.domain.DailyChallenge;
 import sopt.org.hmh.domain.dailychallenge.domain.Status;
+import sopt.org.hmh.domain.dailychallenge.domain.exception.DailyChallengeError;
+import sopt.org.hmh.domain.dailychallenge.domain.exception.DailyChallengeException;
 import sopt.org.hmh.domain.dailychallenge.repository.DailyChallengeRepository;
 import java.util.List;
 
@@ -91,5 +94,10 @@ public class DailyChallengeService {
         }
         if (usageTime > AppConstants.MAXIMUM_APP_TIME || usageTime < AppConstants.MINIMUM_APP_TIME)
             throw new AppException(AppError.INVALID_TIME_RANGE);
+    }
+
+    public DailyChallenge findByChallengeDateAndUserIdOrThrowException(LocalDate challengeDate, Long userId) {
+        return dailyChallengeRepository.findByChallengeDateAndUserId(challengeDate, userId)
+                .orElseThrow(() -> new DailyChallengeException(DailyChallengeError.DAILY_CHALLENGE_NOT_FOUND));
     }
 }
