@@ -17,11 +17,11 @@ import sopt.org.hmh.global.common.response.BaseResponse;
 public interface PointApi {
 
     @Operation(
-            summary = "스크린타임 연장 시 챌린지 실패 처리하는 API",
+            summary = "포인트 사용 API",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
-                            description = "챌린지 실패 요청 성공했습니다."),
+                            description = "포인트 사용에 성공하였습니다."),
                     @ApiResponse(
                             responseCode = "400",
                             description = "잘못된 요청입니다.",
