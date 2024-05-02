@@ -14,6 +14,8 @@ import sopt.org.hmh.domain.user.domain.OnboardingInfo;
 import sopt.org.hmh.domain.user.domain.OnboardingProblem;
 import sopt.org.hmh.domain.user.domain.User;
 import sopt.org.hmh.domain.user.domain.UserConstants;
+import sopt.org.hmh.domain.user.domain.exception.UserError;
+import sopt.org.hmh.domain.user.domain.exception.UserException;
 import sopt.org.hmh.domain.user.dto.response.UserInfoResponse;
 import sopt.org.hmh.domain.user.repository.UserRepository;
 import sopt.org.hmh.global.auth.redis.RedisManagerService;
@@ -33,7 +35,7 @@ public class UserService {
     @Transactional
     public void withdraw(Long userId) {
         redisManagerService.deleteRefreshToken(userId);
-        userRepository.findByIdOrThrowException(userId).softDelete();
+        this.findByIdOrThrowException(userId).softDelete();
     }
 
     public void logout(Long userId) {
@@ -41,11 +43,11 @@ public class UserService {
     }
 
     public UserInfoResponse getUserInfo(Long userId) {
-        return UserInfoResponse.of(userRepository.findByIdOrThrowException(userId));
+        return UserInfoResponse.of(this.findByIdOrThrowException(userId));
     }
 
     public User getUserBySocialPlatformAndSocialId(SocialPlatform socialPlatform, String socialId) {
-        User user = userRepository.findBySocialPlatformAndSocialIdOrThrowException(socialPlatform, socialId);
+        User user = this.findBySocialPlatformAndSocialIdOrThrowException(socialPlatform, socialId);
         if (user.isDeleted()) {
             user.recover();
         }
@@ -89,4 +91,13 @@ public class UserService {
         problemRepository.saveAll(problemList);
     }
 
+    public User findBySocialPlatformAndSocialIdOrThrowException(SocialPlatform socialPlatform, String socialId) {
+        return userRepository.findBySocialPlatformAndSocialId(socialPlatform, socialId).orElseThrow(
+                () -> new AuthException(AuthError.NOT_SIGNUP_USER));
+    }
+
+    public User findByIdOrThrowException(Long userId) {
+        return userRepository.findById(userId).orElseThrow(
+                () -> new UserException(UserError.NOT_FOUND_USER));
+    }
 }
