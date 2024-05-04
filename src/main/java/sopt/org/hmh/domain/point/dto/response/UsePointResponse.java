@@ -1,6 +1,6 @@
 package sopt.org.hmh.domain.point.dto.response;
 
-public record PointUsageResponse(
+public record UsePointResponse(
         Integer usagePoint,
         Integer userPoint
 ) {
