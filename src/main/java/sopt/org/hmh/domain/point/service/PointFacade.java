@@ -9,6 +9,7 @@ import sopt.org.hmh.domain.point.dto.response.EarnPointResponse;
 import sopt.org.hmh.domain.dailychallenge.domain.DailyChallenge;
 import sopt.org.hmh.domain.dailychallenge.domain.Status;
 import sopt.org.hmh.domain.dailychallenge.service.DailyChallengeService;
+import sopt.org.hmh.domain.point.dto.response.UsagePointResponse;
 import sopt.org.hmh.domain.point.dto.response.UsePointResponse;
 import sopt.org.hmh.domain.user.domain.User;
 import sopt.org.hmh.domain.user.service.UserService;
@@ -44,5 +45,10 @@ public class PointFacade {
         return new EarnPointResponse(
                 user.increasePoint(ChallengeConstants.EARNED_POINT)
         );
+    }
+
+    @Transactional(readOnly = true)
+    public UsagePointResponse getUsagePoint() {
+        return new UsagePointResponse(ChallengeConstants.USAGE_POINT);
     }
 }
