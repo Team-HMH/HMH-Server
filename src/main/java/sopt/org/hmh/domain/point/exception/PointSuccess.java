@@ -8,6 +8,7 @@ import sopt.org.hmh.global.common.exception.base.SuccessBase;
 public enum PointSuccess implements SuccessBase {
 
     POINT_USAGE_SUCCESS(HttpStatus.OK, "포인트 사용에 성공하였습니다"),
+    POINT_EARN_SUCCESS(HttpStatus.OK, "포인트 받기에 성공하였습니다"),
     ;
 
     private final HttpStatus status;

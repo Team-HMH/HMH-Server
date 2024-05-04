@@ -78,4 +78,9 @@ public class User extends BaseTimeEntity {
         this.point -= usagePoint;
         return this.point;
     }
+
+    public Integer increasePoint(Integer earnedPoint) {
+        this.point += earnedPoint;
+        return this.point;
+    }
 }
