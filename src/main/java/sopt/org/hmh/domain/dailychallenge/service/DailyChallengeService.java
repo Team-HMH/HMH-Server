@@ -100,4 +100,10 @@ public class DailyChallengeService {
         return dailyChallengeRepository.findByChallengeDateAndUserId(challengeDate, userId)
                 .orElseThrow(() -> new DailyChallengeException(DailyChallengeError.DAILY_CHALLENGE_NOT_FOUND));
     }
+
+    public void validateDailyChallengeStatus(DailyChallenge dailyChallenge, Status expected) {
+        if (dailyChallenge.getStatus() != expected) {
+            throw new DailyChallengeException(DailyChallengeError.DAILY_CHALLENGE_ALREADY_HANDLED);
+        }
+    }
 }
