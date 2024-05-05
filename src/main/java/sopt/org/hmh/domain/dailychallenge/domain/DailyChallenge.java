@@ -4,6 +4,8 @@ import static jakarta.persistence.GenerationType.*;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,7 +18,9 @@ import java.util.List;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class DailyChallenge extends BaseTimeEntity {
 
     @Id
@@ -27,24 +31,17 @@ public class DailyChallenge extends BaseTimeEntity {
     @JoinColumn(name = "challenge_id")
     private Challenge challenge;
 
-    private Long goalTime;
+    @OneToMany(mappedBy = "dailyChallenge", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private final List<AppWithUsageGoalTime> apps = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    @OneToMany(mappedBy = "dailyChallenge", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private final List<AppWithUsageGoalTime> apps = new ArrayList<>();
-
-    private LocalDate challengeDate;
-
     private Long userId;
 
-    @Builder
-    public DailyChallenge(Challenge challenge, Long goalTime, Status status) {
-        this.challenge = challenge;
-        this.goalTime = goalTime;
-        this.status = status;
-    }
+    private Long goalTime;
+
+    private LocalDate challengeDate;
 
     public void changeStatus(Status status) {
         this.status = status;
