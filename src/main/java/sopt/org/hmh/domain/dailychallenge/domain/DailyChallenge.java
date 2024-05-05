@@ -5,21 +5,16 @@ import static jakarta.persistence.GenerationType.*;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import sopt.org.hmh.domain.app.domain.AppWithUsageGoalTime;
 import sopt.org.hmh.global.common.domain.BaseTimeEntity;
 import sopt.org.hmh.domain.challenge.domain.Challenge;
-
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Getter
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class DailyChallenge extends BaseTimeEntity {
 
@@ -32,7 +27,7 @@ public class DailyChallenge extends BaseTimeEntity {
     private Challenge challenge;
 
     @OneToMany(mappedBy = "dailyChallenge", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private final List<AppWithUsageGoalTime> apps = new ArrayList<>();
+    private List<AppWithUsageGoalTime> apps;
 
     @Enumerated(EnumType.STRING)
     private Status status;
@@ -43,7 +38,20 @@ public class DailyChallenge extends BaseTimeEntity {
 
     private LocalDate challengeDate;
 
+    @Builder
+    DailyChallenge(Challenge challenge, Long userId, Long goalTime, LocalDate challengeDate) {
+        this.challenge = challenge;
+        this.userId = userId;
+        this.goalTime = goalTime;
+        this.challengeDate = challengeDate;
+        this.status = Status.NONE;
+    }
+
     public void changeStatus(Status status) {
         this.status = status;
+    }
+
+    public void addHistoryApps(List<AppWithUsageGoalTime> apps) {
+        this.apps = apps;
     }
 }
