@@ -40,6 +40,11 @@ public class DailyChallenge extends BaseTimeEntity {
 
     @Builder
     DailyChallenge(Challenge challenge, Long userId, Long goalTime, LocalDate challengeDate) {
+        Assert.notNull(challenge, "Challenge must not be null");
+        Assert.notNull(userId, "UserId must not be null");
+        Assert.notNull(goalTime, "GoalTime must not be null");
+        Assert.notNull(challengeDate, "ChallengeDate must not be null");
+
         this.challenge = challenge;
         this.userId = userId;
         this.goalTime = goalTime;
