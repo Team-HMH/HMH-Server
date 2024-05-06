@@ -28,7 +28,7 @@ public class DailyChallengeService {
         }
     }
 
-    public void finishDailyChallengeByChangeStatus(DailyChallenge dailyChallenge) {
+    public void changeStatusByCurrentStatus(DailyChallenge dailyChallenge) {
         if (dailyChallenge.getStatus() == Status.NONE) {
             dailyChallenge.changeStatus(Status.UNEARNED);
             return;

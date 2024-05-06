@@ -18,7 +18,7 @@ public class DailyChallengeFacade {
     public void addFinishedDailyChallengeHistory(Long userId, FinishedDailyChallengeListRequest requests, String os) {
         requests.finishedDailyChallenges().forEach(request -> {
             DailyChallenge dailyChallenge = dailyChallengeService.findByChallengeDateAndUserIdOrThrowException(request.challengeDate(), userId);
-            dailyChallengeService.finishDailyChallengeByChangeStatus(dailyChallenge);
+            dailyChallengeService.changeStatusByCurrentStatus(dailyChallenge);
             appService.addAppForHistory(request.apps(), dailyChallenge, os);
         });
     }
