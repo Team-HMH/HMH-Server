@@ -7,4 +7,5 @@ import lombok.NoArgsConstructor;
 public abstract class UserConstants {
     public static final Integer INITIAL_POINT = 0;
     public static final String DEFAULT_USER_NAME = "여행자";
+    public static final Long MEMBER_INFO_RETENTION_PERIOD = 30L;
 }

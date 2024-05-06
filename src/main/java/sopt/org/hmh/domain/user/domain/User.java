@@ -1,5 +1,7 @@
 package sopt.org.hmh.domain.user.domain;
 
+import static sopt.org.hmh.domain.user.domain.UserConstants.MEMBER_INFO_RETENTION_PERIOD;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -8,6 +10,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Min;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -24,8 +27,6 @@ import sopt.org.hmh.global.common.domain.BaseTimeEntity;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User extends BaseTimeEntity {
 
-    private static final Long MEMBER_INFO_RETENTION_PERIOD = 30L;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -36,6 +37,8 @@ public class User extends BaseTimeEntity {
 
     @Column(unique = true)
     private String socialId;
+
+    @Min(value = 0)
     private Integer point;
 
     @Column(columnDefinition = "TEXT")
@@ -73,6 +76,11 @@ public class User extends BaseTimeEntity {
             throw new UserException(UserError.NOT_ENOUGH_POINTS);
         }
         this.point -= usagePoint;
+        return this.point;
+    }
+
+    public Integer increasePoint(Integer earnedPoint) {
+        this.point += earnedPoint;
         return this.point;
     }
 }
