@@ -8,8 +8,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import sopt.org.hmh.domain.app.domain.AppWithGoalTime;
-import sopt.org.hmh.domain.challenge.domain.exception.ChallengeError;
-import sopt.org.hmh.domain.challenge.domain.exception.ChallengeException;
 import sopt.org.hmh.global.common.domain.BaseTimeEntity;
 import sopt.org.hmh.domain.dailychallenge.domain.DailyChallenge;
 import java.util.ArrayList;
@@ -43,12 +41,5 @@ public class Challenge extends BaseTimeEntity {
         this.goalTime = goalTime;
         this.isChallengeFailedToday = false;
         this.apps = apps;
-    }
-
-    public void setChallengeFailedToday(boolean challengeFailedToday) {
-        if (challengeFailedToday && this.isChallengeFailedToday) {
-            throw new ChallengeException(ChallengeError.CHALLENGE_ALREADY_FAILED_TODAY);
-        }
-        this.isChallengeFailedToday = challengeFailedToday;
     }
 }
