@@ -17,8 +17,8 @@ public class DailyChallengeController implements DailyChallengeApi {
 
     private final DailyChallengeFacade dailyChallengeFacade;
 
-    @PostMapping
     @Override
+    @PostMapping("/finish")
     public ResponseEntity<BaseResponse<EmptyJsonResponse>> orderAddHistoryDailyChallenge(
             @UserId final Long userId,
             @RequestHeader("OS") final String os,
