@@ -26,7 +26,7 @@ public class DailyChallengeController implements DailyChallengeApi {
     ) {
         dailyChallengeFacade.addFinishedDailyChallengeHistory(userId, request, os);
         return ResponseEntity
-                .status(DailyChallengeSuccess.ADD_HISTORY_DAILY_CHALLENGE_SUCCESS.getHttpStatus())
-                .body(BaseResponse.success(DailyChallengeSuccess.ADD_HISTORY_DAILY_CHALLENGE_SUCCESS, new EmptyJsonResponse()));
+                .status(DailyChallengeSuccess.SEND_FINISHED_DAILY_CHALLENGE_SUCCESS.getHttpStatus())
+                .body(BaseResponse.success(DailyChallengeSuccess.SEND_FINISHED_DAILY_CHALLENGE_SUCCESS, new EmptyJsonResponse()));
     }
 }
