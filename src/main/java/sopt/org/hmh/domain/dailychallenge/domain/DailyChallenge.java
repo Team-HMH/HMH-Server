@@ -56,8 +56,4 @@ public class DailyChallenge extends BaseTimeEntity {
     public void changeStatus(Status status) {
         this.status = status;
     }
-
-    public void addHistoryApps(List<AppWithUsageGoalTime> apps) {
-        this.apps = apps;
-    }
 }
