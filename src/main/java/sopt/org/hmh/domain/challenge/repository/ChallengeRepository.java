@@ -7,6 +7,8 @@ import sopt.org.hmh.domain.challenge.domain.Challenge;
 
 public interface ChallengeRepository extends JpaRepository<Challenge, Long> {
 
+    Optional<Challenge> findById(Long id);
+
     Optional<Challenge> findFirstByUserIdOrderByCreatedAtDesc(Long userId);
 
     void deleteByUserIdIn(List<Long> userId);
