@@ -128,7 +128,7 @@ public class ChallengeService {
         if (period == null) {
             throw new ChallengeException(ChallengeError.INVALID_PERIOD_NULL);
         }
-        if (period != ChallengeDay.DAYS7.getValue() && period != ChallengeDay.DAYS14.getValue()) {
+        if (period != ChallengeDay.DAYS7.getValue() && period != ChallengeDay.DAYS14.getValue() && period != ChallengeDay.DAYS20.getValue() && period != ChallengeDay.DAYS30.getValue()) {
             throw new ChallengeException(ChallengeError.INVALID_PERIOD_NUMERIC);
         }
     }
