@@ -31,6 +31,7 @@ public class User extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+    private Long currentChallengeId;
 
     @Enumerated(EnumType.STRING)
     private SocialPlatform socialPlatform;

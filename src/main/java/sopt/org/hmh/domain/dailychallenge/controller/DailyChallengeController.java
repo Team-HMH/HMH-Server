@@ -3,9 +3,9 @@ package sopt.org.hmh.domain.dailychallenge.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import sopt.org.hmh.domain.app.dto.request.AppArrayUsageTimeRequest;
 import sopt.org.hmh.domain.dailychallenge.domain.exception.DailyChallengeSuccess;
-import sopt.org.hmh.domain.dailychallenge.service.DailyChallengeService;
+import sopt.org.hmh.domain.dailychallenge.dto.request.FinishedDailyChallengeListRequest;
+import sopt.org.hmh.domain.dailychallenge.service.DailyChallengeFacade;
 import sopt.org.hmh.global.auth.UserId;
 import sopt.org.hmh.global.common.response.BaseResponse;
 import sopt.org.hmh.global.common.response.EmptyJsonResponse;
@@ -15,18 +15,18 @@ import sopt.org.hmh.global.common.response.EmptyJsonResponse;
 @RequestMapping("/api/v1/challenge/daily")
 public class DailyChallengeController implements DailyChallengeApi {
 
-    private final DailyChallengeService dailyChallengeService;
+    private final DailyChallengeFacade dailyChallengeFacade;
 
-    @PostMapping
     @Override
-    public ResponseEntity<BaseResponse<?>> orderAddHistoryDailyChallenge(
+    @PostMapping("/finish")
+    public ResponseEntity<BaseResponse<EmptyJsonResponse>> orderAddHistoryDailyChallenge(
             @UserId final Long userId,
             @RequestHeader("OS") final String os,
-            @RequestBody final AppArrayUsageTimeRequest request
+            @RequestBody final FinishedDailyChallengeListRequest request
     ) {
-        dailyChallengeService.addHistoryDailyChallenge(userId, request.apps(), os);
+        dailyChallengeFacade.addFinishedDailyChallengeHistory(userId, request, os);
         return ResponseEntity
-                .status(DailyChallengeSuccess.ADD_HISTORY_DAILY_CHALLENGE_SUCCESS.getHttpStatus())
-                .body(BaseResponse.success(DailyChallengeSuccess.ADD_HISTORY_DAILY_CHALLENGE_SUCCESS, new EmptyJsonResponse()));
+                .status(DailyChallengeSuccess.SEND_FINISHED_DAILY_CHALLENGE_SUCCESS.getHttpStatus())
+                .body(BaseResponse.success(DailyChallengeSuccess.SEND_FINISHED_DAILY_CHALLENGE_SUCCESS, new EmptyJsonResponse()));
     }
 }

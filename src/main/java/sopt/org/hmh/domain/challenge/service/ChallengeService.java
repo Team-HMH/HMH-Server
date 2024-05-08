@@ -162,8 +162,18 @@ public class ChallengeService {
             throw new AppException(AppError.INVALID_TIME_RANGE);
     }
 
+    @Deprecated
     public Challenge findFirstByUserIdOrderByCreatedAtDescOrElseThrow(Long userId) {
         return challengeRepository.findFirstByUserIdOrderByCreatedAtDesc(userId).orElseThrow(
                 () -> new ChallengeException(ChallengeError.CHALLENGE_NOT_FOUND));
+    }
+
+    public Challenge findByIdOrElseThrow(Long challengeId) {
+        return challengeRepository.findById(challengeId).orElseThrow(
+                () -> new ChallengeException(ChallengeError.CHALLENGE_NOT_FOUND));
+    }
+
+    public List<AppWithGoalTime> getCurrentChallengeAppWithGoalTimeByChallengeId(Long challengeId) {
+        return this.findByIdOrElseThrow(challengeId).getApps();
     }
 }

@@ -100,4 +100,8 @@ public class UserService {
         return userRepository.findById(userId).orElseThrow(
                 () -> new UserException(UserError.NOT_FOUND_USER));
     }
+
+    public Long getCurrentChallengeIdByUserId(Long userId) {
+        return this.findByIdOrThrowException(userId).getCurrentChallengeId();
+    }
 }
