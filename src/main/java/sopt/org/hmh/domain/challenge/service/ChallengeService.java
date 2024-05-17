@@ -27,6 +27,7 @@ import sopt.org.hmh.domain.user.service.UserService;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -82,6 +83,9 @@ public class ChallengeService {
         Challenge challenge = findCurrentChallengeByUserId(userId);
         Integer todayIndex = calculateTodayIndex(challenge.getCreatedAt(), challenge.getPeriod());
 
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String formattedStartDate = challenge.getCreatedAt().format(formatter);
+
         return ChallengeResponse.builder()
                 .period(challenge.getPeriod())
                 .statuses(challenge.getHistoryDailyChallenges()
@@ -89,6 +93,7 @@ public class ChallengeService {
                         .map(DailyChallenge::getStatus)
                         .toList())
                 .todayIndex(todayIndex)
+                .startDate(formattedStartDate)
                 .goalTime(challenge.getGoalTime())
                 .apps(challenge.getApps().stream()
                         .map(app -> new AppGoalTimeResponse(app.getAppCode(), app.getGoalTime())).toList())

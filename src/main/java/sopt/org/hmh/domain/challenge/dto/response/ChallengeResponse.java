@@ -15,6 +15,7 @@ public record ChallengeResponse(
         Integer period,
         List<Status> statuses,
         Integer todayIndex,
+        String startDate,
         Long goalTime,
         List<AppGoalTimeResponse> apps
 ) {
