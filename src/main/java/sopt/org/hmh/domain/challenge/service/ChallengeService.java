@@ -43,14 +43,13 @@ public class ChallengeService {
         validateChallengePeriod(period);
         validateChallengeGoalTime(goalTime);
 
-        Optional<Challenge> previousChallenge = challengeRepository.findFirstByUserIdOrderByCreatedAtDesc(userId);
-
         Challenge challenge = challengeRepository.save(Challenge.builder()
                 .userId(userId)
                 .period(period)
                 .goalTime(goalTime)
                 .build());
 
+        Optional<Challenge> previousChallenge = challengeRepository.findFirstByUserIdOrderByCreatedAtDesc(userId);
         if (previousChallenge.isPresent()) {
             List<AppGoalTimeRequest> previousApps = previousChallenge.get().getApps().stream()
                     .map(app -> new AppGoalTimeRequest(app.getAppCode(), app.getGoalTime()))
