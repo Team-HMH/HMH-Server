@@ -23,8 +23,6 @@ import sopt.org.hmh.domain.dailychallenge.domain.DailyChallenge;
 import sopt.org.hmh.domain.dailychallenge.domain.Status;
 import sopt.org.hmh.domain.dailychallenge.repository.DailyChallengeRepository;
 import sopt.org.hmh.domain.user.domain.User;
-import sopt.org.hmh.domain.user.domain.exception.UserError;
-import sopt.org.hmh.domain.user.domain.exception.UserException;
 import sopt.org.hmh.domain.user.service.UserService;
 
 import java.time.LocalDate;
@@ -32,7 +30,6 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -187,12 +184,6 @@ public class ChallengeService {
         }
         if (appTime > AppConstants.MAXIMUM_APP_TIME || appTime < AppConstants.MINIMUM_APP_TIME)
             throw new AppException(AppError.INVALID_TIME_RANGE);
-    }
-
-    @Deprecated
-    public Challenge findFirstByUserIdOrderByCreatedAtDescOrElseThrow(Long userId) {
-        return challengeRepository.findFirstByUserIdOrderByCreatedAtDesc(userId).orElseThrow(
-                () -> new ChallengeException(ChallengeError.CHALLENGE_NOT_FOUND));
     }
 
     public Challenge findByIdOrElseThrow(Long challengeId) {
