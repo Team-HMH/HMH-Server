@@ -103,7 +103,7 @@ public class ChallengeService {
     }
 
     public DailyChallengeResponse getDailyChallenge(Long userId) {
-        Challenge challenge = this.findFirstByUserIdOrderByCreatedAtDescOrElseThrow(userId);
+        Challenge challenge = findCurrentChallengeByUserId(userId);
 
         return DailyChallengeResponse.builder()
                 .status(Boolean.TRUE.equals(challenge.isChallengeFailedToday())
