@@ -23,6 +23,8 @@ import sopt.org.hmh.domain.dailychallenge.domain.DailyChallenge;
 import sopt.org.hmh.domain.dailychallenge.domain.Status;
 import sopt.org.hmh.domain.dailychallenge.repository.DailyChallengeRepository;
 import sopt.org.hmh.domain.user.domain.User;
+import sopt.org.hmh.domain.user.domain.exception.UserError;
+import sopt.org.hmh.domain.user.domain.exception.UserException;
 import sopt.org.hmh.domain.user.service.UserService;
 
 import java.time.LocalDate;
@@ -93,6 +95,11 @@ public class ChallengeService {
                 .apps(challenge.getApps().stream()
                         .map(app -> new AppGoalTimeResponse(app.getAppCode(), app.getGoalTime())).toList())
                 .build();
+    }
+
+    private Challenge findCurrentChallengeByUserId(Long userId) {
+        User user = userService.findByIdOrThrowException(userId);
+        return findByIdOrElseThrow(user.getCurrentChallengeId());
     }
 
     public DailyChallengeResponse getDailyChallenge(Long userId) {
