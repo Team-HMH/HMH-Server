@@ -81,7 +81,7 @@ public class ChallengeService {
     }
 
     public ChallengeResponse getChallenge(Long userId) {
-        Challenge challenge = this.findFirstByUserIdOrderByCreatedAtDescOrElseThrow(userId);
+        Challenge challenge = findCurrentChallengeByUserId(userId);
         Integer todayIndex = calculateTodayIndex(challenge.getCreatedAt(), challenge.getPeriod());
 
         return ChallengeResponse.builder()
