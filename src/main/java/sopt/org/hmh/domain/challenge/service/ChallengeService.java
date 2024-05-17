@@ -26,6 +26,7 @@ import sopt.org.hmh.domain.dailychallenge.repository.DailyChallengeRepository;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -74,9 +75,7 @@ public class ChallengeService {
 
     public ChallengeResponse getChallenge(Long userId) {
         Challenge challenge = this.findFirstByUserIdOrderByCreatedAtDescOrElseThrow(userId);
-        Integer todayIndex = Boolean.TRUE.equals(hasChallengePeriodEnded(challenge.getCreatedAt(), challenge.getPeriod()))
-                ? -1
-                : challenge.getHistoryDailyChallenges().size();
+        Integer todayIndex = calculateTodayIndex(challenge.getCreatedAt(), challenge.getPeriod());
 
         return ChallengeResponse.builder()
                 .period(challenge.getPeriod())
@@ -134,10 +133,9 @@ public class ChallengeService {
         challengeRepository.deleteByUserIdIn(expiredUserIdList);
     }
 
-    private Boolean hasChallengePeriodEnded(LocalDateTime challengeCreatedAt, Integer period) {
-        Duration duration = Duration.between(LocalDateTime.now(), challengeCreatedAt);
-        long daysDifference = duration.toDays();
-        return daysDifference >= period;
+    private Integer calculateTodayIndex(LocalDateTime challengeCreateAt, int period) {
+        int daysBetween = (int) ChronoUnit.DAYS.between(challengeCreateAt.toLocalDate(), LocalDate.now());
+        return (daysBetween >= period) ? -1 : daysBetween;
     }
 
     private void validateChallengePeriod(Integer period) {
