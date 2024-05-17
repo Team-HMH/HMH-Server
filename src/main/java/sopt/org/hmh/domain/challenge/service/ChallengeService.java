@@ -54,9 +54,11 @@ public class ChallengeService {
                 .goalTime(goalTime)
                 .build());
 
-        Optional<Challenge> previousChallenge = challengeRepository.findFirstByUserIdOrderByCreatedAtDesc(userId);
-        if (previousChallenge.isPresent()) {
-            List<AppGoalTimeRequest> previousApps = previousChallenge.get().getApps().stream()
+        User user = userService.findByIdOrThrowException(userId);
+        Long previousChallengeId = user.getCurrentChallengeId();
+        if (previousChallengeId != null) {
+            Challenge previousChallenge = findByIdOrElseThrow(previousChallengeId);
+            List<AppGoalTimeRequest> previousApps = previousChallenge.getApps().stream()
                     .map(app -> new AppGoalTimeRequest(app.getAppCode(), app.getGoalTime()))
                     .toList();
             addApps(challenge, previousApps, os);
@@ -74,7 +76,6 @@ public class ChallengeService {
         }
         dailyChallengeRepository.saveAll(dailyChallenges);
 
-        User user = userService.findByIdOrThrowException(userId);
         user.changeCurrentChallengeId(challenge.getId());
         
         return challenge;
