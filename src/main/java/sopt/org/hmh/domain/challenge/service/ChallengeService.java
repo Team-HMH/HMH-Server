@@ -74,7 +74,7 @@ public class ChallengeService {
         dailyChallengeRepository.saveAll(dailyChallenges);
 
         user.changeCurrentChallengeId(challenge.getId());
-        
+
         return challenge;
     }
 
@@ -93,11 +93,6 @@ public class ChallengeService {
                 .apps(challenge.getApps().stream()
                         .map(app -> new AppGoalTimeResponse(app.getAppCode(), app.getGoalTime())).toList())
                 .build();
-    }
-
-    private Challenge findCurrentChallengeByUserId(Long userId) {
-        User user = userService.findByIdOrThrowException(userId);
-        return findByIdOrElseThrow(user.getCurrentChallengeId());
     }
 
     public DailyChallengeResponse getDailyChallenge(Long userId) {
@@ -189,6 +184,11 @@ public class ChallengeService {
     public Challenge findByIdOrElseThrow(Long challengeId) {
         return challengeRepository.findById(challengeId).orElseThrow(
                 () -> new ChallengeException(ChallengeError.CHALLENGE_NOT_FOUND));
+    }
+
+    public Challenge findCurrentChallengeByUserId(Long userId) {
+        User user = userService.findByIdOrThrowException(userId);
+        return findByIdOrElseThrow(user.getCurrentChallengeId());
     }
 
     public List<AppWithGoalTime> getCurrentChallengeAppWithGoalTimeByChallengeId(Long challengeId) {
