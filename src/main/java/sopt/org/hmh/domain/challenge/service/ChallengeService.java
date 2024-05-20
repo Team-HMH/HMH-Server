@@ -21,9 +21,13 @@ import sopt.org.hmh.domain.challenge.dto.response.DailyChallengeResponse;
 import sopt.org.hmh.domain.challenge.repository.ChallengeRepository;
 import sopt.org.hmh.domain.dailychallenge.domain.DailyChallenge;
 import sopt.org.hmh.domain.dailychallenge.domain.Status;
+import sopt.org.hmh.domain.dailychallenge.repository.DailyChallengeRepository;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,13 +37,12 @@ public class ChallengeService {
 
     private final ChallengeRepository challengeRepository;
     private final AppWithGoalTimeRepository appWithGoalTimeRepository;
+    private final DailyChallengeRepository dailyChallengeRepository;
 
     @Transactional
     public Challenge addChallenge(Long userId, Integer period, Long goalTime, String os) {
         validateChallengePeriod(period);
         validateChallengeGoalTime(goalTime);
-
-        Optional<Challenge> previousChallenge = challengeRepository.findFirstByUserIdOrderByCreatedAtDesc(userId);
 
         Challenge challenge = challengeRepository.save(Challenge.builder()
                 .userId(userId)
@@ -47,20 +50,32 @@ public class ChallengeService {
                 .goalTime(goalTime)
                 .build());
 
+        Optional<Challenge> previousChallenge = challengeRepository.findFirstByUserIdOrderByCreatedAtDesc(userId);
         if (previousChallenge.isPresent()) {
             List<AppGoalTimeRequest> previousApps = previousChallenge.get().getApps().stream()
                     .map(app -> new AppGoalTimeRequest(app.getAppCode(), app.getGoalTime()))
                     .toList();
             addApps(challenge, previousApps, os);
         }
+
+        List<DailyChallenge> dailyChallenges = new ArrayList<>();
+        LocalDate startDate = challenge.getCreatedAt().toLocalDate();
+        for (int dayCount = 0; dayCount < period; dayCount++) {
+            DailyChallenge dailyChallenge = DailyChallenge.builder()
+                    .challengeDate(startDate.plusDays(dayCount))
+                    .challenge(challenge)
+                    .userId(userId)
+                    .goalTime(goalTime).build();
+            dailyChallenges.add(dailyChallenge);
+        }
+        dailyChallengeRepository.saveAll(dailyChallenges);
+
         return challenge;
     }
 
     public ChallengeResponse getChallenge(Long userId) {
         Challenge challenge = this.findFirstByUserIdOrderByCreatedAtDescOrElseThrow(userId);
-        Integer todayIndex = Boolean.TRUE.equals(hasChallengePeriodEnded(challenge.getCreatedAt(), challenge.getPeriod()))
-                ? -1
-                : challenge.getHistoryDailyChallenges().size();
+        Integer todayIndex = calculateTodayIndex(challenge.getCreatedAt(), challenge.getPeriod());
 
         return ChallengeResponse.builder()
                 .period(challenge.getPeriod())
@@ -118,10 +133,9 @@ public class ChallengeService {
         challengeRepository.deleteByUserIdIn(expiredUserIdList);
     }
 
-    private Boolean hasChallengePeriodEnded(LocalDateTime challengeCreatedAt, Integer period) {
-        Duration duration = Duration.between(LocalDateTime.now(), challengeCreatedAt);
-        long daysDifference = duration.toDays();
-        return daysDifference >= period;
+    private Integer calculateTodayIndex(LocalDateTime challengeCreateAt, int period) {
+        int daysBetween = (int) ChronoUnit.DAYS.between(challengeCreateAt.toLocalDate(), LocalDate.now());
+        return (daysBetween >= period) ? -1 : daysBetween;
     }
 
     private void validateChallengePeriod(Integer period) {
