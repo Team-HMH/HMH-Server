@@ -60,7 +60,7 @@ public class ChallengeController implements ChallengeApi {
     public ResponseEntity<BaseResponse<?>> orderAddApps(@UserId final Long userId,
                                                         @RequestHeader("OS") final String os,
                                                         @RequestBody final AppArrayGoalTimeRequest requests) {
-        Challenge challenge = challengeService.findFirstByUserIdOrderByCreatedAtDescOrElseThrow(userId);
+        Challenge challenge = challengeService.findCurrentChallengeByUserId(userId);
         challengeService.addApps(challenge, requests.apps(), os);
 
         return ResponseEntity
@@ -74,7 +74,7 @@ public class ChallengeController implements ChallengeApi {
     public ResponseEntity<BaseResponse<?>> orderRemoveApp(@UserId final Long userId,
                                                           @RequestHeader("OS") final String os,
                                                           @RequestBody final AppRemoveRequest request) {
-        Challenge challenge = challengeService.findFirstByUserIdOrderByCreatedAtDescOrElseThrow(userId);
+        Challenge challenge = challengeService.findCurrentChallengeByUserId(userId);
         challengeService.removeApp(challenge, request, os);
 
         return ResponseEntity

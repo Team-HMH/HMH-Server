@@ -1,6 +1,8 @@
 package sopt.org.hmh.domain.user.service;
 
 import java.util.List;
+import java.util.Optional;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,6 +12,8 @@ import sopt.org.hmh.domain.auth.exception.AuthError;
 import sopt.org.hmh.domain.auth.exception.AuthException;
 import sopt.org.hmh.domain.auth.repository.OnboardingInfoRepository;
 import sopt.org.hmh.domain.auth.repository.ProblemRepository;
+import sopt.org.hmh.domain.challenge.domain.exception.ChallengeError;
+import sopt.org.hmh.domain.challenge.domain.exception.ChallengeException;
 import sopt.org.hmh.domain.user.domain.OnboardingInfo;
 import sopt.org.hmh.domain.user.domain.OnboardingProblem;
 import sopt.org.hmh.domain.user.domain.User;
@@ -102,6 +106,7 @@ public class UserService {
     }
 
     public Long getCurrentChallengeIdByUserId(Long userId) {
-        return this.findByIdOrThrowException(userId).getCurrentChallengeId();
+        return Optional.ofNullable(this.findByIdOrThrowException(userId).getCurrentChallengeId())
+                .orElseThrow(() -> new UserException(UserError.NOT_FOUND_CURRENT_CHALLENGE_ID));
     }
 }
