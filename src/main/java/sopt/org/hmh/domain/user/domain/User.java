@@ -84,4 +84,8 @@ public class User extends BaseTimeEntity {
         this.point += earnedPoint;
         return this.point;
     }
+
+    public void changeCurrentChallengeId(Long currentChallengeId) {
+        this.currentChallengeId = currentChallengeId;
+    }
 }

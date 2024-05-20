@@ -22,8 +22,9 @@ import sopt.org.hmh.domain.challenge.repository.ChallengeRepository;
 import sopt.org.hmh.domain.dailychallenge.domain.DailyChallenge;
 import sopt.org.hmh.domain.dailychallenge.domain.Status;
 import sopt.org.hmh.domain.dailychallenge.repository.DailyChallengeRepository;
+import sopt.org.hmh.domain.user.domain.User;
+import sopt.org.hmh.domain.user.service.UserService;
 
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -38,6 +39,7 @@ public class ChallengeService {
     private final ChallengeRepository challengeRepository;
     private final AppWithGoalTimeRepository appWithGoalTimeRepository;
     private final DailyChallengeRepository dailyChallengeRepository;
+    private final UserService userService;
 
     @Transactional
     public Challenge addChallenge(Long userId, Integer period, Long goalTime, String os) {
@@ -70,6 +72,9 @@ public class ChallengeService {
         }
         dailyChallengeRepository.saveAll(dailyChallenges);
 
+        User user = userService.findByIdOrThrowException(userId);
+        user.changeCurrentChallengeId(challenge.getId());
+        
         return challenge;
     }
 
