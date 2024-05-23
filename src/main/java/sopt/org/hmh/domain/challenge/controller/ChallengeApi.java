@@ -8,7 +8,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import sopt.org.hmh.domain.app.dto.request.AppArrayGoalTimeRequest;
+import sopt.org.hmh.domain.app.dto.request.ChallengeAppArrayRequest;
 import sopt.org.hmh.domain.app.dto.request.AppRemoveRequest;
 import sopt.org.hmh.domain.challenge.dto.request.ChallengeRequest;
 import sopt.org.hmh.domain.challenge.dto.response.ChallengeResponse;
@@ -96,7 +96,7 @@ public interface ChallengeApi {
                             content = @Content)})
     ResponseEntity<BaseResponse<?>> orderAddApps(@UserId @Parameter(hidden = true) Long userId,
                                                  @RequestHeader("OS") String os,
-                                                 @RequestBody AppArrayGoalTimeRequest requests);
+                                                 @RequestBody ChallengeAppArrayRequest requests);
 
     @GetMapping("/app")
     @Operation(

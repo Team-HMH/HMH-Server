@@ -4,7 +4,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sopt.org.hmh.domain.app.domain.AppWithGoalTime;
+import sopt.org.hmh.domain.app.domain.ChallengeApp;
 import sopt.org.hmh.domain.app.service.AppService;
 import sopt.org.hmh.domain.challenge.service.ChallengeService;
 import sopt.org.hmh.domain.dailychallenge.domain.DailyChallenge;
@@ -26,7 +26,7 @@ public class DailyChallengeFacade {
             DailyChallenge dailyChallenge = dailyChallengeService.findByChallengeDateAndUserIdOrThrowException(request.challengeDate(), userId);
             dailyChallengeService.changeStatusByCurrentStatus(dailyChallenge);
             Long currentChallengeId = userService.getCurrentChallengeIdByUserId(userId);
-            List<AppWithGoalTime> currentChallengeApps = challengeService.getCurrentChallengeAppWithGoalTimeByChallengeId(currentChallengeId);
+            List<ChallengeApp> currentChallengeApps = challengeService.getCurrentChallengeAppByChallengeId(currentChallengeId);
             appService.addAppForHistory(currentChallengeApps, request.apps(), dailyChallenge, os);
         });
     }

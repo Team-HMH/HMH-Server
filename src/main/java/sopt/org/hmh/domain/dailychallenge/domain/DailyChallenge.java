@@ -9,7 +9,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.util.Assert;
-import sopt.org.hmh.domain.app.domain.AppWithUsageGoalTime;
+import sopt.org.hmh.domain.app.domain.HistoryApp;
 import sopt.org.hmh.global.common.domain.BaseTimeEntity;
 import sopt.org.hmh.domain.challenge.domain.Challenge;
 import java.util.List;
@@ -28,7 +28,7 @@ public class DailyChallenge extends BaseTimeEntity {
     private Challenge challenge;
 
     @OneToMany(mappedBy = "dailyChallenge", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<AppWithUsageGoalTime> apps;
+    private List<HistoryApp> apps;
 
     @Enumerated(EnumType.STRING)
     private Status status;
