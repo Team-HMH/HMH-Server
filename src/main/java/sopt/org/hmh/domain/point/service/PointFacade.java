@@ -1,16 +1,19 @@
 package sopt.org.hmh.domain.point.service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sopt.org.hmh.domain.challenge.domain.Challenge;
 import sopt.org.hmh.domain.challenge.domain.ChallengeConstants;
-import sopt.org.hmh.domain.point.dto.response.EarnPointResponse;
+import sopt.org.hmh.domain.challenge.service.ChallengeService;
+import sopt.org.hmh.domain.point.dto.response.*;
 import sopt.org.hmh.domain.dailychallenge.domain.DailyChallenge;
 import sopt.org.hmh.domain.dailychallenge.domain.Status;
 import sopt.org.hmh.domain.dailychallenge.service.DailyChallengeService;
-import sopt.org.hmh.domain.point.dto.response.UsagePointResponse;
-import sopt.org.hmh.domain.point.dto.response.UsePointResponse;
 import sopt.org.hmh.domain.user.domain.User;
 import sopt.org.hmh.domain.user.service.UserService;
 
@@ -21,6 +24,7 @@ public class PointFacade {
 
     private final UserService userService;
     private final DailyChallengeService dailyChallengeService;
+    private final ChallengeService challengeService;
 
     public UsePointResponse usePointAndChallengeFailed(Long userId, LocalDate challengeDate) {
         DailyChallenge dailyChallenge = dailyChallengeService.findByChallengeDateAndUserIdOrThrowException(challengeDate, userId);
@@ -50,5 +54,22 @@ public class PointFacade {
     @Transactional(readOnly = true)
     public UsagePointResponse getUsagePoint() {
         return new UsagePointResponse(ChallengeConstants.USAGE_POINT);
+    }
+
+    public ChallengePointStatusListResponse getChallengePointStatusList(Long userId) {
+        List<DailyChallenge> dailyChallenges = challengeService
+                .findCurrentChallengeByUserId(userId)
+                .getHistoryDailyChallenges();
+
+        List<ChallengePointStatusResponse> challengePointStatusResponseList = new ArrayList<>();
+        for (DailyChallenge dailyChallenge : dailyChallenges) {
+            challengePointStatusResponseList.add(
+                    new ChallengePointStatusResponse(
+                            dailyChallenge.getChallengeDate(),
+                            dailyChallenge.getStatus()
+                    ));
+        }
+
+        return new ChallengePointStatusListResponse(challengePointStatusResponseList);
     }
 }
