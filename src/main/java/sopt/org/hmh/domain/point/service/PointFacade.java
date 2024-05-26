@@ -70,6 +70,7 @@ public class PointFacade {
                     ));
         }
 
-        return new ChallengePointStatusListResponse(challengePointStatusResponseList);
+        return new ChallengePointStatusListResponse(userService.getUserInfo(userId).point(),
+                challengePointStatusResponseList);
     }
 }
