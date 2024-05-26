@@ -3,6 +3,7 @@ package sopt.org.hmh.domain.point.service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -61,14 +62,10 @@ public class PointFacade {
                 .findCurrentChallengeByUserId(userId)
                 .getHistoryDailyChallenges();
 
-        List<ChallengePointStatusResponse> challengePointStatusResponseList = new ArrayList<>();
-        for (DailyChallenge dailyChallenge : dailyChallenges) {
-            challengePointStatusResponseList.add(
-                    new ChallengePointStatusResponse(
-                            dailyChallenge.getChallengeDate(),
-                            dailyChallenge.getStatus()
-                    ));
-        }
+        List<ChallengePointStatusResponse> challengePointStatusResponseList = dailyChallenges.stream()
+                .map(dailyChallenge -> new ChallengePointStatusResponse(
+                        dailyChallenge.getChallengeDate(),
+                        dailyChallenge.getStatus())).toList();
 
         return new ChallengePointStatusListResponse(userService.getUserInfo(userId).point(),
                 challengePointStatusResponseList);
