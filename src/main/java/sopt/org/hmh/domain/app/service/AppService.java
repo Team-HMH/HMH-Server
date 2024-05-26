@@ -4,12 +4,12 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sopt.org.hmh.domain.app.domain.AppWithGoalTime;
-import sopt.org.hmh.domain.app.domain.AppWithUsageGoalTime;
+import sopt.org.hmh.domain.app.domain.ChallengeApp;
+import sopt.org.hmh.domain.app.domain.HistoryApp;
 import sopt.org.hmh.domain.app.domain.exception.AppError;
 import sopt.org.hmh.domain.app.domain.exception.AppException;
-import sopt.org.hmh.domain.app.dto.request.AppUsageTimeRequest;
-import sopt.org.hmh.domain.app.repository.AppWithUsageGoalTimeRepository;
+import sopt.org.hmh.domain.app.dto.request.HistoryAppRequest;
+import sopt.org.hmh.domain.app.repository.HistoryAppRepository;
 import sopt.org.hmh.domain.dailychallenge.domain.DailyChallenge;
 
 @Service
@@ -17,16 +17,16 @@ import sopt.org.hmh.domain.dailychallenge.domain.DailyChallenge;
 @Transactional
 public class AppService {
 
-    private final AppWithUsageGoalTimeRepository appWithUsageGoalTimeRepository;
+    private final HistoryAppRepository historyAppRepository;
 
-    public void addAppForHistory(List<AppWithGoalTime> currentChallengeApps, List<AppUsageTimeRequest> apps,
-            DailyChallenge dailyChallenge, String os) {
-        appWithUsageGoalTimeRepository.saveAll(supplementAdditionalInfo(currentChallengeApps, apps, dailyChallenge, os));
+    public void addAppForHistory(List<ChallengeApp> currentChallengeApps, List<HistoryAppRequest> apps,
+                                 DailyChallenge dailyChallenge, String os) {
+        historyAppRepository.saveAll(supplementAdditionalInfo(currentChallengeApps, apps, dailyChallenge, os));
     }
 
-    private List<AppWithUsageGoalTime> supplementAdditionalInfo(List<AppWithGoalTime> currentChallengeApps,
-            List<AppUsageTimeRequest> apps, DailyChallenge dailyChallenge, String os) {
-        return apps.stream().map(app -> AppWithUsageGoalTime.builder()
+    private List<HistoryApp> supplementAdditionalInfo(List<ChallengeApp> currentChallengeApps,
+                                                      List<HistoryAppRequest> apps, DailyChallenge dailyChallenge, String os) {
+        return apps.stream().map(app -> HistoryApp.builder()
                 .goalTime(this.getGoalTime(currentChallengeApps, app.appCode()))
                 .appCode(app.appCode())
                 .dailyChallenge(dailyChallenge)
@@ -36,11 +36,11 @@ public class AppService {
         ).toList();
     }
 
-    private Long getGoalTime(List<AppWithGoalTime> currentChallengeApps, String appCode) {
+    private Long getGoalTime(List<ChallengeApp> currentChallengeApps, String appCode) {
         return currentChallengeApps.stream()
                 .filter(currentChallengeApp -> currentChallengeApp.getAppCode().equals(appCode))
                 .findFirst()
-                .map(AppWithGoalTime::getGoalTime)
+                .map(ChallengeApp::getGoalTime)
                 .orElseThrow(() -> new AppException(AppError.APP_NOT_FOUND));
     }
 }

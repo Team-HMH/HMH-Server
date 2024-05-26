@@ -4,13 +4,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sopt.org.hmh.domain.app.domain.AppConstants;
-import sopt.org.hmh.domain.app.domain.AppWithGoalTime;
+import sopt.org.hmh.domain.app.domain.ChallengeApp;
 import sopt.org.hmh.domain.app.domain.exception.AppError;
 import sopt.org.hmh.domain.app.domain.exception.AppException;
 import sopt.org.hmh.domain.app.dto.request.AppRemoveRequest;
-import sopt.org.hmh.domain.app.dto.request.AppGoalTimeRequest;
-import sopt.org.hmh.domain.app.dto.response.AppGoalTimeResponse;
-import sopt.org.hmh.domain.app.repository.AppWithGoalTimeRepository;
+import sopt.org.hmh.domain.app.dto.request.ChallengeAppRequest;
+import sopt.org.hmh.domain.app.dto.response.ChallengeAppResponse;
+import sopt.org.hmh.domain.app.repository.ChallengeAppRepository;
 import sopt.org.hmh.domain.challenge.domain.Challenge;
 import sopt.org.hmh.domain.challenge.domain.ChallengeConstants;
 import sopt.org.hmh.domain.challenge.domain.ChallengeDay;
@@ -27,7 +27,6 @@ import sopt.org.hmh.domain.user.service.UserService;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +36,7 @@ import java.util.List;
 public class ChallengeService {
 
     private final ChallengeRepository challengeRepository;
-    private final AppWithGoalTimeRepository appWithGoalTimeRepository;
+    private final ChallengeAppRepository challengeAppRepository;
     private final DailyChallengeRepository dailyChallengeRepository;
     private final UserService userService;
 
@@ -56,8 +55,8 @@ public class ChallengeService {
         Long previousChallengeId = user.getCurrentChallengeId();
         if (previousChallengeId != null) {
             Challenge previousChallenge = findByIdOrElseThrow(previousChallengeId);
-            List<AppGoalTimeRequest> previousApps = previousChallenge.getApps().stream()
-                    .map(app -> new AppGoalTimeRequest(app.getAppCode(), app.getGoalTime()))
+            List<ChallengeAppRequest> previousApps = previousChallenge.getApps().stream()
+                    .map(app -> new ChallengeAppRequest(app.getAppCode(), app.getGoalTime()))
                     .toList();
             addApps(challenge, previousApps, os);
         }
@@ -93,7 +92,7 @@ public class ChallengeService {
                 .startDate(challenge.getCreatedAt().toLocalDate().toString())
                 .goalTime(challenge.getGoalTime())
                 .apps(challenge.getApps().stream()
-                        .map(app -> new AppGoalTimeResponse(app.getAppCode(), app.getGoalTime())).toList())
+                        .map(app -> new ChallengeAppResponse(app.getAppCode(), app.getGoalTime())).toList())
                 .build();
     }
 
@@ -106,33 +105,33 @@ public class ChallengeService {
                         : Status.NONE)
                 .goalTime(challenge.getGoalTime())
                 .apps(challenge.getApps().stream()
-                        .map(app -> new AppGoalTimeResponse(app.getAppCode(), app.getGoalTime())).toList())
+                        .map(app -> new ChallengeAppResponse(app.getAppCode(), app.getGoalTime())).toList())
                 .build();
     }
 
     @Transactional
     public void removeApp(Challenge challenge, AppRemoveRequest request, String os) {
         validateAppCode(request.appCode());
-        AppWithGoalTime appToRemove = appWithGoalTimeRepository
+        ChallengeApp appToRemove = challengeAppRepository
                 .findFirstByChallengeIdAndAppCodeAndOsOrElseThrow(challenge.getId(), request.appCode(), os);
-        appWithGoalTimeRepository.delete(appToRemove);
+        challengeAppRepository.delete(appToRemove);
     }
 
     @Transactional
-    public void addApps(Challenge challenge, List<AppGoalTimeRequest> requests, String os) {
-        List<AppWithGoalTime> appsToUpdate = requests.stream()
+    public void addApps(Challenge challenge, List<ChallengeAppRequest> requests, String os) {
+        List<ChallengeApp> appsToUpdate = requests.stream()
                 .map(request -> {
                     validateAppExist(challenge.getId(), request.appCode(), os);
                     validateAppCode(request.appCode());
                     validateAppTime(request.goalTime());
-                    return AppWithGoalTime.builder()
+                    return ChallengeApp.builder()
                             .challenge(challenge)
                             .appCode(request.appCode())
                             .goalTime(request.goalTime())
                             .os(os)
                             .build();
                 }).toList();
-        appWithGoalTimeRepository.saveAll(appsToUpdate);
+        challengeAppRepository.saveAll(appsToUpdate);
     }
 
     @Transactional
@@ -164,7 +163,7 @@ public class ChallengeService {
     }
 
     private void validateAppExist(Long challengeId, String appCode, String os) {
-        if (appWithGoalTimeRepository.existsByChallengeIdAndAppCodeAndOs(challengeId, appCode, os)) {
+        if (challengeAppRepository.existsByChallengeIdAndAppCodeAndOs(challengeId, appCode, os)) {
             throw new AppException(AppError.APP_EXIST_ALREADY);
         }
     }
@@ -193,7 +192,7 @@ public class ChallengeService {
         return findByIdOrElseThrow(user.getCurrentChallengeId());
     }
 
-    public List<AppWithGoalTime> getCurrentChallengeAppWithGoalTimeByChallengeId(Long challengeId) {
+    public List<ChallengeApp> getCurrentChallengeAppByChallengeId(Long challengeId) {
         return this.findByIdOrElseThrow(challengeId).getApps();
     }
 }

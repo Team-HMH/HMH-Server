@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sopt.org.hmh.domain.app.domain.exception.AppSuccess;
-import sopt.org.hmh.domain.app.dto.request.AppArrayGoalTimeRequest;
+import sopt.org.hmh.domain.app.dto.request.ChallengeAppArrayRequest;
 import sopt.org.hmh.domain.app.dto.request.AppRemoveRequest;
 import sopt.org.hmh.domain.challenge.domain.Challenge;
 import sopt.org.hmh.domain.challenge.domain.exception.ChallengeSuccess;
@@ -59,7 +59,7 @@ public class ChallengeController implements ChallengeApi {
     @Override
     public ResponseEntity<BaseResponse<?>> orderAddApps(@UserId final Long userId,
                                                         @RequestHeader("OS") final String os,
-                                                        @RequestBody final AppArrayGoalTimeRequest requests) {
+                                                        @RequestBody final ChallengeAppArrayRequest requests) {
         Challenge challenge = challengeService.findCurrentChallengeByUserId(userId);
         challengeService.addApps(challenge, requests.apps(), os);
 

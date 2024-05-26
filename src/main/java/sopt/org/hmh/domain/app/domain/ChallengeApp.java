@@ -10,7 +10,7 @@ import sopt.org.hmh.domain.challenge.domain.Challenge;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class AppWithGoalTime extends App {
+public class ChallengeApp extends App {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "challenge_id")
@@ -19,7 +19,7 @@ public class AppWithGoalTime extends App {
     private Long goalTime;
 
     @Builder
-    private AppWithGoalTime(Challenge challenge, String appCode, Long goalTime, String os) {
+    private ChallengeApp(Challenge challenge, String appCode, Long goalTime, String os) {
         this.challenge = challenge;
         this.os = os;
         this.appCode = appCode;
