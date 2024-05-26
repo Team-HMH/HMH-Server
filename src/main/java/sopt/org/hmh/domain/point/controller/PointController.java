@@ -25,7 +25,7 @@ public class PointController implements PointApi {
     private final PointFacade pointFacade;
 
     @Override
-    @PatchMapping("/list")
+    @GetMapping("/list")
     public ResponseEntity<BaseResponse<ChallengePointStatusListResponse>> orderGetChallengePointStatusList(
             @UserId final Long userId
     ) {
