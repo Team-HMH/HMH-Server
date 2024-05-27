@@ -1,6 +1,8 @@
 package sopt.org.hmh.domain.point.controller;
 
 import java.time.LocalDate;
+import java.util.List;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,9 +10,8 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import sopt.org.hmh.domain.point.dto.response.EarnPointResponse;
-import sopt.org.hmh.domain.point.dto.response.UsagePointResponse;
-import sopt.org.hmh.domain.point.dto.response.UsePointResponse;
+import sopt.org.hmh.domain.challenge.domain.Challenge;
+import sopt.org.hmh.domain.point.dto.response.*;
 import sopt.org.hmh.domain.point.exception.PointSuccess;
 import sopt.org.hmh.domain.point.service.PointFacade;
 import sopt.org.hmh.global.auth.UserId;
@@ -22,6 +23,18 @@ import sopt.org.hmh.global.common.response.BaseResponse;
 public class PointController implements PointApi {
 
     private final PointFacade pointFacade;
+
+    @Override
+    @GetMapping("/list")
+    public ResponseEntity<BaseResponse<ChallengePointStatusListResponse>> orderGetChallengePointStatusList(
+            @UserId final Long userId
+    ) {
+        return ResponseEntity
+                .status(PointSuccess.GET_CHALLENGE_POINT_STATUS_LIST_SUCCESS.getHttpStatus())
+                .body(BaseResponse.success(PointSuccess.GET_CHALLENGE_POINT_STATUS_LIST_SUCCESS,
+                        pointFacade.getChallengePointStatusList(userId)));
+
+    }
 
     @Override
     @PatchMapping("/use")
