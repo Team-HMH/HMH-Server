@@ -58,16 +58,17 @@ public class PointFacade {
     }
 
     public ChallengePointStatusListResponse getChallengePointStatusList(Long userId) {
-        List<DailyChallenge> dailyChallenges = challengeService
-                .findCurrentChallengeByUserId(userId)
-                .getHistoryDailyChallenges();
-
-        List<ChallengePointStatusResponse> challengePointStatusResponseList = dailyChallenges.stream()
+        Challenge challenge = challengeService.findCurrentChallengeByUserId(userId);
+        List<ChallengePointStatusResponse> challengePointStatusResponseList =
+                challenge.getHistoryDailyChallenges().stream()
                 .map(dailyChallenge -> new ChallengePointStatusResponse(
                         dailyChallenge.getChallengeDate(),
                         dailyChallenge.getStatus())).toList();
 
-        return new ChallengePointStatusListResponse(userService.getUserInfo(userId).point(),
-                challengePointStatusResponseList);
+        return new ChallengePointStatusListResponse(
+                userService.getUserInfo(userId).point(),
+                challenge.getPeriod(),
+                challengePointStatusResponseList
+        );
     }
 }
