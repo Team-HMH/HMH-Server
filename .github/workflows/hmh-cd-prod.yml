@@ -1,8 +1,8 @@
-name: 🚀 APPLICATION-DEPLOY!
+name: 🎉PROD-SERVER-DEPLOY🎉
 
 on:
   push:
-    branches: [ 'develop' ]
+    branches: [ 'main' ]
 
 jobs:
   build:
@@ -10,7 +10,7 @@ jobs:
     strategy:
       matrix:
         codedeploy-application-name: [ hmh-codedeploy-app ]
-        deployment-group-name: [ hmh-app-deploy-group ]
+        deployment-group-name: [ hmh-prod-deploy-group ]
         s3-bucket: [ hmh-server-bucket ]
 
     steps:
@@ -30,7 +30,7 @@ jobs:
         shell: bash
 
       - name: copy yml file
-        run: echo "${{ secrets.APPLICATION_YML }}" > ./src/main/resources/application.yml
+        run: echo "${{ secrets.APPLICATION_PROD_YML }}" > ./src/main/resources/application.yml
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
@@ -49,12 +49,12 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: 🚀 s3 upload
-        run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://${{matrix.s3-bucket}}/deploy/$GITHUB_SHA.zip
+        run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://${{matrix.s3-bucket}}/prod/deploy/$GITHUB_SHA.zip # 수정 고려
 
       - name: ☀️ CodeDeploy~!
         run: aws deploy create-deployment
           --application-name ${{matrix.codedeploy-application-name}}
           --deployment-group-name ${{matrix.deployment-group-name}}
-          --s3-location bucket=${{matrix.s3-bucket}},bundleType=zip,key=deploy/$GITHUB_SHA.zip
+          --s3-location bucket=${{matrix.s3-bucket}},bundleType=zip,key=prod/deploy/$GITHUB_SHA.zip
           --file-exists-behavior OVERWRITE
           --region ap-northeast-2

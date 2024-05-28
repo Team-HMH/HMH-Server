@@ -3,8 +3,8 @@ name: 🏭 APPLICATION-BUILD!
 on:
   pull_request:
     branches: [ "develop" ]
-  #push:
-    #branches: [ "develop" ]
+  push:
+    branches: [ "develop" ]
 
 permissions:
   contents: read
@@ -28,7 +28,7 @@ jobs:
           mkdir ./src/main/resources
           touch ./src/main/resources/application.yml
           
-          echo "${{ secrets.APPLICATION_YML }}" >> ./src/main/resources/application.yml
+          echo "${{ secrets.APPLICATION_DEV_YML }}" >> ./src/main/resources/application.yml
           
           cat ./src/main/resources/application.yml
         shell: bash
@@ -39,4 +39,4 @@ jobs:
 
       - name: Build with Gradle
         run: |
-          ./gradlew build -x test
+          ./gradlew clean build
