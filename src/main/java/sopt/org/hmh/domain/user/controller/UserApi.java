@@ -9,7 +9,7 @@ import sopt.org.hmh.global.common.response.BaseResponse;
 public interface UserApi {
 
     @Operation(summary = "로그아웃")
-    ResponseEntity<BaseResponse<?>> orderLogout(@UserId @Parameter(hidden = true) final Long userId);
+    ResponseEntity<BaseResponse<?>> orderLogout();
 
     @Operation(summary = "유저 정보 불러오기")
     ResponseEntity<BaseResponse<?>> orderGetUserInfo(@UserId @Parameter(hidden = true) final Long userId);

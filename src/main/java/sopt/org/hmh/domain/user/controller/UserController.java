@@ -22,8 +22,7 @@ public class UserController implements UserApi{
 
     @PostMapping("/logout")
     @Override
-    public ResponseEntity<BaseResponse<?>> orderLogout(@UserId final Long userId) {
-        userService.logout(userId);
+    public ResponseEntity<BaseResponse<?>> orderLogout() {
         return ResponseEntity
                 .status(UserSuccess.LOGOUT_SUCCESS.getHttpStatus())
                 .body(BaseResponse.success(UserSuccess.LOGOUT_SUCCESS, new EmptyJsonResponse()));
