@@ -11,8 +11,6 @@ import javax.crypto.SecretKey;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import sopt.org.hmh.global.auth.redis.RefreshToken;
-import sopt.org.hmh.global.auth.redis.TokenRepository;
 
 @Component
 @RequiredArgsConstructor
@@ -25,29 +23,17 @@ public class JwtGenerator {
     @Value("${jwt.refresh-token-expiration-time}")
     private Long REFRESH_TOKEN_EXPIRATION_TIME;
 
-    private final TokenRepository tokenRepository;
-
     public String generateToken(Long userId, boolean isRefreshToken) {
         final Date now = generateNowDate();
         final Date expiration = generateExpirationDate(isRefreshToken, now);
 
-        String token = Jwts.builder()
+        return Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
                 .setSubject(String.valueOf(userId))
                 .setIssuedAt(now)
                 .setExpiration(expiration)
                 .signWith(getSigningKey())
                 .compact();
-
-        if (isRefreshToken) {
-            tokenRepository.save(
-                    RefreshToken.builder()
-                            .userId(userId)
-                            .token(token)
-                            .expiration(REFRESH_TOKEN_EXPIRATION_TIME / 1000)
-                            .build());
-        }
-        return token;
     }
 
     public JwtParser getJwtParser() {
