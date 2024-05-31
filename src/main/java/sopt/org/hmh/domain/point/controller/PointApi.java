@@ -6,15 +6,12 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.time.LocalDate;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PatchMapping;
+import sopt.org.hmh.domain.point.dto.request.ChallengeDateRequest;
 import sopt.org.hmh.domain.point.dto.response.ChallengePointStatusListResponse;
 import sopt.org.hmh.domain.point.dto.response.EarnPointResponse;
 import sopt.org.hmh.domain.point.dto.response.UsagePointResponse;
 import sopt.org.hmh.domain.point.dto.response.UsePointResponse;
-import sopt.org.hmh.domain.point.exception.PointSuccess;
-import sopt.org.hmh.global.auth.UserId;
 import sopt.org.hmh.global.auth.jwt.JwtConstants;
 import sopt.org.hmh.global.common.response.BaseResponse;
 
@@ -54,7 +51,7 @@ public interface PointApi {
                             description = "서버 내부 오류입니다.",
                             content = @Content)})
     ResponseEntity<BaseResponse<UsePointResponse>> orderUsagePointAndChallengeFailed(
-            @Parameter(hidden = true) Long userId, LocalDate challengeDate);
+            @Parameter(hidden = true) Long userId, ChallengeDateRequest challengeDateRequest);
 
     @Operation(
             summary = "포인트 받기 API",
@@ -71,7 +68,7 @@ public interface PointApi {
                             description = "서버 내부 오류입니다.",
                             content = @Content)})
     ResponseEntity<BaseResponse<EarnPointResponse>> orderEarnPointAndChallengeEarned(
-            @Parameter(hidden = true) Long userId, LocalDate challengeDate);
+            @Parameter(hidden = true) Long userId, ChallengeDateRequest challengeDateRequest);
 
     @Operation(
             summary = "사용할 포인트 받기 API",
