@@ -6,7 +6,6 @@ import org.springframework.transaction.annotation.Transactional;
 import sopt.org.hmh.domain.auth.dto.response.ReissueResponse;
 import sopt.org.hmh.global.auth.jwt.exception.JwtError;
 import sopt.org.hmh.global.auth.jwt.exception.JwtException;
-import sopt.org.hmh.global.auth.redis.RedisManagerService;
 
 @Service
 @RequiredArgsConstructor
@@ -14,14 +13,12 @@ public class TokenService {
 
     private final JwtProvider jwtProvider;
     private final JwtValidator jwtValidator;
-    private final RedisManagerService redisManagerService;
 
     @Transactional
     public ReissueResponse reissueToken(String refreshToken) {
         String parsedRefreshToken = parseTokenString(refreshToken);
         Long userId = jwtProvider.getSubject(parsedRefreshToken);
         jwtValidator.validateRefreshToken(parsedRefreshToken);
-        redisManagerService.deleteRefreshToken(userId);
         return ReissueResponse.of(jwtProvider.issueToken(userId));
     }
 

@@ -12,8 +12,6 @@ import sopt.org.hmh.domain.auth.exception.AuthError;
 import sopt.org.hmh.domain.auth.exception.AuthException;
 import sopt.org.hmh.domain.auth.repository.OnboardingInfoRepository;
 import sopt.org.hmh.domain.auth.repository.ProblemRepository;
-import sopt.org.hmh.domain.challenge.domain.exception.ChallengeError;
-import sopt.org.hmh.domain.challenge.domain.exception.ChallengeException;
 import sopt.org.hmh.domain.user.domain.OnboardingInfo;
 import sopt.org.hmh.domain.user.domain.OnboardingProblem;
 import sopt.org.hmh.domain.user.domain.User;
@@ -22,7 +20,6 @@ import sopt.org.hmh.domain.user.domain.exception.UserError;
 import sopt.org.hmh.domain.user.domain.exception.UserException;
 import sopt.org.hmh.domain.user.dto.response.UserInfoResponse;
 import sopt.org.hmh.domain.user.repository.UserRepository;
-import sopt.org.hmh.global.auth.redis.RedisManagerService;
 import sopt.org.hmh.global.auth.social.SocialPlatform;
 
 @Service
@@ -30,7 +27,6 @@ import sopt.org.hmh.global.auth.social.SocialPlatform;
 @Transactional(readOnly = true)
 public class UserService {
 
-    private final RedisManagerService redisManagerService;
     private final UserRepository userRepository;
     private final OnboardingInfoRepository onboardingInfoRepository;
     private final ProblemRepository problemRepository;
@@ -38,12 +34,7 @@ public class UserService {
 
     @Transactional
     public void withdraw(Long userId) {
-        redisManagerService.deleteRefreshToken(userId);
         this.findByIdOrThrowException(userId).softDelete();
-    }
-
-    public void logout(Long userId) {
-        redisManagerService.deleteRefreshToken(userId);
     }
 
     public UserInfoResponse getUserInfo(Long userId) {
