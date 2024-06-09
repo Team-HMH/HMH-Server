@@ -1,9 +1,7 @@
 package sopt.org.hmh.domain.point.service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -50,11 +48,6 @@ public class PointFacade {
         return new EarnPointResponse(
                 user.increasePoint(ChallengeConstants.EARNED_POINT)
         );
-    }
-
-    @Transactional(readOnly = true)
-    public UsagePointResponse getUsagePoint() {
-        return new UsagePointResponse(ChallengeConstants.USAGE_POINT);
     }
 
     public ChallengePointStatusListResponse getChallengePointStatusList(Long userId) {
