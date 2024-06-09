@@ -25,12 +25,17 @@ public class DailyChallengeService {
     }
 
     public void validateDailyChallengeStatus(Status dailyChallengeStatus, List<Status> expectedStatuses) {
-        expectedStatuses.forEach(expected -> {
-            if (dailyChallengeStatus != expected) {
-                throw new DailyChallengeException(DailyChallengeError.DAILY_CHALLENGE_ALREADY_PROCESSED);
+        boolean isAlreadyProcessed = true;
+        for (Status expected : expectedStatuses) {
+            if (dailyChallengeStatus == expected) {
+                isAlreadyProcessed = false;
+                break;
             }
-        });
+        }
 
+        if (isAlreadyProcessed) {
+            throw new DailyChallengeException(DailyChallengeError.DAILY_CHALLENGE_ALREADY_PROCESSED);
+        }
     }
 
     public void changeStatusByCurrentStatus(DailyChallenge dailyChallenge) {
