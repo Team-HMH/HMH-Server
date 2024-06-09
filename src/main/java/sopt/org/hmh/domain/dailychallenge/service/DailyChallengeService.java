@@ -1,6 +1,7 @@
 package sopt.org.hmh.domain.dailychallenge.service;
 
 import java.time.LocalDate;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -8,6 +9,7 @@ import sopt.org.hmh.domain.dailychallenge.domain.DailyChallenge;
 import sopt.org.hmh.domain.dailychallenge.domain.Status;
 import sopt.org.hmh.domain.dailychallenge.domain.exception.DailyChallengeError;
 import sopt.org.hmh.domain.dailychallenge.domain.exception.DailyChallengeException;
+import sopt.org.hmh.domain.dailychallenge.dto.request.FinishedDailyChallengeStatusListRequest;
 import sopt.org.hmh.domain.dailychallenge.repository.DailyChallengeRepository;
 
 @Service
@@ -22,8 +24,16 @@ public class DailyChallengeService {
                 .orElseThrow(() -> new DailyChallengeException(DailyChallengeError.DAILY_CHALLENGE_NOT_FOUND));
     }
 
-    public void validateDailyChallengeStatus(DailyChallenge dailyChallenge, Status expected) {
-        if (dailyChallenge.getStatus() != expected) {
+    public void validateDailyChallengeStatus(Status dailyChallengeStatus, List<Status> expectedStatuses) {
+        boolean isAlreadyProcessed = true;
+        for (Status expected : expectedStatuses) {
+            if (dailyChallengeStatus == expected) {
+                isAlreadyProcessed = false;
+                break;
+            }
+        }
+
+        if (isAlreadyProcessed) {
             throw new DailyChallengeException(DailyChallengeError.DAILY_CHALLENGE_ALREADY_PROCESSED);
         }
     }
@@ -41,5 +51,18 @@ public class DailyChallengeService {
             return;
         }
         throw new DailyChallengeException(DailyChallengeError.DAILY_CHALLENGE_ALREADY_PROCESSED);
+    }
+
+    public void changeDailyChallengeStatusByIsSuccess(Long userId, FinishedDailyChallengeStatusListRequest requests) {
+        requests.finishedDailyChallenges().forEach(request -> {
+            DailyChallenge dailyChallenge = this.findByChallengeDateAndUserIdOrThrowException(request.challengeDate(), userId);
+            if (request.isSuccess()) {
+                this.validateDailyChallengeStatus(dailyChallenge.getStatus(), List.of(Status.NONE));
+                dailyChallenge.changeStatus(Status.UNEARNED);
+            } else {
+                this.validateDailyChallengeStatus(dailyChallenge.getStatus(), List.of(Status.NONE, Status.FAILURE));
+                dailyChallenge.changeStatus(Status.FAILURE);
+            }
+        });
     }
 }

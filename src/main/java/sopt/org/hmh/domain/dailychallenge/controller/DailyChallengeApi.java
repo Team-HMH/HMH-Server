@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import sopt.org.hmh.domain.dailychallenge.dto.request.FinishedDailyChallengeListRequest;
+import sopt.org.hmh.domain.dailychallenge.dto.request.FinishedDailyChallengeStatusListRequest;
 import sopt.org.hmh.global.auth.jwt.JwtConstants;
 import sopt.org.hmh.global.common.response.BaseResponse;
 import sopt.org.hmh.global.common.response.EmptyJsonResponse;
@@ -33,6 +34,13 @@ public interface DailyChallengeApi {
     ResponseEntity<BaseResponse<EmptyJsonResponse>> orderAddHistoryDailyChallenge(
             @Parameter(hidden = true) final Long userId,
             final String os,
-            final FinishedDailyChallengeListRequest request);
+            final FinishedDailyChallengeListRequest request
+    );
+
+    ResponseEntity<BaseResponse<EmptyJsonResponse>> orderChangeStatusDailyChallenge(
+            @Parameter(hidden = true) final Long userId,
+            final String os,
+            final FinishedDailyChallengeStatusListRequest request
+    );
 }
 
