@@ -6,5 +6,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public abstract class AppConstants {
     public static final Long MINIMUM_APP_TIME = 0L;
-    public static final Long MAXIMUM_APP_TIME = 3659000L;
+    public static final Long MAXIMUM_APP_TIME = 21_600_000L; // 6시간
 }
