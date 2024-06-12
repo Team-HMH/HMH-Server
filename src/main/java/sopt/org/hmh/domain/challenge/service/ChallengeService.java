@@ -120,7 +120,6 @@ public class ChallengeService {
         List<ChallengeApp> appsToUpdate = requests.stream()
                 .map(request -> {
                     validateAppExist(challenge.getId(), request.appCode(), os);
-                    validateAppTime(request.goalTime());
                     return ChallengeApp.builder()
                             .challenge(challenge)
                             .appCode(request.appCode())
@@ -145,14 +144,6 @@ public class ChallengeService {
         if (challengeAppRepository.existsByChallengeIdAndAppCodeAndOs(challengeId, appCode, os)) {
             throw new AppException(AppError.APP_EXIST_ALREADY);
         }
-    }
-
-    private void validateAppTime(Long appTime) {
-        if (appTime == null) {
-            throw new AppException(AppError.INVALID_TIME_NULL);
-        }
-        if (appTime > AppConstants.MAXIMUM_APP_TIME || appTime < AppConstants.MINIMUM_APP_TIME)
-            throw new AppException(AppError.INVALID_TIME_RANGE);
     }
 
     public Challenge findByIdOrElseThrow(Long challengeId) {
