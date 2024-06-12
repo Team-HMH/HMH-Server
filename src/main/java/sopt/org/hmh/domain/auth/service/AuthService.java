@@ -52,8 +52,7 @@ public class AuthService {
 
         User user = userService.addUser(socialPlatform, socialId, request.name());
 
-        Challenge challenge = challengeService.addChallenge(user.getId(), request.challengeSignUpRequest().period(),
-                request.challengeSignUpRequest().goalTime(), os);
+        Challenge challenge = challengeService.addChallenge(user.getId(), request.toChallengeRequest() , os);
         challengeService.addApps(challenge, request.challengeSignUpRequest().apps(), os);
         
         userService.registerOnboardingInfo(request);

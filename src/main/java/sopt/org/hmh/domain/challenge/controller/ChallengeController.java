@@ -28,7 +28,7 @@ public class ChallengeController implements ChallengeApi {
     public ResponseEntity<BaseResponse<?>> orderAddChallenge(@UserId final Long userId,
                                                              @RequestHeader("OS") final String os,
                                                              @RequestBody final ChallengeRequest request) {
-        challengeService.addChallenge(userId, request.period(), request.goalTime(), os);
+        challengeService.addChallenge(userId, request, os);
 
         return ResponseEntity
                 .status(ChallengeSuccess.ADD_CHALLENGE_SUCCESS.getHttpStatus())
