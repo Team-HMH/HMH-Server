@@ -12,10 +12,9 @@ import sopt.org.hmh.domain.app.dto.request.ChallengeAppRequest;
 import sopt.org.hmh.domain.app.dto.response.ChallengeAppResponse;
 import sopt.org.hmh.domain.app.repository.ChallengeAppRepository;
 import sopt.org.hmh.domain.challenge.domain.Challenge;
-import sopt.org.hmh.domain.challenge.domain.ChallengeConstants;
-import sopt.org.hmh.domain.challenge.domain.ChallengeDay;
 import sopt.org.hmh.domain.challenge.domain.exception.ChallengeError;
 import sopt.org.hmh.domain.challenge.domain.exception.ChallengeException;
+import sopt.org.hmh.domain.challenge.dto.request.ChallengeRequest;
 import sopt.org.hmh.domain.challenge.dto.response.ChallengeResponse;
 import sopt.org.hmh.domain.challenge.dto.response.DailyChallengeResponse;
 import sopt.org.hmh.domain.challenge.repository.ChallengeRepository;
@@ -41,9 +40,9 @@ public class ChallengeService {
     private final UserService userService;
 
     @Transactional
-    public Challenge addChallenge(Long userId, Integer period, Long goalTime, String os) {
-        validateChallengePeriod(period);
-        validateChallengeGoalTime(goalTime);
+    public Challenge addChallenge(Long userId, ChallengeRequest challengeRequest, String os) {
+        Integer period = challengeRequest.period();
+        Long goalTime = challengeRequest.goalTime();
 
         Challenge challenge = challengeRepository.save(Challenge.builder()
                 .userId(userId)
@@ -142,24 +141,6 @@ public class ChallengeService {
     private Integer calculateTodayIndex(LocalDateTime challengeCreateAt, int period) {
         int daysBetween = (int) ChronoUnit.DAYS.between(challengeCreateAt.toLocalDate(), LocalDate.now());
         return (daysBetween >= period) ? -1 : daysBetween;
-    }
-
-    private void validateChallengePeriod(Integer period) {
-        if (period == null) {
-            throw new ChallengeException(ChallengeError.INVALID_PERIOD_NULL);
-        }
-        if (period != ChallengeDay.DAYS7.getValue() && period != ChallengeDay.DAYS14.getValue() && period != ChallengeDay.DAYS20.getValue() && period != ChallengeDay.DAYS30.getValue()) {
-            throw new ChallengeException(ChallengeError.INVALID_PERIOD_NUMERIC);
-        }
-    }
-
-    private void validateChallengeGoalTime(Long goalTime) {
-        if (goalTime == null) {
-            throw new ChallengeException(ChallengeError.INVALID_GOAL_TIME_NULL);
-        }
-        if (goalTime < ChallengeConstants.MINIMUM_GOAL_TIME || goalTime > ChallengeConstants.MAXIMUM_GOAL_TIME) {
-            throw new ChallengeException(ChallengeError.INVALID_GOAL_TIME_NUMERIC);
-        }
     }
 
     private void validateAppExist(Long challengeId, String appCode, String os) {
