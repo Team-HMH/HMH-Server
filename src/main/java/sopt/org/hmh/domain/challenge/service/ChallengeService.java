@@ -110,7 +110,6 @@ public class ChallengeService {
 
     @Transactional
     public void removeApp(Challenge challenge, AppRemoveRequest request, String os) {
-        validateAppCode(request.appCode());
         ChallengeApp appToRemove = challengeAppRepository
                 .findFirstByChallengeIdAndAppCodeAndOsOrElseThrow(challenge.getId(), request.appCode(), os);
         challengeAppRepository.delete(appToRemove);
@@ -121,7 +120,6 @@ public class ChallengeService {
         List<ChallengeApp> appsToUpdate = requests.stream()
                 .map(request -> {
                     validateAppExist(challenge.getId(), request.appCode(), os);
-                    validateAppCode(request.appCode());
                     validateAppTime(request.goalTime());
                     return ChallengeApp.builder()
                             .challenge(challenge)
@@ -146,12 +144,6 @@ public class ChallengeService {
     private void validateAppExist(Long challengeId, String appCode, String os) {
         if (challengeAppRepository.existsByChallengeIdAndAppCodeAndOs(challengeId, appCode, os)) {
             throw new AppException(AppError.APP_EXIST_ALREADY);
-        }
-    }
-
-    private void validateAppCode(String appCode) {
-        if (appCode.isEmpty()) {
-            throw new AppException(AppError.INVALID_APP_CODE_NULL);
         }
     }
 
