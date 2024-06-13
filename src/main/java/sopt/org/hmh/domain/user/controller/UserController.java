@@ -1,15 +1,17 @@
 package sopt.org.hmh.domain.user.controller;
 
+import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import sopt.org.hmh.domain.user.domain.exception.UserSuccess;
-import sopt.org.hmh.domain.user.dto.request.UserRequest.LockCheckDateRequest;
 import sopt.org.hmh.domain.user.dto.request.UserRequest.LockDateRequest;
 import sopt.org.hmh.domain.user.dto.response.UserResponse.IsLockTodayResponse;
 import sopt.org.hmh.domain.user.dto.response.UserResponse.UserInfoResponse;
@@ -71,11 +73,12 @@ public class UserController implements UserApi {
     @GetMapping("/daily/lock")
     @Override
     public ResponseEntity<BaseResponse<IsLockTodayResponse>> orderGetRecentLockDate(
-            @UserId final Long userId, @RequestBody final LockCheckDateRequest request) {
+            @UserId final Long userId,
+            @RequestParam(name = "lockCheckDate") @DateTimeFormat(pattern = "yyyy-MM-dd") final LocalDate lockCheckDate) {
         return ResponseEntity
                 .status(UserSuccess.GET_RECENT_LOCK_DATE_SUCCESS.getHttpStatus())
                 .body(BaseResponse.success(UserSuccess.GET_RECENT_LOCK_DATE_SUCCESS,
-                        userService.checkIsTodayLock(userId, request.lockCheckDate())));
+                        userService.checkIsTodayLock(userId, lockCheckDate)));
     }
 
 }

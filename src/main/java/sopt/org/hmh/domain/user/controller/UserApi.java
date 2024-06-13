@@ -2,13 +2,11 @@ package sopt.org.hmh.domain.user.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import java.time.LocalDate;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import sopt.org.hmh.domain.user.dto.request.UserRequest.LockCheckDateRequest;
 import sopt.org.hmh.domain.user.dto.request.UserRequest.LockDateRequest;
 import sopt.org.hmh.domain.user.dto.response.UserResponse.IsLockTodayResponse;
 import sopt.org.hmh.domain.user.dto.response.UserResponse.UserInfoResponse;
-import sopt.org.hmh.global.auth.UserId;
 import sopt.org.hmh.global.common.response.BaseResponse;
 import sopt.org.hmh.global.common.response.EmptyJsonResponse;
 
@@ -32,6 +30,6 @@ public interface UserApi {
 
     @Operation(summary = "당일 잠금 여부 확인")
     ResponseEntity<BaseResponse<IsLockTodayResponse>> orderGetRecentLockDate(
-            @UserId final Long userId, @RequestBody final LockCheckDateRequest request);
+            @Parameter(hidden = true) final Long userId, final LocalDate lockCheckDate);
 
 }
