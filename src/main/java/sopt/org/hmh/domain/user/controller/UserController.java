@@ -1,5 +1,6 @@
 package sopt.org.hmh.domain.user.controller;
 
+import jakarta.validation.Valid;
 import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -63,7 +64,7 @@ public class UserController implements UserApi {
     @PostMapping("/daily/lock")
     @Override
     public ResponseEntity<BaseResponse<EmptyJsonResponse>> orderChangeRecentLockDate(
-            @UserId final Long userId, @RequestBody final LockDateRequest request) {
+            @UserId final Long userId, @Valid @RequestBody final LockDateRequest request) {
         userService.changeRecentLockDate(userId, request.lockDate());
         return ResponseEntity
                 .status(UserSuccess.CHANGE_RECENT_LOCK_DATE_SUCCESS.getHttpStatus())
