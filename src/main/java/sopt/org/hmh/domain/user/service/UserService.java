@@ -19,7 +19,8 @@ import sopt.org.hmh.domain.user.domain.User;
 import sopt.org.hmh.domain.user.domain.UserConstants;
 import sopt.org.hmh.domain.user.domain.exception.UserError;
 import sopt.org.hmh.domain.user.domain.exception.UserException;
-import sopt.org.hmh.domain.user.dto.response.UserInfoResponse;
+import sopt.org.hmh.domain.user.dto.response.UserResponse.IsLockTodayResponse;
+import sopt.org.hmh.domain.user.dto.response.UserResponse.UserInfoResponse;
 import sopt.org.hmh.domain.user.repository.UserRepository;
 import sopt.org.hmh.global.auth.social.SocialPlatform;
 
@@ -104,5 +105,9 @@ public class UserService {
 
     public void changeRecentLockDate(Long userId, LocalDate localDate) {
         this.findByIdOrThrowException(userId).changeRecentLockDate(localDate);
+    }
+
+    public IsLockTodayResponse checkIsTodayLock(Long userId, LocalDate lockCheckDate) {
+        return new IsLockTodayResponse(this.findByIdOrThrowException(userId).getRecentLockDate().equals(lockCheckDate));
     }
 }
