@@ -12,6 +12,8 @@ public enum UserSuccess implements SuccessBase {
     GET_USER_POINT_SUCCESS(HttpStatus.OK, "유저의 포인트 정보를 불러오는데에 성공했습니다."),
     LOGOUT_SUCCESS(HttpStatus.OK, "로그아웃에 성공했습니다."),
     WITHDRAW_SUCCESS(HttpStatus.OK, "회원 탈퇴를 성공하였습니다."),
+    CHANGE_RECENT_LOCK_DATE_SUCCESS(HttpStatus.OK, "당일 잠금 여부 전송에 성공했습니다."),
+    GET_RECENT_LOCK_DATE_SUCCESS(HttpStatus.OK, "당일 잠금 여부 확인에 성공했습니다."),
     ;
 
     private final HttpStatus status;

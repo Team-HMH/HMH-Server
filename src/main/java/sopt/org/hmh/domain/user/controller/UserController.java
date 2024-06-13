@@ -64,8 +64,8 @@ public class UserController implements UserApi {
             @UserId final Long userId, @RequestBody final LockDateRequest request) {
         userService.changeRecentLockDate(userId, request.lockDate());
         return ResponseEntity
-                .status(UserSuccess.GET_USER_POINT_SUCCESS.getHttpStatus())
-                .body(BaseResponse.success(UserSuccess.GET_USER_POINT_SUCCESS, new EmptyJsonResponse()));
+                .status(UserSuccess.CHANGE_RECENT_LOCK_DATE_SUCCESS.getHttpStatus())
+                .body(BaseResponse.success(UserSuccess.CHANGE_RECENT_LOCK_DATE_SUCCESS, new EmptyJsonResponse()));
     }
 
     @GetMapping("/daily/lock")
@@ -73,8 +73,8 @@ public class UserController implements UserApi {
     public ResponseEntity<BaseResponse<IsLockTodayResponse>> orderGetRecentLockDate(
             @UserId final Long userId, @RequestBody final LockCheckDateRequest request) {
         return ResponseEntity
-                .status(UserSuccess.GET_USER_POINT_SUCCESS.getHttpStatus())
-                .body(BaseResponse.success(UserSuccess.GET_USER_POINT_SUCCESS,
+                .status(UserSuccess.GET_RECENT_LOCK_DATE_SUCCESS.getHttpStatus())
+                .body(BaseResponse.success(UserSuccess.GET_RECENT_LOCK_DATE_SUCCESS,
                         userService.checkIsTodayLock(userId, request.lockCheckDate())));
     }
 
