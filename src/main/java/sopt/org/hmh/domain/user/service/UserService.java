@@ -103,11 +103,18 @@ public class UserService {
                 .orElseThrow(() -> new UserException(UserError.NOT_FOUND_CURRENT_CHALLENGE_ID));
     }
 
+    @Transactional
     public void changeRecentLockDate(Long userId, LocalDate localDate) {
         this.findByIdOrThrowException(userId).changeRecentLockDate(localDate);
     }
 
     public IsLockTodayResponse checkIsTodayLock(Long userId, LocalDate lockCheckDate) {
-        return new IsLockTodayResponse(this.findByIdOrThrowException(userId).getRecentLockDate().equals(lockCheckDate));
+        LocalDate userRecentLockDate = this.findByIdOrThrowException(userId).getRecentLockDate();
+
+        if (userRecentLockDate == null) {
+            return new IsLockTodayResponse(false);
+        }
+
+        return new IsLockTodayResponse(userRecentLockDate.equals(lockCheckDate));
     }
 }
