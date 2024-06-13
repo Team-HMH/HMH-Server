@@ -1,5 +1,6 @@
 package sopt.org.hmh.domain.user.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -99,5 +100,9 @@ public class UserService {
     public Long getCurrentChallengeIdByUserId(Long userId) {
         return Optional.ofNullable(this.findByIdOrThrowException(userId).getCurrentChallengeId())
                 .orElseThrow(() -> new UserException(UserError.NOT_FOUND_CURRENT_CHALLENGE_ID));
+    }
+
+    public void changeRecentLockDate(Long userId, LocalDate localDate) {
+        this.findByIdOrThrowException(userId).changeRecentLockDate(localDate);
     }
 }
