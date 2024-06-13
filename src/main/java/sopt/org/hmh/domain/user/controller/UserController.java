@@ -9,8 +9,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import sopt.org.hmh.domain.user.domain.exception.UserSuccess;
+import sopt.org.hmh.domain.user.dto.request.UserRequest.LockCheckDateRequest;
 import sopt.org.hmh.domain.user.dto.request.UserRequest.LockDateRequest;
-import sopt.org.hmh.domain.user.dto.response.UserInfoResponse;
+import sopt.org.hmh.domain.user.dto.response.UserResponse.IsLockTodayResponse;
+import sopt.org.hmh.domain.user.dto.response.UserResponse.UserInfoResponse;
 import sopt.org.hmh.domain.user.service.UserService;
 import sopt.org.hmh.global.auth.UserId;
 import sopt.org.hmh.global.common.response.BaseResponse;
@@ -19,7 +21,7 @@ import sopt.org.hmh.global.common.response.EmptyJsonResponse;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/user")
-public class UserController implements UserApi{
+public class UserController implements UserApi {
 
     private final UserService userService;
 
@@ -44,7 +46,8 @@ public class UserController implements UserApi{
     public ResponseEntity<BaseResponse<Integer>> orderGetUserPoint(@UserId final Long userId) {
         return ResponseEntity
                 .status(UserSuccess.GET_USER_POINT_SUCCESS.getHttpStatus())
-                .body(BaseResponse.success(UserSuccess.GET_USER_POINT_SUCCESS, userService.getUserInfo(userId).point()));
+                .body(BaseResponse.success(UserSuccess.GET_USER_POINT_SUCCESS,
+                        userService.getUserInfo(userId).point()));
     }
 
     @DeleteMapping
@@ -62,7 +65,17 @@ public class UserController implements UserApi{
         userService.changeRecentLockDate(userId, request.lockDate());
         return ResponseEntity
                 .status(UserSuccess.GET_USER_POINT_SUCCESS.getHttpStatus())
-                .body(BaseResponse.success(UserSuccess.GET_USER_POINT_SUCCESS,new EmptyJsonResponse()));
+                .body(BaseResponse.success(UserSuccess.GET_USER_POINT_SUCCESS, new EmptyJsonResponse()));
+    }
+
+    @GetMapping("/daily/lock")
+    @Override
+    public ResponseEntity<BaseResponse<IsLockTodayResponse>> orderGetRecentLockDate(
+            @UserId final Long userId, @RequestBody final LockCheckDateRequest request) {
+        return ResponseEntity
+                .status(UserSuccess.GET_USER_POINT_SUCCESS.getHttpStatus())
+                .body(BaseResponse.success(UserSuccess.GET_USER_POINT_SUCCESS,
+                        userService.checkIsTodayLock(userId, request.lockCheckDate())));
     }
 
 }

@@ -13,4 +13,10 @@ public class UserRequest {
             LocalDate lockDate
     ) {
     }
+
+    public record LockCheckDateRequest(
+            @DateTimeFormat(pattern = "yyyy-MM-dd")
+            LocalDate lockCheckDate
+    ) {
+    }
 }
