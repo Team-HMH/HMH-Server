@@ -100,9 +100,6 @@ public class ChallengeService {
         Challenge challenge = findCurrentChallengeByUserId(userId);
 
         return DailyChallengeResponse.builder()
-                .status(Boolean.TRUE.equals(challenge.isChallengeFailedToday())
-                        ? Status.FAILURE
-                        : Status.NONE)
                 .goalTime(challenge.getGoalTime())
                 .apps(challenge.getApps().stream()
                         .map(app -> new ChallengeAppResponse(app.getAppCode(), app.getGoalTime())).toList())
