@@ -11,6 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Min;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -44,6 +45,8 @@ public class User extends BaseTimeEntity {
 
     @Column(columnDefinition = "TEXT")
     private String profileImageUrl;
+
+    private LocalDate recentLockDate;
 
     private boolean isDeleted = false;
     private LocalDateTime deletedAt;
@@ -87,5 +90,9 @@ public class User extends BaseTimeEntity {
 
     public void changeCurrentChallengeId(Long currentChallengeId) {
         this.currentChallengeId = currentChallengeId;
+    }
+
+    public void changeRecentLockDate(LocalDate recentLockDate) {
+        this.recentLockDate = recentLockDate;
     }
 }

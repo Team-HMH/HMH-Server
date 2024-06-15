@@ -49,7 +49,7 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: 🚀 s3 upload
-        run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://${{matrix.s3-bucket}}/prod/deploy/$GITHUB_SHA.zip # 수정 고려
+        run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://${{matrix.s3-bucket}}/prod/deploy/$GITHUB_SHA.zip
 
       - name: ☀️ CodeDeploy~!
         run: aws deploy create-deployment

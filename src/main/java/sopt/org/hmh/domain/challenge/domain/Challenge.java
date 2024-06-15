@@ -26,8 +26,6 @@ public class Challenge extends BaseTimeEntity {
     private Integer period;
     private Long goalTime;
 
-    private boolean isChallengeFailedToday;
-
     @OneToMany(mappedBy = "challenge", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<ChallengeApp> apps = new ArrayList<>();
 
@@ -39,7 +37,6 @@ public class Challenge extends BaseTimeEntity {
         this.period = period;
         this.userId = userId;
         this.goalTime = goalTime;
-        this.isChallengeFailedToday = false;
         this.apps = apps;
     }
 }
