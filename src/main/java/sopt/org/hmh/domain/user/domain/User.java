@@ -11,6 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
@@ -32,13 +33,12 @@ public class User extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
     private String name;
 
     private Long currentChallengeId;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @NotNull(message = "소셜 플랫폼은 null일 수 없습니다.")
     private SocialPlatform socialPlatform;
 
     @Column(unique = true)

@@ -5,6 +5,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 
 @Getter
@@ -15,9 +16,9 @@ public abstract class App {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @NotNull(message = "os는 null일 수 없습니다.")
     protected String os;
 
-    @Column(nullable = false)
+    @NotNull(message = "appCode는 null일 수 없습니다.")
     protected String appCode;
 }

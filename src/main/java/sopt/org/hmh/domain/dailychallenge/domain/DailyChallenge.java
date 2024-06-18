@@ -3,6 +3,7 @@ package sopt.org.hmh.domain.dailychallenge.domain;
 import static jakarta.persistence.GenerationType.*;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -25,31 +26,27 @@ public class DailyChallenge extends BaseTimeEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "challenge_id")
+    @NotNull(message = "챌린지는 null일 수 없습니다.")
     private Challenge challenge;
 
     @OneToMany(mappedBy = "dailyChallenge", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<HistoryApp> apps;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @NotNull(message = "status값은 null일 수 없습니다.")
     private Status status;
 
-    @Column(nullable = false)
+    @NotNull(message = "유저 아이디는 null일 수 없습니다.")
     private Long userId;
 
-    @Column(nullable = false)
+    @NotNull(message = "목표 시간은 null일 수 없습니다.")
     private Long goalTime;
 
-    @Column(nullable = false)
+    @NotNull(message = "챌린지 날짜는 null일 수 없습니다.")
     private LocalDate challengeDate;
 
     @Builder
     DailyChallenge(Challenge challenge, Long userId, Long goalTime, LocalDate challengeDate) {
-        Assert.notNull(challenge, "Challenge must not be null");
-        Assert.notNull(userId, "UserId must not be null");
-        Assert.notNull(goalTime, "GoalTime must not be null");
-        Assert.notNull(challengeDate, "ChallengeDate must not be null");
-
         this.challenge = challenge;
         this.userId = userId;
         this.goalTime = goalTime;
