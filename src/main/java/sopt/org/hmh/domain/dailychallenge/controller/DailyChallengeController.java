@@ -1,5 +1,6 @@
 package sopt.org.hmh.domain.dailychallenge.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +23,7 @@ public class DailyChallengeController implements DailyChallengeApi {
     public ResponseEntity<BaseResponse<EmptyJsonResponse>> orderAddHistoryDailyChallenge(
             @UserId final Long userId,
             @RequestHeader("OS") final String os,
-            @RequestBody final FinishedDailyChallengeListRequest request
+            @RequestBody @Valid final FinishedDailyChallengeListRequest request
     ) {
         dailyChallengeFacade.addFinishedDailyChallengeHistory(userId, request, os);
         return ResponseEntity
