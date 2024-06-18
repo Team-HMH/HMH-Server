@@ -26,7 +26,8 @@ public class PointFacade {
     private final ChallengeService challengeService;
 
     public UsePointResponse usePointAndChallengeFailed(Long userId, LocalDate challengeDate) {
-        DailyChallenge dailyChallenge = dailyChallengeService.findByChallengeDateAndUserIdOrThrowException(challengeDate, userId);
+        DailyChallenge dailyChallenge =
+                dailyChallengeService.findByChallengeDateAndUserIdOrThrowException(challengeDate, userId);
         User user = userService.findByIdOrThrowException(userId);
 
         dailyChallengeService.validateDailyChallengeStatus(dailyChallenge.getStatus(), List.of(Status.NONE));
@@ -39,19 +40,19 @@ public class PointFacade {
     }
 
     public EarnPointResponse earnPointAndChallengeEarned(Long userId, LocalDate challengeDate) {
-        DailyChallenge dailyChallenge = dailyChallengeService.findByChallengeDateAndUserIdOrThrowException(challengeDate, userId);
+        DailyChallenge dailyChallenge =
+                dailyChallengeService.findByChallengeDateAndUserIdOrThrowException(challengeDate, userId);
         User user = userService.findByIdOrThrowException(userId);
 
         dailyChallengeService.validateDailyChallengeStatus(dailyChallenge.getStatus(), List.of(Status.UNEARNED));
         dailyChallenge.changeStatus(Status.EARNED);
 
-        return new EarnPointResponse(
-                user.increasePoint(ChallengeConstants.EARNED_POINT)
-        );
+        return new EarnPointResponse(user.increasePoint(ChallengeConstants.EARNED_POINT));
     }
 
     public ChallengePointStatusListResponse getChallengePointStatusList(Long userId) {
-        Challenge challenge = challengeService.findCurrentChallengeByUserId(userId);
+        User user = userService.findByIdOrThrowException(userId);
+        Challenge challenge = challengeService.findByIdOrElseThrow(user.getCurrentChallengeId());
         List<ChallengePointStatusResponse> challengePointStatusResponseList =
                 challenge.getHistoryDailyChallenges().stream()
                 .map(dailyChallenge -> new ChallengePointStatusResponse(
