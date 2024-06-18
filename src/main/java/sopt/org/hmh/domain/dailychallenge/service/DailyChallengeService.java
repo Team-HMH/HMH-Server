@@ -15,7 +15,6 @@ import sopt.org.hmh.domain.dailychallenge.repository.DailyChallengeRepository;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class DailyChallengeService {
 
     private final DailyChallengeRepository dailyChallengeRepository;

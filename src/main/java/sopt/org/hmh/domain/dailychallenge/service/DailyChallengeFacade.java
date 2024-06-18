@@ -15,7 +15,6 @@ import sopt.org.hmh.domain.user.service.UserService;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class DailyChallengeFacade {
 
     private final DailyChallengeService dailyChallengeService;
@@ -23,6 +22,7 @@ public class DailyChallengeFacade {
     private final ChallengeService challengeService;
     private final UserService userService;
 
+    @Transactional
     public void addFinishedDailyChallengeHistory(Long userId, FinishedDailyChallengeListRequest requests, String os) {
         Long currentChallengeId = userService.getCurrentChallengeIdByUserId(userId);
         List<ChallengeApp> currentChallengeApps = challengeService.getCurrentChallengeAppByChallengeId(currentChallengeId);
@@ -34,6 +34,7 @@ public class DailyChallengeFacade {
         });
     }
 
+    @Transactional
     public void changeDailyChallengeStatusByIsSuccess(Long userId, FinishedDailyChallengeStatusListRequest requests) {
         requests.finishedDailyChallenges().forEach(request -> {
             DailyChallenge dailyChallenge = dailyChallengeService.findByChallengeDateAndUserIdOrThrowException(request.challengeDate(), userId);
