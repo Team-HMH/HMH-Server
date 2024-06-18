@@ -62,7 +62,7 @@ public class PointFacade {
                         dailyChallenge.getStatus())).toList();
 
         return new ChallengePointStatusListResponse(
-                userService.getUserInfo(userId).point(),
+                user.getPoint(),
                 challenge.getPeriod(),
                 challengePointStatusResponseList
         );
