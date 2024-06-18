@@ -3,7 +3,6 @@ package sopt.org.hmh.domain.challenge.service;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import sopt.org.hmh.domain.app.domain.ChallengeApp;
 import sopt.org.hmh.domain.challenge.domain.Challenge;
 import sopt.org.hmh.domain.challenge.domain.exception.ChallengeError;
@@ -32,5 +31,4 @@ public class ChallengeService {
     public Challenge save(Challenge challenge) {
         return challengeRepository.save(challenge);
     }
-
 }
