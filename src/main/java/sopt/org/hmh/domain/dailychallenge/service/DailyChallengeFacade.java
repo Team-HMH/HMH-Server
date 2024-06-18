@@ -8,7 +8,9 @@ import sopt.org.hmh.domain.app.domain.ChallengeApp;
 import sopt.org.hmh.domain.app.service.HistoryAppService;
 import sopt.org.hmh.domain.challenge.service.ChallengeService;
 import sopt.org.hmh.domain.dailychallenge.domain.DailyChallenge;
+import sopt.org.hmh.domain.dailychallenge.domain.Status;
 import sopt.org.hmh.domain.dailychallenge.dto.request.FinishedDailyChallengeListRequest;
+import sopt.org.hmh.domain.dailychallenge.dto.request.FinishedDailyChallengeStatusListRequest;
 import sopt.org.hmh.domain.user.service.UserService;
 
 @Service
@@ -29,6 +31,19 @@ public class DailyChallengeFacade {
             DailyChallenge dailyChallenge = dailyChallengeService.findByChallengeDateAndUserIdOrThrowException(request.challengeDate(), userId);
             dailyChallengeService.changeStatusByCurrentStatus(dailyChallenge);
             historyAppService.addHistoryApp(currentChallengeApps, request.apps(), dailyChallenge, os);
+        });
+    }
+
+    public void changeDailyChallengeStatusByIsSuccess(Long userId, FinishedDailyChallengeStatusListRequest requests) {
+        requests.finishedDailyChallenges().forEach(request -> {
+            DailyChallenge dailyChallenge = dailyChallengeService.findByChallengeDateAndUserIdOrThrowException(request.challengeDate(), userId);
+            if (request.isSuccess()) {
+                dailyChallengeService.validateDailyChallengeStatus(dailyChallenge.getStatus(), List.of(Status.NONE));
+                dailyChallenge.changeStatus(Status.UNEARNED);
+            } else {
+                dailyChallengeService.validateDailyChallengeStatus(dailyChallenge.getStatus(), List.of(Status.NONE, Status.FAILURE));
+                dailyChallenge.changeStatus(Status.FAILURE);
+            }
         });
     }
 }

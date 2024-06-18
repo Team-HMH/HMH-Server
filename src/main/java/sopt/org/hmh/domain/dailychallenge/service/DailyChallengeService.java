@@ -11,7 +11,6 @@ import sopt.org.hmh.domain.dailychallenge.domain.DailyChallenge;
 import sopt.org.hmh.domain.dailychallenge.domain.Status;
 import sopt.org.hmh.domain.dailychallenge.domain.exception.DailyChallengeError;
 import sopt.org.hmh.domain.dailychallenge.domain.exception.DailyChallengeException;
-import sopt.org.hmh.domain.dailychallenge.dto.request.FinishedDailyChallengeStatusListRequest;
 import sopt.org.hmh.domain.dailychallenge.repository.DailyChallengeRepository;
 
 @Service
@@ -53,19 +52,6 @@ public class DailyChallengeService {
             return;
         }
         throw new DailyChallengeException(DailyChallengeError.DAILY_CHALLENGE_ALREADY_PROCESSED);
-    }
-
-    public void changeDailyChallengeStatusByIsSuccess(Long userId, FinishedDailyChallengeStatusListRequest requests) {
-        requests.finishedDailyChallenges().forEach(request -> {
-            DailyChallenge dailyChallenge = this.findByChallengeDateAndUserIdOrThrowException(request.challengeDate(), userId);
-            if (request.isSuccess()) {
-                this.validateDailyChallengeStatus(dailyChallenge.getStatus(), List.of(Status.NONE));
-                dailyChallenge.changeStatus(Status.UNEARNED);
-            } else {
-                this.validateDailyChallengeStatus(dailyChallenge.getStatus(), List.of(Status.NONE, Status.FAILURE));
-                dailyChallenge.changeStatus(Status.FAILURE);
-            }
-        });
     }
 
     public void addDailyChallenge(Long userId, LocalDate startDate, Challenge challenge) {
