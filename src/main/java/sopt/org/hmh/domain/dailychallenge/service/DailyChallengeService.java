@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import sopt.org.hmh.domain.challenge.domain.Challenge;
 import sopt.org.hmh.domain.dailychallenge.domain.DailyChallenge;
 import sopt.org.hmh.domain.dailychallenge.domain.Status;
@@ -25,15 +24,7 @@ public class DailyChallengeService {
     }
 
     public void validateDailyChallengeStatus(Status dailyChallengeStatus, List<Status> expectedStatuses) {
-        boolean isAlreadyProcessed = true;
-        for (Status expected : expectedStatuses) {
-            if (dailyChallengeStatus == expected) {
-                isAlreadyProcessed = false;
-                break;
-            }
-        }
-
-        if (isAlreadyProcessed) {
+        if (!expectedStatuses.contains(dailyChallengeStatus)) {
             throw new DailyChallengeException(DailyChallengeError.DAILY_CHALLENGE_ALREADY_PROCESSED);
         }
     }
