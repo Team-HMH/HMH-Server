@@ -13,7 +13,7 @@ public record ChallengeAppRequest(
 ) {
         public ChallengeAppRequest {
                 if (goalTime > AppConstants.MAXIMUM_APP_TIME || goalTime < AppConstants.MINIMUM_APP_TIME) {
-                        throw new AppException(AppError.INVALID_TIME_RANGE);
+                        throw new AppException(AppError.INVALID_GOAL_TIME);
                 }
         }
 }

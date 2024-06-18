@@ -9,7 +9,7 @@ public enum AppError implements ErrorBase {
 
     APP_NOT_FOUND(HttpStatus.NOT_FOUND, "앱을 찾을 수 없습니다."),
     APP_EXIST_ALREADY(HttpStatus.CONFLICT, "이미 추가된 앱입니다."),
-    INVALID_TIME_RANGE(HttpStatus.BAD_REQUEST, "앱 시간의 범위가 유효한지 확인해주세요"),
+    INVALID_GOAL_TIME(HttpStatus.BAD_REQUEST, "앱 목표 시간이 유효하지 않습니다."),
     ;
 
     private final HttpStatus status;
