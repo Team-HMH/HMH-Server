@@ -70,8 +70,8 @@ public class UserService {
         return name;
     }
 
-    public void registerOnboardingInfo(SocialSignUpRequest request) {
-        Long onboardingInfoId = onboardingInfoRepository.save(request.toOnboardingInfo()).getId();
+    public void registerOnboardingInfo(SocialSignUpRequest request, Long userId) {
+        Long onboardingInfoId = onboardingInfoRepository.save(request.toOnboardingInfo(userId)).getId();
         problemRepository.saveAll(request.toProblemList(onboardingInfoId));
     }
 
@@ -91,18 +91,13 @@ public class UserService {
     }
 
     @Transactional
-    public void changeRecentLockDate(Long userId, LocalDate localDate) {
-        this.findByIdOrThrowException(userId).changeRecentLockDate(localDate);
+    public void changeRecentLockDate(Long userId, LocalDate lockDate) {
+        this.findByIdOrThrowException(userId).changeRecentLockDate(lockDate);
     }
 
     @Transactional(readOnly = true)
     public IsLockTodayResponse checkIsTodayLock(Long userId, LocalDate lockCheckDate) {
         LocalDate userRecentLockDate = this.findByIdOrThrowException(userId).getRecentLockDate();
-
-        if (userRecentLockDate == null) {
-            return new IsLockTodayResponse(false);
-        }
-
-        return new IsLockTodayResponse(userRecentLockDate.equals(lockCheckDate));
+        return new IsLockTodayResponse(lockCheckDate.equals(userRecentLockDate));
     }
 }
