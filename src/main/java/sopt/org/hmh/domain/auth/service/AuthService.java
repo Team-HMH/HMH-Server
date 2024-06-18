@@ -22,7 +22,6 @@ import sopt.org.hmh.global.auth.social.kakao.fegin.KakaoLoginService;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class AuthService {
 
     private final KakaoLoginService kakaoLoginService;
@@ -33,7 +32,7 @@ public class AuthService {
     private final TokenService tokenService;
     private final UserService userService;
 
-    @Transactional
+    @Transactional(readOnly = true)
     public LoginResponse login(String socialAccessToken, SocialPlatformRequest request) {
 
         SocialPlatform socialPlatform = request.socialPlatform();
