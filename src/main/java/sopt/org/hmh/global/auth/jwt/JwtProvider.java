@@ -11,7 +11,7 @@ public class JwtProvider {
     private final JwtGenerator jwtGenerator;
 
     public TokenResponse issueToken(Long userId) {
-        return TokenResponse.of(jwtGenerator.generateToken(userId, false),
+        return new TokenResponse(jwtGenerator.generateToken(userId, false),
                 jwtGenerator.generateToken(userId, true));
     }
 
