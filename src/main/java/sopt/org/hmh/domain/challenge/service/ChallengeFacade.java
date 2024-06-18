@@ -54,8 +54,8 @@ public class ChallengeFacade {
     }
 
     public ChallengeResponse getChallenge(Long userId) {
-        Challenge challenge = findCurrentChallengeByUserId(userId);
-        Integer todayIndex = calculateTodayIndex(challenge.getCreatedAt(), challenge.getPeriod());
+        Challenge challenge = this.findCurrentChallengeByUserId(userId);
+        Integer todayIndex = this.calculateTodayIndex(challenge.getCreatedAt(), challenge.getPeriod());
 
         return ChallengeResponse.builder()
                 .period(challenge.getPeriod())
@@ -72,7 +72,7 @@ public class ChallengeFacade {
     }
 
     public DailyChallengeResponse getDailyChallenge(Long userId) {
-        Challenge challenge = findCurrentChallengeByUserId(userId);
+        Challenge challenge = this.findCurrentChallengeByUserId(userId);
 
         return DailyChallengeResponse.builder()
                 .goalTime(challenge.getGoalTime())
