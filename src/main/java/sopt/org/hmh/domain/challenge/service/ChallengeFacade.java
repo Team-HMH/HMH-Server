@@ -95,13 +95,13 @@ public class ChallengeFacade {
     }
 
     @Transactional
-    public void addApps(Long userId, List<ChallengeAppRequest> requests, String os) {
+    public void addAppsToCurrentChallenge(Long userId, List<ChallengeAppRequest> requests, String os) {
         Challenge challenge = this.findCurrentChallengeByUserId(userId);
         challengeAppService.addApps(challenge, requests, os);
     }
 
     @Transactional
-    public void removeApp(Long userId, String appCode, String os) {
+    public void removeAppFromCurrentChallenge(Long userId, String appCode, String os) {
         Challenge challenge = this.findCurrentChallengeByUserId(userId);
         challengeAppService.removeApp(challenge, appCode, os);
     }

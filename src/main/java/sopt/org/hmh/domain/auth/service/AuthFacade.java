@@ -26,7 +26,6 @@ public class AuthFacade {
 
     private final KakaoLoginService kakaoLoginService;
     private final AppleOAuthProvider appleOAuthProvider;
-
     private final ChallengeFacade challengeFacade;
     private final ChallengeAppService challengeAppService;
     private final TokenService tokenService;
