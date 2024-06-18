@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 import sopt.org.hmh.domain.app.domain.exception.AppSuccess;
 import sopt.org.hmh.domain.app.dto.request.ChallengeAppArrayRequest;
 import sopt.org.hmh.domain.app.dto.request.AppRemoveRequest;
-import sopt.org.hmh.domain.challenge.domain.Challenge;
 import sopt.org.hmh.domain.challenge.domain.exception.ChallengeSuccess;
 import sopt.org.hmh.domain.challenge.dto.request.ChallengeRequest;
 import sopt.org.hmh.domain.challenge.dto.response.ChallengeResponse;
@@ -43,7 +42,7 @@ public class ChallengeController implements ChallengeApi {
         return ResponseEntity
                 .status(ChallengeSuccess.GET_CHALLENGE_SUCCESS.getHttpStatus())
                 .body(BaseResponse.success(ChallengeSuccess.GET_CHALLENGE_SUCCESS,
-                        challengeFacade.getChallenge(userId)));
+                        challengeFacade.getCurrentChallengeInfo(userId)));
     }
 
     @GetMapping("/home")
