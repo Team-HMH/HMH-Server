@@ -19,8 +19,8 @@ public record ChallengeRequest(
         if (!ChallengeConstants.AVAILABLE_CHALLENGE_PERIODS.contains(period)) {
             throw new ChallengeException(ChallengeError.INVALID_PERIOD_NUMERIC);
         }
-        if (goalTime > AppConstants.MAXIMUM_APP_TIME || goalTime < AppConstants.MINIMUM_APP_TIME) {
-            throw new AppException(AppError.INVALID_TIME_RANGE);
+        if (goalTime > ChallengeConstants.MAXIMUM_GOAL_TIME || goalTime < ChallengeConstants.MINIMUM_GOAL_TIME) {
+            throw new ChallengeException(ChallengeError.INVALID_GOAL_TIME);
         }
     }
 }
