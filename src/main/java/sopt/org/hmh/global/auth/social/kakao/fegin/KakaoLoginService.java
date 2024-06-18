@@ -36,15 +36,7 @@ public class KakaoLoginService {
         KakaoUserResponse userRequest = getKakaoUserRequest(socialAccessToken);
 
         try {
-            String nickname = userRequest.kakaoAccount().profile().nickname();
-            String profileImageUrl = userRequest.kakaoAccount().profile().profileImageUrl();
-
-            if (!StringUtils.hasText(profileImageUrl)) {
-                profileImageUrl = "";
-            }
-
-            loginUser.updateSocialInfo(nickname, profileImageUrl);
-
+            loginUser.updateSocialInfo(userRequest.kakaoAccount().profile().nickname());
         } catch (NullPointerException exception) {
             throw new JwtException(JwtError.INVALID_SOCIAL_ACCESS_TOKEN_FORMAT);
         }

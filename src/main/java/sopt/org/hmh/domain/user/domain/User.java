@@ -31,10 +31,15 @@ public class User extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false)
     private String name;
+
+    @Column(nullable = false)
     private Long currentChallengeId;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private SocialPlatform socialPlatform;
 
     @Column(unique = true)
@@ -42,9 +47,6 @@ public class User extends BaseTimeEntity {
 
     @Min(value = 0)
     private Integer point;
-
-    @Column(columnDefinition = "TEXT")
-    private String profileImageUrl;
 
     private LocalDate recentLockDate;
 
@@ -59,9 +61,8 @@ public class User extends BaseTimeEntity {
         this.point = UserConstants.INITIAL_POINT;
     }
 
-    public void updateSocialInfo(String nickname, String profileImageUrl) {
+    public void updateSocialInfo(String nickname) {
         this.name = nickname;
-        this.profileImageUrl = profileImageUrl;
     }
 
     public void softDelete() {
