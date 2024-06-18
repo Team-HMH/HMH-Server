@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import sopt.org.hmh.domain.challenge.dto.request.ChallengeDateRequest;
+import sopt.org.hmh.domain.challenge.domain.ChallengeConstants;
 import sopt.org.hmh.domain.point.dto.response.*;
 import sopt.org.hmh.domain.point.exception.PointSuccess;
 import sopt.org.hmh.domain.point.service.PointFacade;
@@ -59,11 +60,20 @@ public class PointController implements PointApi {
     }
 
     @Override
+    @GetMapping("/earn")
+    public ResponseEntity<BaseResponse<EarnedPointResponse>> orderGetEarnedPoint() {
+        return ResponseEntity
+                .status(PointSuccess.GET_EARNED_POINT_SUCCESS.getHttpStatus())
+                .body(BaseResponse.success(PointSuccess.GET_EARNED_POINT_SUCCESS,
+                        new EarnedPointResponse(ChallengeConstants.EARNED_POINT)));
+    }
+
+    @Override
     @GetMapping("/use")
     public ResponseEntity<BaseResponse<UsagePointResponse>> orderGetUsagePoint() {
         return ResponseEntity
                 .status(PointSuccess.GET_USAGE_POINT_SUCCESS.getHttpStatus())
                 .body(BaseResponse.success(PointSuccess.GET_USAGE_POINT_SUCCESS,
-                        pointFacade.getUsagePoint()));
+                        new UsagePointResponse(ChallengeConstants.USAGE_POINT)));
     }
 }

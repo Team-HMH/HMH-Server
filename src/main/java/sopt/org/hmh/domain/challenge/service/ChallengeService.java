@@ -3,7 +3,6 @@ package sopt.org.hmh.domain.challenge.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sopt.org.hmh.domain.app.domain.AppConstants;
 import sopt.org.hmh.domain.app.domain.ChallengeApp;
 import sopt.org.hmh.domain.app.domain.exception.AppError;
 import sopt.org.hmh.domain.app.domain.exception.AppException;
@@ -19,7 +18,6 @@ import sopt.org.hmh.domain.challenge.dto.response.ChallengeResponse;
 import sopt.org.hmh.domain.challenge.dto.response.DailyChallengeResponse;
 import sopt.org.hmh.domain.challenge.repository.ChallengeRepository;
 import sopt.org.hmh.domain.dailychallenge.domain.DailyChallenge;
-import sopt.org.hmh.domain.dailychallenge.domain.Status;
 import sopt.org.hmh.domain.dailychallenge.repository.DailyChallengeRepository;
 import sopt.org.hmh.domain.user.domain.User;
 import sopt.org.hmh.domain.user.service.UserService;
@@ -99,9 +97,6 @@ public class ChallengeService {
         Challenge challenge = findCurrentChallengeByUserId(userId);
 
         return DailyChallengeResponse.builder()
-                .status(Boolean.TRUE.equals(challenge.isChallengeFailedToday())
-                        ? Status.FAILURE
-                        : Status.NONE)
                 .goalTime(challenge.getGoalTime())
                 .apps(challenge.getApps().stream()
                         .map(app -> new ChallengeAppResponse(app.getAppCode(), app.getGoalTime())).toList())

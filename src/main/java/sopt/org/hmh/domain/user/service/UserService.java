@@ -1,5 +1,6 @@
 package sopt.org.hmh.domain.user.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,7 +19,8 @@ import sopt.org.hmh.domain.user.domain.User;
 import sopt.org.hmh.domain.user.domain.UserConstants;
 import sopt.org.hmh.domain.user.domain.exception.UserError;
 import sopt.org.hmh.domain.user.domain.exception.UserException;
-import sopt.org.hmh.domain.user.dto.response.UserInfoResponse;
+import sopt.org.hmh.domain.user.dto.response.UserResponse.IsLockTodayResponse;
+import sopt.org.hmh.domain.user.dto.response.UserResponse.UserInfoResponse;
 import sopt.org.hmh.domain.user.repository.UserRepository;
 import sopt.org.hmh.global.auth.social.SocialPlatform;
 
@@ -99,5 +101,20 @@ public class UserService {
     public Long getCurrentChallengeIdByUserId(Long userId) {
         return Optional.ofNullable(this.findByIdOrThrowException(userId).getCurrentChallengeId())
                 .orElseThrow(() -> new UserException(UserError.NOT_FOUND_CURRENT_CHALLENGE_ID));
+    }
+
+    @Transactional
+    public void changeRecentLockDate(Long userId, LocalDate localDate) {
+        this.findByIdOrThrowException(userId).changeRecentLockDate(localDate);
+    }
+
+    public IsLockTodayResponse checkIsTodayLock(Long userId, LocalDate lockCheckDate) {
+        LocalDate userRecentLockDate = this.findByIdOrThrowException(userId).getRecentLockDate();
+
+        if (userRecentLockDate == null) {
+            return new IsLockTodayResponse(false);
+        }
+
+        return new IsLockTodayResponse(userRecentLockDate.equals(lockCheckDate));
     }
 }

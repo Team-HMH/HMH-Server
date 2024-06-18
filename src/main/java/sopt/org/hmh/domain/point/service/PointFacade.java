@@ -1,9 +1,7 @@
 package sopt.org.hmh.domain.point.service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,7 +29,7 @@ public class PointFacade {
         DailyChallenge dailyChallenge = dailyChallengeService.findByChallengeDateAndUserIdOrThrowException(challengeDate, userId);
         User user = userService.findByIdOrThrowException(userId);
 
-        dailyChallengeService.validateDailyChallengeStatus(dailyChallenge, Status.NONE);
+        dailyChallengeService.validateDailyChallengeStatus(dailyChallenge.getStatus(), List.of(Status.NONE));
         dailyChallenge.changeStatus(Status.FAILURE);
 
         return new UsePointResponse(
@@ -44,17 +42,12 @@ public class PointFacade {
         DailyChallenge dailyChallenge = dailyChallengeService.findByChallengeDateAndUserIdOrThrowException(challengeDate, userId);
         User user = userService.findByIdOrThrowException(userId);
 
-        dailyChallengeService.validateDailyChallengeStatus(dailyChallenge, Status.UNEARNED);
+        dailyChallengeService.validateDailyChallengeStatus(dailyChallenge.getStatus(), List.of(Status.UNEARNED));
         dailyChallenge.changeStatus(Status.EARNED);
 
         return new EarnPointResponse(
                 user.increasePoint(ChallengeConstants.EARNED_POINT)
         );
-    }
-
-    @Transactional(readOnly = true)
-    public UsagePointResponse getUsagePoint() {
-        return new UsagePointResponse(ChallengeConstants.USAGE_POINT);
     }
 
     public ChallengePointStatusListResponse getChallengePointStatusList(Long userId) {
