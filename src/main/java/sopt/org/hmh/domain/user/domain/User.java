@@ -35,7 +35,6 @@ public class User extends BaseTimeEntity {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
     private Long currentChallengeId;
 
     @Enumerated(EnumType.STRING)
