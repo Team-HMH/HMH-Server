@@ -1,7 +1,6 @@
 package sopt.org.hmh.domain.user.service;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Optional;
 
 import lombok.RequiredArgsConstructor;
@@ -13,8 +12,6 @@ import sopt.org.hmh.domain.auth.exception.AuthError;
 import sopt.org.hmh.domain.auth.exception.AuthException;
 import sopt.org.hmh.domain.auth.repository.OnboardingInfoRepository;
 import sopt.org.hmh.domain.auth.repository.ProblemRepository;
-import sopt.org.hmh.domain.user.domain.OnboardingInfo;
-import sopt.org.hmh.domain.user.domain.OnboardingProblem;
 import sopt.org.hmh.domain.user.domain.User;
 import sopt.org.hmh.domain.user.domain.UserConstants;
 import sopt.org.hmh.domain.user.domain.exception.UserError;
@@ -75,17 +72,8 @@ public class UserService {
     }
 
     public void registerOnboardingInfo(SocialSignUpRequest request) {
-        OnboardingInfo onboardingInfo = OnboardingInfo.builder()
-                .averageUseTime(request.onboardingRequest().averageUseTime())
-                .build();
-        Long onboardingInfoId = onboardingInfoRepository.save(onboardingInfo).getId();
-
-        List<OnboardingProblem> problemList = request.onboardingRequest().problemList().stream()
-                .map(problem -> OnboardingProblem.builder()
-                        .onboardingInfoId(onboardingInfoId)
-                        .problem(problem).build())
-                .toList();
-        problemRepository.saveAll(problemList);
+        Long onboardingInfoId = onboardingInfoRepository.save(request.toOnboardingInfo()).getId();
+        problemRepository.saveAll(request.toProblemList(onboardingInfoId));
     }
 
     public User findBySocialPlatformAndSocialIdOrThrowException(SocialPlatform socialPlatform, String socialId) {
