@@ -2,9 +2,11 @@ package sopt.org.hmh.domain.dailychallenge.service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sopt.org.hmh.domain.challenge.domain.Challenge;
 import sopt.org.hmh.domain.dailychallenge.domain.DailyChallenge;
 import sopt.org.hmh.domain.dailychallenge.domain.Status;
 import sopt.org.hmh.domain.dailychallenge.domain.exception.DailyChallengeError;
@@ -64,5 +66,15 @@ public class DailyChallengeService {
                 dailyChallenge.changeStatus(Status.FAILURE);
             }
         });
+    }
+
+    public void addDailyChallenge(Long userId, LocalDate startDate, Challenge challenge) {
+        dailyChallengeRepository.saveAll(IntStream.range(0, challenge.getPeriod())
+                .mapToObj(i -> DailyChallenge.builder()
+                        .challengeDate(startDate.plusDays(i))
+                        .challenge(challenge)
+                        .userId(userId)
+                        .goalTime(challenge.getGoalTime()).build())
+                .toList());
     }
 }
