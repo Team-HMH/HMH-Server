@@ -15,7 +15,7 @@ import sopt.org.hmh.domain.dailychallenge.domain.DailyChallenge;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class AppService {
+public class HistoryAppService {
 
     private final HistoryAppRepository historyAppRepository;
 

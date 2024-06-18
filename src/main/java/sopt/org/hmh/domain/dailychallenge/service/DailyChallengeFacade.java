@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sopt.org.hmh.domain.app.domain.ChallengeApp;
-import sopt.org.hmh.domain.app.service.AppService;
+import sopt.org.hmh.domain.app.service.HistoryAppService;
 import sopt.org.hmh.domain.challenge.service.ChallengeService;
 import sopt.org.hmh.domain.dailychallenge.domain.DailyChallenge;
 import sopt.org.hmh.domain.dailychallenge.dto.request.FinishedDailyChallengeListRequest;
@@ -17,7 +17,7 @@ import sopt.org.hmh.domain.user.service.UserService;
 public class DailyChallengeFacade {
 
     private final DailyChallengeService dailyChallengeService;
-    private final AppService appService;
+    private final HistoryAppService historyAppService;
     private final ChallengeService challengeService;
     private final UserService userService;
 
@@ -27,7 +27,7 @@ public class DailyChallengeFacade {
             dailyChallengeService.changeStatusByCurrentStatus(dailyChallenge);
             Long currentChallengeId = userService.getCurrentChallengeIdByUserId(userId);
             List<ChallengeApp> currentChallengeApps = challengeService.getCurrentChallengeAppByChallengeId(currentChallengeId);
-            appService.addAppForHistory(currentChallengeApps, request.apps(), dailyChallenge, os);
+            historyAppService.addAppForHistory(currentChallengeApps, request.apps(), dailyChallenge, os);
         });
     }
 }
