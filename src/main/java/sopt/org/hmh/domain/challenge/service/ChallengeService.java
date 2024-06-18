@@ -3,7 +3,6 @@ package sopt.org.hmh.domain.challenge.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sopt.org.hmh.domain.app.domain.AppConstants;
 import sopt.org.hmh.domain.app.domain.ChallengeApp;
 import sopt.org.hmh.domain.app.domain.exception.AppError;
 import sopt.org.hmh.domain.app.domain.exception.AppException;
@@ -12,10 +11,9 @@ import sopt.org.hmh.domain.app.dto.request.ChallengeAppRequest;
 import sopt.org.hmh.domain.app.dto.response.ChallengeAppResponse;
 import sopt.org.hmh.domain.app.repository.ChallengeAppRepository;
 import sopt.org.hmh.domain.challenge.domain.Challenge;
-import sopt.org.hmh.domain.challenge.domain.ChallengeConstants;
-import sopt.org.hmh.domain.challenge.domain.ChallengeDay;
 import sopt.org.hmh.domain.challenge.domain.exception.ChallengeError;
 import sopt.org.hmh.domain.challenge.domain.exception.ChallengeException;
+import sopt.org.hmh.domain.challenge.dto.request.ChallengeRequest;
 import sopt.org.hmh.domain.challenge.dto.response.ChallengeResponse;
 import sopt.org.hmh.domain.challenge.dto.response.DailyChallengeResponse;
 import sopt.org.hmh.domain.challenge.repository.ChallengeRepository;
@@ -40,9 +38,9 @@ public class ChallengeService {
     private final UserService userService;
 
     @Transactional
-    public Challenge addChallenge(Long userId, Integer period, Long goalTime, String os) {
-        validateChallengePeriod(period);
-        validateChallengeGoalTime(goalTime);
+    public Challenge addChallenge(Long userId, ChallengeRequest challengeRequest, String os) {
+        Integer period = challengeRequest.period();
+        Long goalTime = challengeRequest.goalTime();
 
         Challenge challenge = challengeRepository.save(Challenge.builder()
                 .userId(userId)
@@ -107,7 +105,6 @@ public class ChallengeService {
 
     @Transactional
     public void removeApp(Challenge challenge, AppRemoveRequest request, String os) {
-        validateAppCode(request.appCode());
         ChallengeApp appToRemove = challengeAppRepository
                 .findFirstByChallengeIdAndAppCodeAndOsOrElseThrow(challenge.getId(), request.appCode(), os);
         challengeAppRepository.delete(appToRemove);
@@ -118,8 +115,6 @@ public class ChallengeService {
         List<ChallengeApp> appsToUpdate = requests.stream()
                 .map(request -> {
                     validateAppExist(challenge.getId(), request.appCode(), os);
-                    validateAppCode(request.appCode());
-                    validateAppTime(request.goalTime());
                     return ChallengeApp.builder()
                             .challenge(challenge)
                             .appCode(request.appCode())
@@ -140,42 +135,10 @@ public class ChallengeService {
         return (daysBetween >= period) ? -1 : daysBetween;
     }
 
-    private void validateChallengePeriod(Integer period) {
-        if (period == null) {
-            throw new ChallengeException(ChallengeError.INVALID_PERIOD_NULL);
-        }
-        if (period != ChallengeDay.DAYS7.getValue() && period != ChallengeDay.DAYS14.getValue() && period != ChallengeDay.DAYS20.getValue() && period != ChallengeDay.DAYS30.getValue()) {
-            throw new ChallengeException(ChallengeError.INVALID_PERIOD_NUMERIC);
-        }
-    }
-
-    private void validateChallengeGoalTime(Long goalTime) {
-        if (goalTime == null) {
-            throw new ChallengeException(ChallengeError.INVALID_GOAL_TIME_NULL);
-        }
-        if (goalTime < ChallengeConstants.MINIMUM_GOAL_TIME || goalTime > ChallengeConstants.MAXIMUM_GOAL_TIME) {
-            throw new ChallengeException(ChallengeError.INVALID_GOAL_TIME_NUMERIC);
-        }
-    }
-
     private void validateAppExist(Long challengeId, String appCode, String os) {
         if (challengeAppRepository.existsByChallengeIdAndAppCodeAndOs(challengeId, appCode, os)) {
             throw new AppException(AppError.APP_EXIST_ALREADY);
         }
-    }
-
-    private void validateAppCode(String appCode) {
-        if (appCode.isEmpty()) {
-            throw new AppException(AppError.INVALID_APP_CODE_NULL);
-        }
-    }
-
-    private void validateAppTime(Long appTime) {
-        if (appTime == null) {
-            throw new AppException(AppError.INVALID_TIME_NULL);
-        }
-        if (appTime > AppConstants.MAXIMUM_APP_TIME || appTime < AppConstants.MINIMUM_APP_TIME)
-            throw new AppException(AppError.INVALID_TIME_RANGE);
     }
 
     public Challenge findByIdOrElseThrow(Long challengeId) {

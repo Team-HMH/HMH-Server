@@ -7,7 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
-import sopt.org.hmh.domain.point.dto.request.ChallengeDateRequest;
+import sopt.org.hmh.domain.challenge.dto.request.ChallengeDateRequest;
 import sopt.org.hmh.domain.point.dto.response.ChallengePointStatusListResponse;
 import sopt.org.hmh.domain.point.dto.response.EarnPointResponse;
 import sopt.org.hmh.domain.point.dto.response.EarnedPointResponse;

@@ -1,5 +1,6 @@
 package sopt.org.hmh.domain.challenge.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,8 +28,8 @@ public class ChallengeController implements ChallengeApi {
     @Override
     public ResponseEntity<BaseResponse<?>> orderAddChallenge(@UserId final Long userId,
                                                              @RequestHeader("OS") final String os,
-                                                             @RequestBody final ChallengeRequest request) {
-        challengeService.addChallenge(userId, request.period(), request.goalTime(), os);
+                                                             @RequestBody @Valid final ChallengeRequest request) {
+        challengeService.addChallenge(userId, request, os);
 
         return ResponseEntity
                 .status(ChallengeSuccess.ADD_CHALLENGE_SUCCESS.getHttpStatus())
@@ -59,7 +60,7 @@ public class ChallengeController implements ChallengeApi {
     @Override
     public ResponseEntity<BaseResponse<?>> orderAddApps(@UserId final Long userId,
                                                         @RequestHeader("OS") final String os,
-                                                        @RequestBody final ChallengeAppArrayRequest requests) {
+                                                        @RequestBody @Valid final ChallengeAppArrayRequest requests) {
         Challenge challenge = challengeService.findCurrentChallengeByUserId(userId);
         challengeService.addApps(challenge, requests.apps(), os);
 
@@ -73,7 +74,7 @@ public class ChallengeController implements ChallengeApi {
     @Override
     public ResponseEntity<BaseResponse<?>> orderRemoveApp(@UserId final Long userId,
                                                           @RequestHeader("OS") final String os,
-                                                          @RequestBody final AppRemoveRequest request) {
+                                                          @RequestBody @Valid final AppRemoveRequest request) {
         Challenge challenge = challengeService.findCurrentChallengeByUserId(userId);
         challengeService.removeApp(challenge, request, os);
 
