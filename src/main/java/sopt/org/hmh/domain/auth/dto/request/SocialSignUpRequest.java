@@ -25,9 +25,10 @@ public record SocialSignUpRequest(
         return new ChallengeRequest(challengeSignUpRequest.period(), challengeSignUpRequest.goalTime());
     }
 
-    public OnboardingInfo toOnboardingInfo() {
+    public OnboardingInfo toOnboardingInfo(Long userId) {
         return OnboardingInfo.builder()
                 .averageUseTime(onboardingRequest.averageUseTime())
+                .userId(userId)
                 .build();
     }
 
