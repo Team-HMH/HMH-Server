@@ -56,7 +56,6 @@ public class ChallengeFacade {
     @Transactional(readOnly = true)
     public ChallengeResponse getChallenge(Long userId) {
         Challenge challenge = this.findCurrentChallengeByUserId(userId);
-        Integer todayIndex = this.calculateTodayIndex(challenge.getCreatedAt(), challenge.getPeriod());
 
         return ChallengeResponse.builder()
                 .period(challenge.getPeriod())
@@ -64,7 +63,7 @@ public class ChallengeFacade {
                         .stream()
                         .map(DailyChallenge::getStatus)
                         .toList())
-                .todayIndex(todayIndex)
+                .todayIndex(this.calculateTodayIndex(challenge.getCreatedAt(), challenge.getPeriod()))
                 .startDate(challenge.getCreatedAt().toLocalDate().toString())
                 .goalTime(challenge.getGoalTime())
                 .apps(challenge.getApps().stream()
