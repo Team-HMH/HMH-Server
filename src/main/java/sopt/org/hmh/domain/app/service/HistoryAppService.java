@@ -3,7 +3,6 @@ package sopt.org.hmh.domain.app.service;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import sopt.org.hmh.domain.app.domain.ChallengeApp;
 import sopt.org.hmh.domain.app.domain.HistoryApp;
 import sopt.org.hmh.domain.app.domain.exception.AppError;
@@ -14,7 +13,6 @@ import sopt.org.hmh.domain.dailychallenge.domain.DailyChallenge;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class HistoryAppService {
 
     private final HistoryAppRepository historyAppRepository;
