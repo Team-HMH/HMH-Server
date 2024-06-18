@@ -22,7 +22,7 @@ import sopt.org.hmh.global.auth.social.kakao.fegin.KakaoLoginService;
 
 @Service
 @RequiredArgsConstructor
-public class AuthService {
+public class AuthFacade {
 
     private final KakaoLoginService kakaoLoginService;
     private final AppleOAuthProvider appleOAuthProvider;
@@ -34,10 +34,8 @@ public class AuthService {
 
     @Transactional(readOnly = true)
     public LoginResponse login(String socialAccessToken, SocialPlatformRequest request) {
-
         SocialPlatform socialPlatform = request.socialPlatform();
-        String socialId = getSocialIdBySocialAccessToken(socialPlatform, socialAccessToken);
-
+        String socialId = this.getSocialIdBySocialAccessToken(socialPlatform, socialAccessToken);
         User loginUser = userService.getUserBySocialPlatformAndSocialId(socialPlatform, socialId);
 
         return performLogin(socialAccessToken, socialPlatform, loginUser);
@@ -45,18 +43,16 @@ public class AuthService {
 
     @Transactional
     public LoginResponse signup(String socialAccessToken, SocialSignUpRequest request, String os) {
-
         SocialPlatform socialPlatform = request.socialPlatform();
-        String socialId = getSocialIdBySocialAccessToken(socialPlatform, socialAccessToken);
+        String socialId = this.getSocialIdBySocialAccessToken(socialPlatform, socialAccessToken);
 
         userService.validateDuplicateUser(socialId, socialPlatform);
-
         User user = userService.addUser(socialPlatform, socialId, request.name());
+        Long userId = user.getId();
+        userService.registerOnboardingInfo(request, userId);
 
-        Challenge challenge = challengeFacade.addChallenge(user.getId(), request.toChallengeRequest() , os);
+        Challenge challenge = challengeFacade.addChallenge(userId, request.toChallengeRequest() , os);
         challengeAppService.addApps(challenge, request.challengeSignUpRequest().apps(), os);
-        
-        userService.registerOnboardingInfo(request);
 
         return performLogin(socialAccessToken, socialPlatform, user);
     }
@@ -73,16 +69,15 @@ public class AuthService {
         return tokenService.reissueToken(refreshToken);
     }
 
-
     private LoginResponse performLogin(String socialAccessToken, SocialPlatform socialPlatform, User loginUser) {
         if (socialPlatform == SocialPlatform.KAKAO) {
             kakaoLoginService.updateUserInfoByKakao(loginUser, socialAccessToken);
         }
-        return LoginResponse.of(loginUser, tokenService.issueToken(loginUser.getId()));
+        Long userId = loginUser.getId();
+        return new LoginResponse(userId, tokenService.issueToken(userId));
     }
 
     public SocialAccessTokenResponse getSocialAccessTokenByAuthorizationCode(String code) {
         return kakaoLoginService.getKakaoAccessToken(code);
     }
-
 }
