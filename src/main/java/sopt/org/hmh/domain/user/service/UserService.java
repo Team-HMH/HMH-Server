@@ -23,19 +23,18 @@ import sopt.org.hmh.global.auth.social.SocialPlatform;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class UserService {
 
     private final UserRepository userRepository;
     private final OnboardingInfoRepository onboardingInfoRepository;
     private final ProblemRepository problemRepository;
 
-
     @Transactional
     public void withdraw(Long userId) {
         this.findByIdOrThrowException(userId).softDelete();
     }
 
+    @Transactional(readOnly = true)
     public UserInfoResponse getUserInfo(Long userId) {
         return UserInfoResponse.of(this.findByIdOrThrowException(userId));
     }
@@ -76,7 +75,7 @@ public class UserService {
         problemRepository.saveAll(request.toProblemList(onboardingInfoId));
     }
 
-    public User findBySocialPlatformAndSocialIdOrThrowException(SocialPlatform socialPlatform, String socialId) {
+    private User findBySocialPlatformAndSocialIdOrThrowException(SocialPlatform socialPlatform, String socialId) {
         return userRepository.findBySocialPlatformAndSocialId(socialPlatform, socialId).orElseThrow(
                 () -> new AuthException(AuthError.NOT_SIGNUP_USER));
     }
@@ -96,6 +95,7 @@ public class UserService {
         this.findByIdOrThrowException(userId).changeRecentLockDate(localDate);
     }
 
+    @Transactional(readOnly = true)
     public IsLockTodayResponse checkIsTodayLock(Long userId, LocalDate lockCheckDate) {
         LocalDate userRecentLockDate = this.findByIdOrThrowException(userId).getRecentLockDate();
 
