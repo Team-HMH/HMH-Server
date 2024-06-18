@@ -61,8 +61,7 @@ public class ChallengeController implements ChallengeApi {
     public ResponseEntity<BaseResponse<?>> orderAddApps(@UserId final Long userId,
                                                         @RequestHeader("OS") final String os,
                                                         @RequestBody @Valid final ChallengeAppArrayRequest requests) {
-        Challenge challenge = challengeFacade.findCurrentChallengeByUserId(userId);
-        challengeFacade.addApps(challenge, requests.apps(), os);
+        challengeFacade.addApps(userId, requests.apps(), os);
 
         return ResponseEntity
                 .status(AppSuccess.ADD_APP_SUCCESS.getHttpStatus())
@@ -75,8 +74,7 @@ public class ChallengeController implements ChallengeApi {
     public ResponseEntity<BaseResponse<?>> orderRemoveApp(@UserId final Long userId,
                                                           @RequestHeader("OS") final String os,
                                                           @RequestBody @Valid final AppRemoveRequest request) {
-        Challenge challenge = challengeFacade.findCurrentChallengeByUserId(userId);
-        challengeFacade.removeApp(challenge, request.appCode(), os);
+        challengeFacade.removeApp(userId, request.appCode(), os);
 
         return ResponseEntity
                 .status(AppSuccess.REMOVE_APP_SUCCESS.getHttpStatus())

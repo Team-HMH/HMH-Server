@@ -16,7 +16,6 @@ public class ChallengeService {
 
     private final ChallengeRepository challengeRepository;
 
-    @Transactional
     public void deleteChallengeRelatedByUserId(List<Long> expiredUserIdList) {
         challengeRepository.deleteByUserIdIn(expiredUserIdList);
     }

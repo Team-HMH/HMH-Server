@@ -53,6 +53,7 @@ public class ChallengeFacade {
         }
     }
 
+    @Transactional(readOnly = true)
     public ChallengeResponse getChallenge(Long userId) {
         Challenge challenge = this.findCurrentChallengeByUserId(userId);
         Integer todayIndex = this.calculateTodayIndex(challenge.getCreatedAt(), challenge.getPeriod());
@@ -71,6 +72,7 @@ public class ChallengeFacade {
                 .build();
     }
 
+    @Transactional(readOnly = true)
     public DailyChallengeResponse getDailyChallenge(Long userId) {
         Challenge challenge = this.findCurrentChallengeByUserId(userId);
 
@@ -91,11 +93,15 @@ public class ChallengeFacade {
         return (daysBetween >= period) ? -1 : daysBetween;
     }
 
-    public void addApps(Challenge challenge, List<ChallengeAppRequest> requests, String os) {
+    @Transactional
+    public void addApps(Long userId, List<ChallengeAppRequest> requests, String os) {
+        Challenge challenge = this.findCurrentChallengeByUserId(userId);
         challengeAppService.addApps(challenge, requests, os);
     }
 
-    public void removeApp(Challenge challenge, String appCode, String os) {
+    @Transactional
+    public void removeApp(Long userId, String appCode, String os) {
+        Challenge challenge = this.findCurrentChallengeByUserId(userId);
         challengeAppService.removeApp(challenge, appCode, os);
     }
 }
