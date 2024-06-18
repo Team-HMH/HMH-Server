@@ -16,7 +16,10 @@ public class HistoryApp extends App {
     @JoinColumn(name = "daily_challenge_id")
     private DailyChallenge dailyChallenge;
 
+    @Column(nullable = false)
     private Long usageTime;
+
+    @Column(nullable = false)
     private Long goalTime;
 
     @Builder

@@ -22,8 +22,13 @@ public class Challenge extends BaseTimeEntity {
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private Long userId;
+
+    @Column(nullable = false)
     private Integer period;
+
+    @Column(nullable = false)
     private Long goalTime;
 
     @OneToMany(mappedBy = "challenge", cascade = CascadeType.REMOVE, orphanRemoval = true)

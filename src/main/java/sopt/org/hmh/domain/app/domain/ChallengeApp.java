@@ -16,6 +16,7 @@ public class ChallengeApp extends App {
     @JoinColumn(name = "challenge_id")
     private Challenge challenge;
 
+    @Column(nullable = false)
     private Long goalTime;
 
     @Builder

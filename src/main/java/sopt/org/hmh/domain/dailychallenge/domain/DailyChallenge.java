@@ -31,12 +31,16 @@ public class DailyChallenge extends BaseTimeEntity {
     private List<HistoryApp> apps;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Status status;
 
+    @Column(nullable = false)
     private Long userId;
 
+    @Column(nullable = false)
     private Long goalTime;
 
+    @Column(nullable = false)
     private LocalDate challengeDate;
 
     @Builder

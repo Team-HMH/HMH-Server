@@ -1,5 +1,6 @@
 package sopt.org.hmh.domain.app.domain;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -14,7 +15,9 @@ public abstract class App {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     protected String os;
 
+    @Column(nullable = false)
     protected String appCode;
 }
