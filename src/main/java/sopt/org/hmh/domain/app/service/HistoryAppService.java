@@ -19,8 +19,9 @@ public class HistoryAppService {
 
     private final HistoryAppRepository historyAppRepository;
 
-    public void addAppForHistory(List<ChallengeApp> currentChallengeApps, List<HistoryAppRequest> apps,
-                                 DailyChallenge dailyChallenge, String os) {
+    public void addHistoryApp(
+            List<ChallengeApp> currentChallengeApps, List<HistoryAppRequest> apps,
+            DailyChallenge dailyChallenge, String os) {
         historyAppRepository.saveAll(supplementAdditionalInfo(currentChallengeApps, apps, dailyChallenge, os));
     }
 
