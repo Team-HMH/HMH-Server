@@ -3,9 +3,10 @@ package sopt.org.hmh.domain.auth.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sopt.org.hmh.domain.app.service.ChallengeAppService;
 import sopt.org.hmh.domain.auth.dto.response.ReissueResponse;
 import sopt.org.hmh.domain.challenge.domain.Challenge;
-import sopt.org.hmh.domain.challenge.service.ChallengeService;
+import sopt.org.hmh.domain.challenge.service.ChallengeFacade;
 import sopt.org.hmh.domain.user.domain.User;
 import sopt.org.hmh.domain.auth.dto.request.SocialPlatformRequest;
 import sopt.org.hmh.domain.auth.dto.request.SocialSignUpRequest;
@@ -27,7 +28,8 @@ public class AuthService {
     private final KakaoLoginService kakaoLoginService;
     private final AppleOAuthProvider appleOAuthProvider;
 
-    private final ChallengeService challengeService;
+    private final ChallengeFacade challengeFacade;
+    private final ChallengeAppService challengeAppService;
     private final TokenService tokenService;
     private final UserService userService;
 
@@ -52,8 +54,8 @@ public class AuthService {
 
         User user = userService.addUser(socialPlatform, socialId, request.name());
 
-        Challenge challenge = challengeService.addChallenge(user.getId(), request.toChallengeRequest() , os);
-        challengeService.addApps(challenge, request.challengeSignUpRequest().apps(), os);
+        Challenge challenge = challengeFacade.addChallenge(user.getId(), request.toChallengeRequest() , os);
+        challengeAppService.addApps(challenge, request.challengeSignUpRequest().apps(), os);
         
         userService.registerOnboardingInfo(request);
 
