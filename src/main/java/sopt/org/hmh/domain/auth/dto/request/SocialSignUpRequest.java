@@ -1,6 +1,7 @@
 package sopt.org.hmh.domain.auth.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import sopt.org.hmh.domain.challenge.dto.request.ChallengeRequest;
 import sopt.org.hmh.domain.challenge.dto.request.ChallengeSignUpRequest;
@@ -12,6 +13,7 @@ public record SocialSignUpRequest(
         String name,
         @JsonProperty(value = "onboarding")
         OnboardingRequest onboardingRequest,
+        @Valid
         @JsonProperty(value = "challenge")
         ChallengeSignUpRequest challengeSignUpRequest
 ) {

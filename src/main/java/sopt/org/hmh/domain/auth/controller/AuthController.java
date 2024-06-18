@@ -1,5 +1,6 @@
 package sopt.org.hmh.domain.auth.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,7 +40,7 @@ public class AuthController implements AuthApi {
     public ResponseEntity<BaseResponse<?>> orderSignup(
             @RequestHeader("Authorization") final String socialAccessToken,
             @RequestHeader("OS") final String os,
-            @RequestBody final SocialSignUpRequest request
+            @RequestBody @Valid final SocialSignUpRequest request
     ) {
         return ResponseEntity
                 .status(AuthSuccess.SIGNUP_SUCCESS.getHttpStatus())
