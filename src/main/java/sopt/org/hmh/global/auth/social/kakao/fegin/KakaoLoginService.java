@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 import sopt.org.hmh.domain.user.domain.User;
 import sopt.org.hmh.global.auth.jwt.exception.JwtError;
 import sopt.org.hmh.global.auth.jwt.exception.JwtException;
@@ -36,7 +35,7 @@ public class KakaoLoginService {
         KakaoUserResponse userRequest = getKakaoUserRequest(socialAccessToken);
 
         try {
-            loginUser.updateSocialInfo(userRequest.kakaoAccount().profile().nickname());
+            loginUser.updateNickname(userRequest.kakaoAccount().profile().nickname());
         } catch (NullPointerException exception) {
             throw new JwtException(JwtError.INVALID_SOCIAL_ACCESS_TOKEN_FORMAT);
         }

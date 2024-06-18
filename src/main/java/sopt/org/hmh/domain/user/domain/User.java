@@ -45,6 +45,7 @@ public class User extends BaseTimeEntity {
     private String socialId;
 
     @Min(value = 0)
+    @NotNull(message = "포인트는 기본 값이 설정되어야 합니다.")
     private Integer point;
 
     private LocalDate recentLockDate;
@@ -60,7 +61,7 @@ public class User extends BaseTimeEntity {
         this.point = UserConstants.INITIAL_POINT;
     }
 
-    public void updateSocialInfo(String nickname) {
+    public void updateNickname(String nickname) {
         this.name = nickname;
     }
 
