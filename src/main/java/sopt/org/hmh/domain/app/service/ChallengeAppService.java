@@ -25,17 +25,12 @@ public class ChallengeAppService {
     }
 
     public void addApps(Challenge challenge, List<ChallengeAppRequest> requests, String os) {
-        List<ChallengeApp> appsToUpdate = requests.stream()
-                .map(request -> {
-                    validateAppExist(challenge.getId(), request.appCode(), os);
-                    return ChallengeApp.builder()
-                            .challenge(challenge)
-                            .appCode(request.appCode())
-                            .goalTime(request.goalTime())
-                            .os(os)
-                            .build();
-                }).toList();
-        challengeAppRepository.saveAll(appsToUpdate);
+        challengeAppRepository.saveAll(
+                requests.stream().map(
+                        request -> {
+                            validateAppExist(challenge.getId(), request.appCode(), os);
+                            return request.toEntity(challenge, os);
+                        }).toList());
     }
 
     private void validateAppExist(Long challengeId, String appCode, String os) {
