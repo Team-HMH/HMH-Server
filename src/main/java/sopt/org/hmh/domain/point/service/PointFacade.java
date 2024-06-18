@@ -18,13 +18,13 @@ import sopt.org.hmh.domain.user.service.UserService;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class PointFacade {
 
     private final UserService userService;
     private final DailyChallengeService dailyChallengeService;
     private final ChallengeService challengeService;
 
+    @Transactional
     public UsePointResponse usePointAndChallengeFailed(Long userId, LocalDate challengeDate) {
         DailyChallenge dailyChallenge =
                 dailyChallengeService.findByChallengeDateAndUserIdOrThrowException(challengeDate, userId);
@@ -39,6 +39,7 @@ public class PointFacade {
         );
     }
 
+    @Transactional
     public EarnPointResponse earnPointAndChallengeEarned(Long userId, LocalDate challengeDate) {
         DailyChallenge dailyChallenge =
                 dailyChallengeService.findByChallengeDateAndUserIdOrThrowException(challengeDate, userId);
@@ -50,6 +51,7 @@ public class PointFacade {
         return new EarnPointResponse(user.increasePoint(ChallengeConstants.EARNED_POINT));
     }
 
+    @Transactional(readOnly = true)
     public ChallengePointStatusListResponse getChallengePointStatusList(Long userId) {
         User user = userService.findByIdOrThrowException(userId);
         Challenge challenge = challengeService.findByIdOrElseThrow(user.getCurrentChallengeId());
