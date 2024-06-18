@@ -11,13 +11,13 @@ import sopt.org.hmh.domain.user.repository.UserRepository;
 
 @Component
 @RequiredArgsConstructor
-@Transactional
 public class ExpiredUserDeleteScheduler {
 
     private final UserRepository userRepository;
     private final ChallengeService challengeService;
 
     @Scheduled(cron = "0 0 4 * * ?")
+    @Transactional
     public void deleteExpiredUser() {
         deleteExpiredUser(LocalDateTime.now());
     }
