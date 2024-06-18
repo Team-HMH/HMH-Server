@@ -1,9 +1,7 @@
 package sopt.org.hmh.domain.challenge.dto.request;
 
 import jakarta.validation.constraints.NotNull;
-import sopt.org.hmh.domain.app.domain.AppConstants;
-import sopt.org.hmh.domain.app.domain.exception.AppError;
-import sopt.org.hmh.domain.app.domain.exception.AppException;
+import sopt.org.hmh.domain.challenge.domain.Challenge;
 import sopt.org.hmh.domain.challenge.domain.ChallengeConstants;
 import sopt.org.hmh.domain.challenge.domain.exception.ChallengeError;
 import sopt.org.hmh.domain.challenge.domain.exception.ChallengeException;
@@ -22,5 +20,13 @@ public record ChallengeRequest(
         if (goalTime > ChallengeConstants.MAXIMUM_GOAL_TIME || goalTime < ChallengeConstants.MINIMUM_GOAL_TIME) {
             throw new ChallengeException(ChallengeError.INVALID_GOAL_TIME);
         }
+    }
+
+    public Challenge toEntity(Long userId) {
+        return Challenge.builder()
+                .userId(userId)
+                .period(period)
+                .goalTime(goalTime)
+                .build();
     }
 }

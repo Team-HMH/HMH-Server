@@ -1,5 +1,6 @@
 package sopt.org.hmh.domain.challenge.service;
 
+import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +26,6 @@ import sopt.org.hmh.domain.user.service.UserService;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -39,14 +39,8 @@ public class ChallengeService {
 
     @Transactional
     public Challenge addChallenge(Long userId, ChallengeRequest challengeRequest, String os) {
-        Integer period = challengeRequest.period();
-        Long goalTime = challengeRequest.goalTime();
-
-        Challenge challenge = challengeRepository.save(Challenge.builder()
-                .userId(userId)
-                .period(period)
-                .goalTime(goalTime)
-                .build());
+        Challenge challenge = challengeRepository.save(challengeRequest.toEntity(userId));
+        LocalDate startDate = challenge.getCreatedAt().toLocalDate();
 
         User user = userService.findByIdOrThrowException(userId);
         Long previousChallengeId = user.getCurrentChallengeId();
@@ -58,17 +52,15 @@ public class ChallengeService {
             addApps(challenge, previousApps, os);
         }
 
-        List<DailyChallenge> dailyChallenges = new ArrayList<>();
-        LocalDate startDate = challenge.getCreatedAt().toLocalDate();
-        for (int dayCount = 0; dayCount < period; dayCount++) {
-            DailyChallenge dailyChallenge = DailyChallenge.builder()
-                    .challengeDate(startDate.plusDays(dayCount))
-                    .challenge(challenge)
-                    .userId(userId)
-                    .goalTime(goalTime).build();
-            dailyChallenges.add(dailyChallenge);
-        }
-        dailyChallengeRepository.saveAll(dailyChallenges);
+        Integer period = challengeRequest.period();
+        Long goalTime = challengeRequest.goalTime();
+        dailyChallengeRepository.saveAll(IntStream.range(0, period)
+                .mapToObj(i -> DailyChallenge.builder()
+                        .challengeDate(startDate.plusDays(i))
+                        .challenge(challenge)
+                        .userId(userId)
+                        .goalTime(goalTime).build())
+                .toList());
 
         user.changeCurrentChallengeId(challenge.getId());
 
