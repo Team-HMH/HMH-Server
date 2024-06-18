@@ -1,5 +1,6 @@
 package sopt.org.hmh.domain.challenge.service;
 
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,21 +32,22 @@ public class ChallengeFacade {
 
     @Transactional
     public Challenge addChallenge(Long userId, ChallengeRequest challengeRequest, String os) {
-        Challenge challenge = challengeService.save(challengeRequest.toEntity(userId));
-        LocalDate startDate = challenge.getCreatedAt().toLocalDate();
-
         User user = userService.findByIdOrThrowException(userId);
-        this.addAppsIfPreviousChallengeExist(os, user.getCurrentChallengeId(), challenge);
+        Optional<Long> previousChallengeId = Optional.of(user.getCurrentChallengeId());
+
+        Challenge challenge = challengeService.save(challengeRequest.toEntity(userId));
         user.changeCurrentChallengeId(challenge.getId());
 
+        LocalDate startDate = challenge.getCreatedAt().toLocalDate();
         dailyChallengeService.addDailyChallenge(userId, startDate, challenge);
+        this.addAppsIfPreviousChallengeExist(os, previousChallengeId, challenge);
 
         return challenge;
     }
 
-    private void addAppsIfPreviousChallengeExist(String os, Long previousChallengeId, Challenge challenge) {
-        if (previousChallengeId != null) {
-            Challenge previousChallenge = challengeService.findByIdOrElseThrow(previousChallengeId);
+    private void addAppsIfPreviousChallengeExist(String os, Optional<Long> previousChallengeId, Challenge challenge) {
+        if (previousChallengeId.isPresent()) {
+            Challenge previousChallenge = challengeService.findByIdOrElseThrow(previousChallengeId.get());
             List<ChallengeAppRequest> previousApps = previousChallenge.getApps().stream()
                     .map(app -> new ChallengeAppRequest(app.getAppCode(), app.getGoalTime()))
                     .toList();
