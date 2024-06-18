@@ -74,7 +74,7 @@ public class ChallengeFacade {
     }
 
     @Transactional(readOnly = true)
-    public DailyChallengeResponse getDailyChallenge(Long userId) {
+    public DailyChallengeResponse getDailyChallengeInfo(Long userId) {
         Challenge challenge = this.findCurrentChallengeByUserId(userId);
 
         return DailyChallengeResponse.builder()

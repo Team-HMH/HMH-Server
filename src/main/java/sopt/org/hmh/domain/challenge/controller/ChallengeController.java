@@ -52,7 +52,7 @@ public class ChallengeController implements ChallengeApi {
         return ResponseEntity
                 .status(ChallengeSuccess.GET_DAILY_CHALLENGE_SUCCESS.getHttpStatus())
                 .body(BaseResponse.success(ChallengeSuccess.GET_DAILY_CHALLENGE_SUCCESS,
-                        challengeFacade.getDailyChallenge(userId)));
+                        challengeFacade.getDailyChallengeInfo(userId)));
     }
 
     @PostMapping("/app")
