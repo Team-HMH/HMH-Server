@@ -11,6 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
@@ -31,20 +32,21 @@ public class User extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String name;
+
     private Long currentChallengeId;
 
     @Enumerated(EnumType.STRING)
+    @NotNull(message = "소셜 플랫폼은 null일 수 없습니다.")
     private SocialPlatform socialPlatform;
 
     @Column(unique = true)
     private String socialId;
 
     @Min(value = 0)
+    @NotNull(message = "포인트는 기본 값이 설정되어야 합니다.")
     private Integer point;
-
-    @Column(columnDefinition = "TEXT")
-    private String profileImageUrl;
 
     private LocalDate recentLockDate;
 
@@ -59,9 +61,8 @@ public class User extends BaseTimeEntity {
         this.point = UserConstants.INITIAL_POINT;
     }
 
-    public void updateSocialInfo(String nickname, String profileImageUrl) {
+    public void updateNickname(String nickname) {
         this.name = nickname;
-        this.profileImageUrl = profileImageUrl;
     }
 
     public void softDelete() {

@@ -1,7 +1,6 @@
 package sopt.org.hmh.domain.user.service;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Optional;
 
 import lombok.RequiredArgsConstructor;
@@ -13,8 +12,6 @@ import sopt.org.hmh.domain.auth.exception.AuthError;
 import sopt.org.hmh.domain.auth.exception.AuthException;
 import sopt.org.hmh.domain.auth.repository.OnboardingInfoRepository;
 import sopt.org.hmh.domain.auth.repository.ProblemRepository;
-import sopt.org.hmh.domain.user.domain.OnboardingInfo;
-import sopt.org.hmh.domain.user.domain.OnboardingProblem;
 import sopt.org.hmh.domain.user.domain.User;
 import sopt.org.hmh.domain.user.domain.UserConstants;
 import sopt.org.hmh.domain.user.domain.exception.UserError;
@@ -26,19 +23,18 @@ import sopt.org.hmh.global.auth.social.SocialPlatform;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class UserService {
 
     private final UserRepository userRepository;
     private final OnboardingInfoRepository onboardingInfoRepository;
     private final ProblemRepository problemRepository;
 
-
     @Transactional
     public void withdraw(Long userId) {
         this.findByIdOrThrowException(userId).softDelete();
     }
 
+    @Transactional(readOnly = true)
     public UserInfoResponse getUserInfo(Long userId) {
         return UserInfoResponse.of(this.findByIdOrThrowException(userId));
     }
@@ -74,21 +70,12 @@ public class UserService {
         return name;
     }
 
-    public void registerOnboardingInfo(SocialSignUpRequest request) {
-        OnboardingInfo onboardingInfo = OnboardingInfo.builder()
-                .averageUseTime(request.onboardingRequest().averageUseTime())
-                .build();
-        Long onboardingInfoId = onboardingInfoRepository.save(onboardingInfo).getId();
-
-        List<OnboardingProblem> problemList = request.onboardingRequest().problemList().stream()
-                .map(problem -> OnboardingProblem.builder()
-                        .onboardingInfoId(onboardingInfoId)
-                        .problem(problem).build())
-                .toList();
-        problemRepository.saveAll(problemList);
+    public void registerOnboardingInfo(SocialSignUpRequest request, Long userId) {
+        Long onboardingInfoId = onboardingInfoRepository.save(request.toOnboardingInfo(userId)).getId();
+        problemRepository.saveAll(request.toProblemList(onboardingInfoId));
     }
 
-    public User findBySocialPlatformAndSocialIdOrThrowException(SocialPlatform socialPlatform, String socialId) {
+    private User findBySocialPlatformAndSocialIdOrThrowException(SocialPlatform socialPlatform, String socialId) {
         return userRepository.findBySocialPlatformAndSocialId(socialPlatform, socialId).orElseThrow(
                 () -> new AuthException(AuthError.NOT_SIGNUP_USER));
     }
@@ -104,17 +91,13 @@ public class UserService {
     }
 
     @Transactional
-    public void changeRecentLockDate(Long userId, LocalDate localDate) {
-        this.findByIdOrThrowException(userId).changeRecentLockDate(localDate);
+    public void changeRecentLockDate(Long userId, LocalDate lockDate) {
+        this.findByIdOrThrowException(userId).changeRecentLockDate(lockDate);
     }
 
+    @Transactional(readOnly = true)
     public IsLockTodayResponse checkIsTodayLock(Long userId, LocalDate lockCheckDate) {
         LocalDate userRecentLockDate = this.findByIdOrThrowException(userId).getRecentLockDate();
-
-        if (userRecentLockDate == null) {
-            return new IsLockTodayResponse(false);
-        }
-
-        return new IsLockTodayResponse(userRecentLockDate.equals(lockCheckDate));
+        return new IsLockTodayResponse(lockCheckDate.equals(userRecentLockDate));
     }
 }

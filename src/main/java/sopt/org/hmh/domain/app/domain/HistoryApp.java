@@ -1,6 +1,7 @@
 package sopt.org.hmh.domain.app.domain;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,7 +17,10 @@ public class HistoryApp extends App {
     @JoinColumn(name = "daily_challenge_id")
     private DailyChallenge dailyChallenge;
 
+    @NotNull(message = "사용 시간은 null일 수 없습니다.")
     private Long usageTime;
+
+    @NotNull(message = "목표 시간은 null일 수 없습니다.")
     private Long goalTime;
 
     @Builder
