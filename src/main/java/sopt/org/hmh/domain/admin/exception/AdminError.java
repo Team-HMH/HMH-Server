@@ -8,7 +8,7 @@ import sopt.org.hmh.global.common.exception.base.ErrorBase;
 public enum AdminError implements ErrorBase {
 
     // 401 UNAUTHORIZED
-    INVALID_PASSWORD(HttpStatus.UNAUTHORIZED, "비밀번호가 일치하지 않습니다."),
+    INVALID_ADMIN_AUTH_CODE(HttpStatus.UNAUTHORIZED, "관리자 인증 번호가 일치하지 않습니다."),
     ;
 
     private final HttpStatus status;
