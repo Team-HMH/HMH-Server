@@ -1,6 +1,10 @@
 package sopt.org.hmh.global.auth.jwt;
 
+import static sopt.org.hmh.global.auth.jwt.JwtConstants.ADMIN_ROLE;
+
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtParser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -32,8 +36,15 @@ public class JwtValidator {
         }
     }
 
-    private void parseToken(String token) {
+    private Jws<Claims> parseToken(String token) {
         JwtParser jwtParser = jwtGenerator.getJwtParser();
-        jwtParser.parseClaimsJws(token);
+        return jwtParser.parseClaimsJws(token);
+    }
+
+    public void validateAdminToken(String token) {
+        String subject = parseToken(token).getBody().getSubject();
+        if (!subject.equals(ADMIN_ROLE)) {
+            throw new JwtException(JwtError.INVALID_ADMIN_TOKEN);
+        }
     }
 }
