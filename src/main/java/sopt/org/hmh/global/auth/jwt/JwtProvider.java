@@ -21,4 +21,8 @@ public class JwtProvider {
                 .getBody()
                 .getSubject());
     }
+
+    public String issueAdminToken() {
+        return jwtGenerator.generateAdminToken();
+    }
 }
