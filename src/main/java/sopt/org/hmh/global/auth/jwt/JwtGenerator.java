@@ -22,6 +22,8 @@ public class JwtGenerator {
     private Long ACCESS_TOKEN_EXPIRATION_TIME;
     @Value("${jwt.refresh-token-expiration-time}")
     private Long REFRESH_TOKEN_EXPIRATION_TIME;
+    @Value("${jwt.admin-access-token-expiration-time}")
+    private Long ADMIN_ACCESS_TOKEN_EXPIRATION_TIME;
 
     public String generateToken(Long userId, boolean isRefreshToken) {
         final Date now = generateNowDate();
@@ -32,6 +34,18 @@ public class JwtGenerator {
                 .setSubject(String.valueOf(userId))
                 .setIssuedAt(now)
                 .setExpiration(expiration)
+                .signWith(getSigningKey())
+                .compact();
+    }
+
+    public String generateAdminToken() {
+        final Date now = generateNowDate();
+
+        return Jwts.builder()
+                .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
+                .setSubject("ADMIN")
+                .setIssuedAt(now)
+                .setExpiration(new Date(now.getTime() + ADMIN_ACCESS_TOKEN_EXPIRATION_TIME))
                 .signWith(getSigningKey())
                 .compact();
     }
