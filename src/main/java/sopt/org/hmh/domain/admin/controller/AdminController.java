@@ -15,15 +15,18 @@ import sopt.org.hmh.global.common.response.BaseResponse;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/admin")
-public class AdminController implements AdminApi{
+public class AdminController implements AdminApi {
+
+    private final AdminFacade adminFacade;
+
     @Override
     @PostMapping("/login")
     public ResponseEntity<BaseResponse<?>> orderAdminLogin(
-            @RequestBody @Valid final AdminLoginRequest request)
-    {
+            @RequestBody @Valid final AdminLoginRequest request) {
         return ResponseEntity
                 .status(AdminSuccess.ADMIN_LOGIN_SUCCESS.getHttpStatus())
-                .body(BaseResponse.success(AdminSuccess.ADMIN_LOGIN_SUCCESS, AdminFacade.adminLogin(request.authCode())));
+                .body(BaseResponse.success(AdminSuccess.ADMIN_LOGIN_SUCCESS,
+                        adminFacade.adminLogin(request.authCode())));
     }
 
 }
