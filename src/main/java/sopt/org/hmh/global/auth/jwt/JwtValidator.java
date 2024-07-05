@@ -1,6 +1,7 @@
 package sopt.org.hmh.global.auth.jwt;
 
 import static sopt.org.hmh.global.auth.jwt.JwtConstants.ADMIN_ROLE;
+import static sopt.org.hmh.global.auth.jwt.JwtPrefixExtractor.extractPrefix;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -37,8 +38,9 @@ public class JwtValidator {
     }
 
     private Jws<Claims> parseToken(String token) {
+        String extractedToken = extractPrefix(token);
         JwtParser jwtParser = jwtGenerator.getJwtParser();
-        return jwtParser.parseClaimsJws(token);
+        return jwtParser.parseClaimsJws(extractedToken);
     }
 
     public void validateAdminToken(String token) {

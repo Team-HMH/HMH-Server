@@ -1,5 +1,7 @@
 package sopt.org.hmh.global.auth.jwt;
 
+import static sopt.org.hmh.global.auth.jwt.JwtPrefixExtractor.extractPrefix;
+
 import io.jsonwebtoken.JwtParser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -16,8 +18,9 @@ public class JwtProvider {
     }
 
     public String getSubject(String token) {
+        String extractedToken = extractPrefix(token);
         JwtParser jwtParser = jwtGenerator.getJwtParser();
-        return jwtParser.parseClaimsJws(token)
+        return jwtParser.parseClaimsJws(extractedToken)
                 .getBody()
                 .getSubject();
     }
