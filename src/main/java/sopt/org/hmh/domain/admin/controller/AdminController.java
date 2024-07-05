@@ -48,7 +48,7 @@ public class AdminController implements AdminApi {
     @PatchMapping("/user")
     public ResponseEntity<Void> orderAdminChangeUserInfo(
             @RequestBody @Valid final AdminUserInfoRequest request) {
-        adminFacade.ChangeUserInfo(request);
+        adminFacade.changeUserInfo(request);
         return ResponseEntity
                 .noContent()
                 .build();

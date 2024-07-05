@@ -89,6 +89,14 @@ public class User extends BaseTimeEntity {
         return this.point;
     }
 
+    public void changePoint(Integer point) {
+        this.point = point;
+    }
+
+    public void changeName(String name) {
+        this.name = name;
+    }
+
     public void changeCurrentChallengeId(Long currentChallengeId) {
         this.currentChallengeId = currentChallengeId;
     }

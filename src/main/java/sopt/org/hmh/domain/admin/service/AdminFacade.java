@@ -1,12 +1,15 @@
 package sopt.org.hmh.domain.admin.service;
 
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sopt.org.hmh.domain.admin.dto.request.AdminUserInfoRequest;
 import sopt.org.hmh.domain.admin.dto.response.AdminTokenResponse;
 import sopt.org.hmh.domain.admin.exception.AdminError;
 import sopt.org.hmh.domain.admin.exception.AdminException;
+import sopt.org.hmh.domain.user.domain.User;
 import sopt.org.hmh.domain.user.service.UserService;
 import sopt.org.hmh.global.auth.jwt.TokenService;
 
@@ -35,5 +38,16 @@ public class AdminFacade {
     public void withdrawImmediately(Long userId) {
         userService.checkIsExistUserId(userId);
         userService.withdrawImmediately(userId);
+    }
+
+    @Transactional
+    public void changeUserInfo(AdminUserInfoRequest request) {
+        User user = userService.findByIdOrThrowException(request.userId());
+        if (Objects.nonNull(request.point())) {
+            user.changePoint(request.point());
+        }
+        if (Objects.nonNull(request.name())) {
+            user.changeName(request.name());
+        }
     }
 }
