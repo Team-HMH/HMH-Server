@@ -9,6 +9,9 @@ public enum AdminSuccess implements SuccessBase {
 
     // 200 OK
     ADMIN_LOGIN_SUCCESS(HttpStatus.OK, "관리자 로그인에 성공했습니다."),
+
+    // 204 NO CONTENT
+    ADMIN_WITHDRAW_IMMEDIATELY_SUCCESS(HttpStatus.NO_CONTENT, "관리자 권한으로 유저 즉시 삭제에 성공했습니다."),
     ;
 
     private final HttpStatus status;

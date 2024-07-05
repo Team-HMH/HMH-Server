@@ -3,6 +3,7 @@ package sopt.org.hmh.domain.admin.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,11 +24,19 @@ public class AdminController implements AdminApi {
     @Override
     @PostMapping("/login")
     public ResponseEntity<BaseResponse<AdminTokenResponse>> orderAdminLogin(
-            @RequestBody @Valid final AdminLoginRequest request) {
+            @RequestBody final AdminLoginRequest request) {
         return ResponseEntity
                 .status(AdminSuccess.ADMIN_LOGIN_SUCCESS.getHttpStatus())
                 .body(BaseResponse.success(AdminSuccess.ADMIN_LOGIN_SUCCESS,
                         adminFacade.adminLogin(request.authCode())));
     }
 
+    @Override
+    @DeleteMapping("/user")
+    public ResponseEntity<?> orderAdminWithdrawImmediately(@RequestBody @Valid final Long userId) {
+        adminFacade.withdrawImmediately(userId);
+        return ResponseEntity
+                .noContent()
+                .build();
+    }
 }
