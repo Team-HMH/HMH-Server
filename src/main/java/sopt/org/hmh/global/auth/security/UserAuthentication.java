@@ -10,7 +10,7 @@ public class UserAuthentication extends UsernamePasswordAuthenticationToken {
         super(principal, credentials, authorities);
     }
 
-    public static UserAuthentication createUserAuthentication(Long userId) {
-        return new UserAuthentication(userId, null, null);
+    public static UserAuthentication createUserAuthentication(String subjectId) {
+        return new UserAuthentication(subjectId, null, null);
     }
 }

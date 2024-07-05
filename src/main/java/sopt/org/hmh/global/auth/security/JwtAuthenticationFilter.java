@@ -41,8 +41,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         throw new JwtException(JwtError.INVALID_ACCESS_TOKEN);
     }
 
-    private void doAuthentication(HttpServletRequest request, Long userId) {
-        UserAuthentication authentication = createUserAuthentication(userId);
+    private void doAuthentication(HttpServletRequest request, String subjectId) {
+        UserAuthentication authentication = createUserAuthentication(subjectId);
         createAndSetWebAuthenticationDetails(request, authentication);
         SecurityContext securityContext = SecurityContextHolder.getContext();
         securityContext.setAuthentication(authentication);

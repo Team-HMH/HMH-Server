@@ -17,7 +17,7 @@ public class TokenService {
     @Transactional
     public ReissueResponse reissueToken(String refreshToken) {
         String parsedRefreshToken = parseTokenString(refreshToken);
-        Long userId = jwtProvider.getSubject(parsedRefreshToken);
+        String userId = jwtProvider.getSubject(parsedRefreshToken);
         jwtValidator.validateRefreshToken(parsedRefreshToken);
         return ReissueResponse.of(jwtProvider.issueToken(userId));
     }
@@ -30,8 +30,8 @@ public class TokenService {
         return parsedTokens[1];
     }
 
-    public TokenResponse issueToken(Long userId) {
-        return jwtProvider.issueToken(userId);
+    public TokenResponse issueToken(String subjectId) {
+        return jwtProvider.issueToken(subjectId);
     }
 
     public String issueAdminToken() {

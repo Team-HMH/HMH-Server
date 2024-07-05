@@ -10,16 +10,16 @@ public class JwtProvider {
 
     private final JwtGenerator jwtGenerator;
 
-    public TokenResponse issueToken(Long userId) {
-        return new TokenResponse(jwtGenerator.generateToken(userId, false),
-                jwtGenerator.generateToken(userId, true));
+    public TokenResponse issueToken(String subjectId) {
+        return new TokenResponse(jwtGenerator.generateToken(subjectId, false),
+                jwtGenerator.generateToken(subjectId, true));
     }
 
-    public Long getSubject(String token) {
+    public String getSubject(String token) {
         JwtParser jwtParser = jwtGenerator.getJwtParser();
-        return Long.valueOf(jwtParser.parseClaimsJws(token)
+        return jwtParser.parseClaimsJws(token)
                 .getBody()
-                .getSubject());
+                .getSubject();
     }
 
     public String issueAdminToken() {

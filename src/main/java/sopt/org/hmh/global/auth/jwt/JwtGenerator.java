@@ -27,13 +27,13 @@ public class JwtGenerator {
     @Value("${jwt.admin-access-token-expiration-time}")
     private Long ADMIN_ACCESS_TOKEN_EXPIRATION_TIME;
 
-    public String generateToken(Long userId, boolean isRefreshToken) {
+    public String generateToken(String subjectId, boolean isRefreshToken) {
         final Date now = generateNowDate();
         final Date expiration = generateExpirationDate(isRefreshToken, now);
 
         return Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
-                .setSubject(String.valueOf(userId))
+                .setSubject(subjectId)
                 .setIssuedAt(now)
                 .setExpiration(expiration)
                 .signWith(getSigningKey())
