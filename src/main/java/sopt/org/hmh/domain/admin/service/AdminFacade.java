@@ -3,6 +3,7 @@ package sopt.org.hmh.domain.admin.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import sopt.org.hmh.domain.admin.dto.response.AdminTokenResponse;
 import sopt.org.hmh.domain.admin.exception.AdminError;
 import sopt.org.hmh.domain.admin.exception.AdminException;
@@ -30,7 +31,9 @@ public class AdminFacade {
         }
     }
 
+    @Transactional
     public void withdrawImmediately(Long userId) {
+        userService.checkIsExistUserId(userId);
         userService.withdrawImmediately(userId);
     }
 }
