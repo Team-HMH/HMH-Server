@@ -1,5 +1,7 @@
 package sopt.org.hmh.global.auth.jwt;
 
+import static sopt.org.hmh.global.auth.jwt.JwtConstants.ADMIN_ROLE;
+
 import io.jsonwebtoken.Header;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
@@ -43,7 +45,7 @@ public class JwtGenerator {
 
         return Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
-                .setSubject("ADMIN")
+                .setSubject(ADMIN_ROLE)
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + ADMIN_ACCESS_TOKEN_EXPIRATION_TIME))
                 .signWith(getSigningKey())
