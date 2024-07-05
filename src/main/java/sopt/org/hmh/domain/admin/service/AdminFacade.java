@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import sopt.org.hmh.domain.admin.dto.response.AdminTokenResponse;
 import sopt.org.hmh.domain.admin.exception.AdminError;
 import sopt.org.hmh.domain.admin.exception.AdminException;
+import sopt.org.hmh.domain.user.service.UserService;
 import sopt.org.hmh.global.auth.jwt.TokenService;
 
 @Service
@@ -15,6 +16,7 @@ public class AdminFacade {
     @Value("${jwt.admin-auth-code}")
     private String adminAuthCode;
 
+    private final UserService userService;
     private final TokenService tokenService;
 
     public AdminTokenResponse adminLogin(String authCode) {
@@ -26,5 +28,9 @@ public class AdminFacade {
         if (!adminAuthCode.equals(authCode)) {
             throw new AdminException(AdminError.INVALID_ADMIN_AUTH_CODE);
         }
+    }
+
+    public void withdrawImmediately(Long userId) {
+        userService.withdrawImmediately(userId);
     }
 }
