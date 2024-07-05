@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import sopt.org.hmh.domain.admin.dto.request.AdminLoginRequest;
+import sopt.org.hmh.domain.admin.dto.request.AdminUserIdRequest;
 import sopt.org.hmh.domain.admin.dto.response.AdminTokenResponse;
 import sopt.org.hmh.domain.admin.exception.AdminSuccess;
 import sopt.org.hmh.domain.admin.service.AdminFacade;
@@ -33,8 +34,9 @@ public class AdminController implements AdminApi {
 
     @Override
     @DeleteMapping("/user")
-    public ResponseEntity<?> orderAdminWithdrawImmediately(@RequestBody @Valid final Long userId) {
-        adminFacade.withdrawImmediately(userId);
+    public ResponseEntity<?> orderAdminWithdrawImmediately(
+            @RequestBody @Valid final AdminUserIdRequest request) {
+        adminFacade.withdrawImmediately(request.userId());
         return ResponseEntity
                 .noContent()
                 .build();
