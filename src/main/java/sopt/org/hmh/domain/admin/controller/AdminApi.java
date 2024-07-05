@@ -7,6 +7,9 @@ import sopt.org.hmh.domain.admin.dto.response.AdminTokenResponse;
 import sopt.org.hmh.global.common.response.BaseResponse;
 
 public interface AdminApi {
-    @Operation(summary = "소셜 로그인")
+    @Operation(summary = "관리자 로그인")
     ResponseEntity<BaseResponse<AdminTokenResponse>> orderAdminLogin(AdminLoginRequest request);
+
+    @Operation(summary = "관리자 권한으로 유저 즉시 삭제")
+    ResponseEntity<?> orderAdminWithdrawImmediately(Long userId);
 }
