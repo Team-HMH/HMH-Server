@@ -100,4 +100,9 @@ public class UserService {
         LocalDate userRecentLockDate = this.findByIdOrThrowException(userId).getRecentLockDate();
         return new IsLockTodayResponse(lockCheckDate.equals(userRecentLockDate));
     }
+
+    @Transactional
+    public void withdrawImmediately(Long userId) {
+        userRepository.deleteById(userId);
+    }
 }
