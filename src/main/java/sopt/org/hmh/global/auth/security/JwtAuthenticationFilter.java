@@ -11,14 +11,11 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
-import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import sopt.org.hmh.global.auth.jwt.JwtConstants;
 import sopt.org.hmh.global.auth.jwt.JwtProvider;
 import sopt.org.hmh.global.auth.jwt.JwtValidator;
-import sopt.org.hmh.global.auth.jwt.exception.JwtError;
-import sopt.org.hmh.global.auth.jwt.exception.JwtException;
 
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -34,11 +31,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private String getAccessToken(HttpServletRequest request) {
-        String accessToken = request.getHeader(JwtConstants.AUTHORIZATION);
-        if (StringUtils.hasText(accessToken) && accessToken.startsWith(JwtConstants.BEARER)) {
-            return accessToken.substring(JwtConstants.BEARER.length());
-        }
-        throw new JwtException(JwtError.INVALID_ACCESS_TOKEN);
+        return request.getHeader(JwtConstants.AUTHORIZATION);
     }
 
     private void doAuthentication(HttpServletRequest request, String subjectId) {
