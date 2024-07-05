@@ -90,7 +90,7 @@ public class UserService {
     }
 
     public void checkIsExistUserId(Long userId) {
-        if (isExistUserId(userId)) {
+        if (!isExistUserId(userId)) {
             throw new UserException(UserError.NOT_FOUND_USER);
         }
     }
