@@ -34,4 +34,8 @@ public class TokenService {
         return jwtProvider.issueToken(userId);
     }
 
+    public String issueAdminToken() {
+        return jwtProvider.issueAdminToken();
+    }
+
 }
