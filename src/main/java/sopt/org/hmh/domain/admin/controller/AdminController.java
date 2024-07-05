@@ -34,7 +34,7 @@ public class AdminController implements AdminApi {
 
     @Override
     @DeleteMapping("/user")
-    public ResponseEntity<?> orderAdminWithdrawImmediately(
+    public ResponseEntity<Void> orderAdminWithdrawImmediately(
             @RequestBody @Valid final AdminUserIdRequest request) {
         adminFacade.withdrawImmediately(request.userId());
         return ResponseEntity

@@ -12,5 +12,5 @@ public interface AdminApi {
     ResponseEntity<BaseResponse<AdminTokenResponse>> orderAdminLogin(AdminLoginRequest request);
 
     @Operation(summary = "관리자 권한으로 유저 즉시 삭제")
-    ResponseEntity<?> orderAdminWithdrawImmediately(AdminUserIdRequest request);
+    ResponseEntity<Void> orderAdminWithdrawImmediately(AdminUserIdRequest request);
 }
