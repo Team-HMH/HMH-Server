@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import sopt.org.hmh.domain.admin.dto.request.AdminLoginRequest;
+import sopt.org.hmh.domain.admin.dto.response.AdminTokenResponse;
 import sopt.org.hmh.domain.admin.exception.AdminSuccess;
 import sopt.org.hmh.domain.admin.service.AdminFacade;
 import sopt.org.hmh.global.common.response.BaseResponse;
@@ -21,7 +22,7 @@ public class AdminController implements AdminApi {
 
     @Override
     @PostMapping("/login")
-    public ResponseEntity<BaseResponse<?>> orderAdminLogin(
+    public ResponseEntity<BaseResponse<AdminTokenResponse>> orderAdminLogin(
             @RequestBody @Valid final AdminLoginRequest request) {
         return ResponseEntity
                 .status(AdminSuccess.ADMIN_LOGIN_SUCCESS.getHttpStatus())
