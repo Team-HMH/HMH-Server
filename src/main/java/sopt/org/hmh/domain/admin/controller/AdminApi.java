@@ -2,6 +2,7 @@ package sopt.org.hmh.domain.admin.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.ResponseEntity;
+import sopt.org.hmh.domain.admin.dto.request.AdminDailyChallengeRequest;
 import sopt.org.hmh.domain.admin.dto.request.AdminLoginRequest;
 import sopt.org.hmh.domain.admin.dto.request.AdminUserIdRequest;
 import sopt.org.hmh.domain.admin.dto.request.AdminUserInfoRequest;
@@ -17,4 +18,7 @@ public interface AdminApi {
 
     @Operation(summary = "관리자 권한으로 유저 정보 변경")
     ResponseEntity<Void> orderAdminChangeUserInfo(AdminUserInfoRequest request);
+
+    @Operation(summary = "관리자 권한으로 유저 챌린지 정보 변경")
+    ResponseEntity<Void> orderAdminChangeDailyChallengeInfo(AdminDailyChallengeRequest request);
 }

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import sopt.org.hmh.domain.admin.dto.request.AdminDailyChallengeRequest;
 import sopt.org.hmh.domain.admin.dto.request.AdminLoginRequest;
 import sopt.org.hmh.domain.admin.dto.request.AdminUserIdRequest;
 import sopt.org.hmh.domain.admin.dto.request.AdminUserInfoRequest;
@@ -49,6 +50,16 @@ public class AdminController implements AdminApi {
     public ResponseEntity<Void> orderAdminChangeUserInfo(
             @RequestBody @Valid final AdminUserInfoRequest request) {
         adminFacade.changeUserInfo(request);
+        return ResponseEntity
+                .noContent()
+                .build();
+    }
+
+    @Override
+    @PatchMapping("/challenge/daily")
+    public ResponseEntity<Void> orderAdminChangeDailyChallengeInfo(
+            @RequestBody @Valid final AdminDailyChallengeRequest request) {
+        adminFacade.changeDailyChallengeInfo(request);
         return ResponseEntity
                 .noContent()
                 .build();
