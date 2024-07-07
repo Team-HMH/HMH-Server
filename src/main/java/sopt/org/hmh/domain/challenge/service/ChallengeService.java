@@ -31,4 +31,8 @@ public class ChallengeService {
     public Challenge save(Challenge challenge) {
         return challengeRepository.save(challenge);
     }
+
+    public Integer getChallengePeriod(Long challengeId) {
+        return findByIdOrElseThrow(challengeId).getPeriod();
+    }
 }
