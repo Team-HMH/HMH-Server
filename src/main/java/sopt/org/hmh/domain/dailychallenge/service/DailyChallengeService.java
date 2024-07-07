@@ -65,15 +65,13 @@ public class DailyChallengeService {
     }
 
     private void changeStatusOfDailyChallenges(List<DailyChallenge> dailyChallenges, List<Status> statuses) {
-        int challengePeriod = dailyChallenges.size();
-        for (int i = 0; i < challengePeriod; i++) {
+        for (int i = 0; i < dailyChallenges.size(); i++) {
             dailyChallenges.get(i).changeStatus(statuses.get(i));
         }
     }
 
     private void changeChallengeDateOfDailyChallenges(List<DailyChallenge> dailyChallenges, LocalDate challengeDate) {
-        int challengePeriod = dailyChallenges.size();
-        for (int i = 0; i < challengePeriod; i++) {
+        for (int i = 0; i < dailyChallenges.size(); i++) {
             dailyChallenges.get(i).changeChallengeDate(challengeDate.plusDays(i));
         }
     }
