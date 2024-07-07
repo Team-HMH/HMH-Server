@@ -9,7 +9,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.util.Assert;
 import sopt.org.hmh.domain.app.domain.HistoryApp;
 import sopt.org.hmh.global.common.domain.BaseTimeEntity;
 import sopt.org.hmh.domain.challenge.domain.Challenge;
@@ -52,6 +51,10 @@ public class DailyChallenge extends BaseTimeEntity {
         this.goalTime = goalTime;
         this.challengeDate = challengeDate;
         this.status = Status.NONE;
+    }
+
+    public void changeChallengeDate(LocalDate challengeDate) {
+        this.challengeDate = challengeDate;
     }
 
     public void changeStatus(Status status) {
