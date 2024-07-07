@@ -15,8 +15,12 @@ public class ChallengeService {
 
     private final ChallengeRepository challengeRepository;
 
-    public void deleteChallengeRelatedByUserId(List<Long> expiredUserIdList) {
+    public void deleteChallengeRelatedByUserIds(List<Long> expiredUserIdList) {
         challengeRepository.deleteByUserIdIn(expiredUserIdList);
+    }
+
+    public void deleteChallengeRelatedByUserId(Long userId) {
+        challengeRepository.deleteByUserId(userId);
     }
 
     public Challenge findByIdOrElseThrow(Long challengeId) {
