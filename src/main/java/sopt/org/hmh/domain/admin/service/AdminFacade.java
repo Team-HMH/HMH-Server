@@ -47,6 +47,7 @@ public class AdminFacade {
     @Transactional
     public void withdrawImmediately(Long userId) {
         userService.checkIsExistUserId(userId);
+        challengeService.deleteChallengeRelatedByUserId(userId);
         userService.withdrawImmediately(userId);
     }
 
