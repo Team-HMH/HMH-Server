@@ -1,5 +1,7 @@
 package sopt.org.hmh.global.auth.jwt;
 
+import static sopt.org.hmh.global.auth.jwt.JwtConstants.ADMIN_ROLE;
+
 import io.jsonwebtoken.Header;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
@@ -22,16 +24,30 @@ public class JwtGenerator {
     private Long ACCESS_TOKEN_EXPIRATION_TIME;
     @Value("${jwt.refresh-token-expiration-time}")
     private Long REFRESH_TOKEN_EXPIRATION_TIME;
+    @Value("${jwt.admin-access-token-expiration-time}")
+    private Long ADMIN_ACCESS_TOKEN_EXPIRATION_TIME;
 
-    public String generateToken(Long userId, boolean isRefreshToken) {
+    public String generateToken(String subjectId, boolean isRefreshToken) {
         final Date now = generateNowDate();
         final Date expiration = generateExpirationDate(isRefreshToken, now);
 
         return Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
-                .setSubject(String.valueOf(userId))
+                .setSubject(subjectId)
                 .setIssuedAt(now)
                 .setExpiration(expiration)
+                .signWith(getSigningKey())
+                .compact();
+    }
+
+    public String generateAdminToken() {
+        final Date now = generateNowDate();
+
+        return Jwts.builder()
+                .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
+                .setSubject(ADMIN_ROLE)
+                .setIssuedAt(now)
+                .setExpiration(new Date(now.getTime() + ADMIN_ACCESS_TOKEN_EXPIRATION_TIME))
                 .signWith(getSigningKey())
                 .compact();
     }

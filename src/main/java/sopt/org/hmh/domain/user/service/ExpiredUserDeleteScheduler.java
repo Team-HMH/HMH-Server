@@ -25,6 +25,6 @@ public class ExpiredUserDeleteScheduler {
     public void deleteExpiredUser(LocalDateTime currentDate) {
         List<Long> expiredUserList = userRepository.findIdByDeletedAtBeforeAndIsDeletedIsTrue(currentDate);
         userRepository.deleteAllById(expiredUserList);
-        challengeService.deleteChallengeRelatedByUserId(expiredUserList);
+        challengeService.deleteChallengeRelatedByUserIds(expiredUserList);
     }
 }

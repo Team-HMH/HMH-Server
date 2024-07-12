@@ -85,6 +85,16 @@ public class UserService {
                 () -> new UserException(UserError.NOT_FOUND_USER));
     }
 
+    private boolean isExistUserId(Long userId) {
+        return userRepository.existsById(userId);
+    }
+
+    public void checkIsExistUserId(Long userId) {
+        if (!isExistUserId(userId)) {
+            throw new UserException(UserError.NOT_FOUND_USER);
+        }
+    }
+
     public Long getCurrentChallengeIdByUserId(Long userId) {
         return Optional.ofNullable(this.findByIdOrThrowException(userId).getCurrentChallengeId())
                 .orElseThrow(() -> new UserException(UserError.NOT_FOUND_CURRENT_CHALLENGE_ID));
@@ -99,5 +109,9 @@ public class UserService {
     public IsLockTodayResponse checkIsTodayLock(Long userId, LocalDate lockCheckDate) {
         LocalDate userRecentLockDate = this.findByIdOrThrowException(userId).getRecentLockDate();
         return new IsLockTodayResponse(lockCheckDate.equals(userRecentLockDate));
+    }
+
+    public void withdrawImmediately(Long userId) {
+        userRepository.deleteById(userId);
     }
 }

@@ -73,7 +73,7 @@ public class AuthFacade {
             kakaoLoginService.updateUserInfoByKakao(loginUser, socialAccessToken);
         }
         Long userId = loginUser.getId();
-        return new LoginResponse(userId, tokenService.issueToken(userId));
+        return new LoginResponse(userId, tokenService.issueToken(userId.toString()));
     }
 
     public SocialAccessTokenResponse getSocialAccessTokenByAuthorizationCode(String code) {

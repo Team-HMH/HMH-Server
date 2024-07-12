@@ -25,9 +25,10 @@ public class ChallengeController implements ChallengeApi {
 
     @PostMapping
     @Override
-    public ResponseEntity<BaseResponse<?>> orderAddChallenge(@UserId final Long userId,
-                                                             @RequestHeader("OS") final String os,
-                                                             @RequestBody @Valid final ChallengeRequest request) {
+    public ResponseEntity<BaseResponse<?>> orderAddChallenge(
+            @UserId final Long userId,
+            @RequestHeader("OS") final String os,
+            @RequestBody @Valid final ChallengeRequest request) {
         challengeFacade.addChallenge(userId, request, os);
 
         return ResponseEntity
@@ -37,8 +38,9 @@ public class ChallengeController implements ChallengeApi {
 
     @GetMapping
     @Override
-    public ResponseEntity<BaseResponse<ChallengeResponse>> orderGetChallenge(@UserId final Long userId,
-                                                                             @RequestHeader("OS") final String os) {
+    public ResponseEntity<BaseResponse<ChallengeResponse>> orderGetChallenge(
+            @UserId final Long userId,
+            @RequestHeader("OS") final String os) {
         return ResponseEntity
                 .status(ChallengeSuccess.GET_CHALLENGE_SUCCESS.getHttpStatus())
                 .body(BaseResponse.success(ChallengeSuccess.GET_CHALLENGE_SUCCESS,
@@ -47,8 +49,9 @@ public class ChallengeController implements ChallengeApi {
 
     @GetMapping("/home")
     @Override
-    public ResponseEntity<BaseResponse<DailyChallengeResponse>> orderGetDailyChallenge(@UserId final Long userId,
-                                                                                       @RequestHeader("OS") final String os) {
+    public ResponseEntity<BaseResponse<DailyChallengeResponse>> orderGetDailyChallenge(
+            @UserId final Long userId,
+            @RequestHeader("OS") final String os) {
         return ResponseEntity
                 .status(ChallengeSuccess.GET_DAILY_CHALLENGE_SUCCESS.getHttpStatus())
                 .body(BaseResponse.success(ChallengeSuccess.GET_DAILY_CHALLENGE_SUCCESS,
@@ -57,9 +60,10 @@ public class ChallengeController implements ChallengeApi {
 
     @PostMapping("/app")
     @Override
-    public ResponseEntity<BaseResponse<?>> orderAddApps(@UserId final Long userId,
-                                                        @RequestHeader("OS") final String os,
-                                                        @RequestBody @Valid final ChallengeAppArrayRequest requests) {
+    public ResponseEntity<BaseResponse<?>> orderAddApps(
+            @UserId final Long userId,
+            @RequestHeader("OS") final String os,
+            @RequestBody @Valid final ChallengeAppArrayRequest requests) {
         challengeFacade.addAppsToCurrentChallenge(userId, requests.apps(), os);
 
         return ResponseEntity
@@ -70,9 +74,10 @@ public class ChallengeController implements ChallengeApi {
 
     @DeleteMapping("/app")
     @Override
-    public ResponseEntity<BaseResponse<?>> orderRemoveApp(@UserId final Long userId,
-                                                          @RequestHeader("OS") final String os,
-                                                          @RequestBody @Valid final AppRemoveRequest request) {
+    public ResponseEntity<BaseResponse<?>> orderRemoveApp(
+            @UserId final Long userId,
+            @RequestHeader("OS") final String os,
+            @RequestBody @Valid final AppRemoveRequest request) {
         challengeFacade.removeAppFromCurrentChallenge(userId, request.appCode(), os);
 
         return ResponseEntity

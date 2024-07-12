@@ -21,9 +21,11 @@ public class UserIdArgumentResolver implements HandlerMethodArgumentResolver {
     }
 
     @Override
-    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
-        return SecurityContextHolder.getContext()
+    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
+            NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
+        return Long.parseLong(SecurityContextHolder.getContext()
                 .getAuthentication()
-                .getPrincipal();
+                .getPrincipal()
+                .toString());
     }
 }

@@ -38,6 +38,7 @@ public class SecurityConfig {
 
             // Authentication
             "/api/v1/user/login",
+            "/api/v1/admin/login",
             "/api/v1/user/reissue",
             "/api/v1/user/signup",
             "/api/v1/user/social/token/kakao",
