@@ -3,6 +3,7 @@ package sopt.org.hmh.domain.challenge.domain;
 import static jakarta.persistence.GenerationType.*;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,15 +23,20 @@ public class Challenge extends BaseTimeEntity {
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
+    @NotNull(message = "유저 아이디는 null일 수 없습니다.")
     private Long userId;
+
+    @NotNull(message = "챌린지 기간은 null일 수 없습니다.")
     private Integer period;
+
+    @NotNull(message = "목표 시간은 null일 수 없습니다.")
     private Long goalTime;
 
     @OneToMany(mappedBy = "challenge", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<ChallengeApp> apps = new ArrayList<>();
+    private List<ChallengeApp> apps;
 
     @OneToMany(mappedBy = "challenge", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private final List<DailyChallenge> historyDailyChallenges  = new ArrayList<>();
+    private List<DailyChallenge> historyDailyChallenges;
 
     @Builder
     private Challenge(Integer period, Long userId, Long goalTime, List<ChallengeApp> apps) {

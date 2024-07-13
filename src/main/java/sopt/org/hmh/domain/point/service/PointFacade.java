@@ -18,15 +18,16 @@ import sopt.org.hmh.domain.user.service.UserService;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class PointFacade {
 
     private final UserService userService;
     private final DailyChallengeService dailyChallengeService;
     private final ChallengeService challengeService;
 
+    @Transactional
     public UsePointResponse usePointAndChallengeFailed(Long userId, LocalDate challengeDate) {
-        DailyChallenge dailyChallenge = dailyChallengeService.findByChallengeDateAndUserIdOrThrowException(challengeDate, userId);
+        DailyChallenge dailyChallenge =
+                dailyChallengeService.findByChallengeDateAndUserIdOrThrowException(challengeDate, userId);
         User user = userService.findByIdOrThrowException(userId);
 
         dailyChallengeService.validateDailyChallengeStatus(dailyChallenge.getStatus(), List.of(Status.NONE));
@@ -38,20 +39,22 @@ public class PointFacade {
         );
     }
 
+    @Transactional
     public EarnPointResponse earnPointAndChallengeEarned(Long userId, LocalDate challengeDate) {
-        DailyChallenge dailyChallenge = dailyChallengeService.findByChallengeDateAndUserIdOrThrowException(challengeDate, userId);
+        DailyChallenge dailyChallenge =
+                dailyChallengeService.findByChallengeDateAndUserIdOrThrowException(challengeDate, userId);
         User user = userService.findByIdOrThrowException(userId);
 
         dailyChallengeService.validateDailyChallengeStatus(dailyChallenge.getStatus(), List.of(Status.UNEARNED));
         dailyChallenge.changeStatus(Status.EARNED);
 
-        return new EarnPointResponse(
-                user.increasePoint(ChallengeConstants.EARNED_POINT)
-        );
+        return new EarnPointResponse(user.increasePoint(ChallengeConstants.EARNED_POINT));
     }
 
+    @Transactional(readOnly = true)
     public ChallengePointStatusListResponse getChallengePointStatusList(Long userId) {
-        Challenge challenge = challengeService.findCurrentChallengeByUserId(userId);
+        User user = userService.findByIdOrThrowException(userId);
+        Challenge challenge = challengeService.findByIdOrElseThrow(user.getCurrentChallengeId());
         List<ChallengePointStatusResponse> challengePointStatusResponseList =
                 challenge.getHistoryDailyChallenges().stream()
                 .map(dailyChallenge -> new ChallengePointStatusResponse(
@@ -59,7 +62,7 @@ public class PointFacade {
                         dailyChallenge.getStatus())).toList();
 
         return new ChallengePointStatusListResponse(
-                userService.getUserInfo(userId).point(),
+                user.getPoint(),
                 challenge.getPeriod(),
                 challengePointStatusResponseList
         );

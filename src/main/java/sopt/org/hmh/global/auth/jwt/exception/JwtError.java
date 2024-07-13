@@ -26,11 +26,14 @@ public enum JwtError implements ErrorBase {
     INVALID_IDENTITY_TOKEN_CLAIMS(HttpStatus.UNAUTHORIZED, "유효하지 않은 애플 아이덴티티 토큰 클레임입니다."),
     UNABLE_TO_CREATE_APPLE_PUBLIC_KEY(HttpStatus.UNAUTHORIZED, "애플 로그인 중 퍼블릭 키 생성에 문제가 발생했습니다."),
 
+    INVALID_ADMIN_TOKEN(HttpStatus.UNAUTHORIZED, "유효하지 않은 관리자 액세스 토큰입니다."),
+
     // 404 NOT FOUND
     NOT_FOUND_REFRESH_TOKEN_ERROR(HttpStatus.NOT_FOUND, "존재하지 않는 리프레시 토큰입니다."),
 
     // 500 INTERNAL ERROR
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 내부 오류입니다.");
+
     private final HttpStatus status;
     private final String errorMessage;
 

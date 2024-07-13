@@ -10,4 +10,6 @@ public interface ChallengeRepository extends JpaRepository<Challenge, Long> {
     Optional<Challenge> findById(Long id);
 
     void deleteByUserIdIn(List<Long> userId);
+
+    void deleteByUserId(Long userId);
 }

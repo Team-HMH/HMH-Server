@@ -1,6 +1,7 @@
 package sopt.org.hmh.domain.app.domain;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,6 +17,7 @@ public class ChallengeApp extends App {
     @JoinColumn(name = "challenge_id")
     private Challenge challenge;
 
+    @NotNull(message = "목표 시간은 null일 수 없습니다.")
     private Long goalTime;
 
     @Builder

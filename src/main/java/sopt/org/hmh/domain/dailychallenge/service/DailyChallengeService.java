@@ -2,19 +2,18 @@ package sopt.org.hmh.domain.dailychallenge.service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import sopt.org.hmh.domain.challenge.domain.Challenge;
 import sopt.org.hmh.domain.dailychallenge.domain.DailyChallenge;
 import sopt.org.hmh.domain.dailychallenge.domain.Status;
 import sopt.org.hmh.domain.dailychallenge.domain.exception.DailyChallengeError;
 import sopt.org.hmh.domain.dailychallenge.domain.exception.DailyChallengeException;
-import sopt.org.hmh.domain.dailychallenge.dto.request.FinishedDailyChallengeStatusListRequest;
 import sopt.org.hmh.domain.dailychallenge.repository.DailyChallengeRepository;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class DailyChallengeService {
 
     private final DailyChallengeRepository dailyChallengeRepository;
@@ -25,15 +24,7 @@ public class DailyChallengeService {
     }
 
     public void validateDailyChallengeStatus(Status dailyChallengeStatus, List<Status> expectedStatuses) {
-        boolean isAlreadyProcessed = true;
-        for (Status expected : expectedStatuses) {
-            if (dailyChallengeStatus == expected) {
-                isAlreadyProcessed = false;
-                break;
-            }
-        }
-
-        if (isAlreadyProcessed) {
+        if (!expectedStatuses.contains(dailyChallengeStatus)) {
             throw new DailyChallengeException(DailyChallengeError.DAILY_CHALLENGE_ALREADY_PROCESSED);
         }
     }
@@ -53,16 +44,35 @@ public class DailyChallengeService {
         throw new DailyChallengeException(DailyChallengeError.DAILY_CHALLENGE_ALREADY_PROCESSED);
     }
 
-    public void changeDailyChallengeStatusByIsSuccess(Long userId, FinishedDailyChallengeStatusListRequest requests) {
-        requests.finishedDailyChallenges().forEach(request -> {
-            DailyChallenge dailyChallenge = this.findByChallengeDateAndUserIdOrThrowException(request.challengeDate(), userId);
-            if (request.isSuccess()) {
-                this.validateDailyChallengeStatus(dailyChallenge.getStatus(), List.of(Status.NONE));
-                dailyChallenge.changeStatus(Status.UNEARNED);
-            } else {
-                this.validateDailyChallengeStatus(dailyChallenge.getStatus(), List.of(Status.NONE, Status.FAILURE));
-                dailyChallenge.changeStatus(Status.FAILURE);
-            }
-        });
+    public void addDailyChallenge(Long userId, LocalDate startDate, Challenge challenge) {
+        dailyChallengeRepository.saveAll(IntStream.range(0, challenge.getPeriod())
+                .mapToObj(i -> DailyChallenge.builder()
+                        .challengeDate(startDate.plusDays(i))
+                        .challenge(challenge)
+                        .userId(userId)
+                        .goalTime(challenge.getGoalTime()).build())
+                .toList());
+    }
+
+    public List<DailyChallenge> getDailyChallengesByChallengeId(Long challengeId) {
+        return dailyChallengeRepository.findAllByChallengeId(challengeId);
+    }
+
+    public void changeInfoOfDailyChallenges(Long challengeId, List<Status> statuses, LocalDate challengeDate) {
+        List<DailyChallenge> dailyChallenges = getDailyChallengesByChallengeId(challengeId);
+        changeStatusOfDailyChallenges(dailyChallenges, statuses);
+        changeChallengeDateOfDailyChallenges(dailyChallenges, challengeDate);
+    }
+
+    private void changeStatusOfDailyChallenges(List<DailyChallenge> dailyChallenges, List<Status> statuses) {
+        for (int i = 0; i < dailyChallenges.size(); i++) {
+            dailyChallenges.get(i).changeStatus(statuses.get(i));
+        }
+    }
+
+    private void changeChallengeDateOfDailyChallenges(List<DailyChallenge> dailyChallenges, LocalDate challengeDate) {
+        for (int i = 0; i < dailyChallenges.size(); i++) {
+            dailyChallenges.get(i).changeChallengeDate(challengeDate.plusDays(i));
+        }
     }
 }

@@ -1,17 +1,17 @@
 package sopt.org.hmh.domain.challenge.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sopt.org.hmh.domain.app.domain.exception.AppSuccess;
 import sopt.org.hmh.domain.app.dto.request.ChallengeAppArrayRequest;
 import sopt.org.hmh.domain.app.dto.request.AppRemoveRequest;
-import sopt.org.hmh.domain.challenge.domain.Challenge;
 import sopt.org.hmh.domain.challenge.domain.exception.ChallengeSuccess;
 import sopt.org.hmh.domain.challenge.dto.request.ChallengeRequest;
 import sopt.org.hmh.domain.challenge.dto.response.ChallengeResponse;
 import sopt.org.hmh.domain.challenge.dto.response.DailyChallengeResponse;
-import sopt.org.hmh.domain.challenge.service.ChallengeService;
+import sopt.org.hmh.domain.challenge.service.ChallengeFacade;
 import sopt.org.hmh.global.auth.UserId;
 import sopt.org.hmh.global.common.response.BaseResponse;
 import sopt.org.hmh.global.common.response.EmptyJsonResponse;
@@ -21,14 +21,15 @@ import sopt.org.hmh.global.common.response.EmptyJsonResponse;
 @RequestMapping("/api/v1/challenge")
 public class ChallengeController implements ChallengeApi {
 
-    private final ChallengeService challengeService;
+    private final ChallengeFacade challengeFacade;
 
     @PostMapping
     @Override
-    public ResponseEntity<BaseResponse<?>> orderAddChallenge(@UserId final Long userId,
-                                                             @RequestHeader("OS") final String os,
-                                                             @RequestBody final ChallengeRequest request) {
-        challengeService.addChallenge(userId, request.period(), request.goalTime(), os);
+    public ResponseEntity<BaseResponse<?>> orderAddChallenge(
+            @UserId final Long userId,
+            @RequestHeader("OS") final String os,
+            @RequestBody @Valid final ChallengeRequest request) {
+        challengeFacade.addChallenge(userId, request, os);
 
         return ResponseEntity
                 .status(ChallengeSuccess.ADD_CHALLENGE_SUCCESS.getHttpStatus())
@@ -37,31 +38,33 @@ public class ChallengeController implements ChallengeApi {
 
     @GetMapping
     @Override
-    public ResponseEntity<BaseResponse<ChallengeResponse>> orderGetChallenge(@UserId final Long userId,
-                                                                             @RequestHeader("OS") final String os) {
+    public ResponseEntity<BaseResponse<ChallengeResponse>> orderGetChallenge(
+            @UserId final Long userId,
+            @RequestHeader("OS") final String os) {
         return ResponseEntity
                 .status(ChallengeSuccess.GET_CHALLENGE_SUCCESS.getHttpStatus())
                 .body(BaseResponse.success(ChallengeSuccess.GET_CHALLENGE_SUCCESS,
-                        challengeService.getChallenge(userId)));
+                        challengeFacade.getCurrentChallengeInfo(userId)));
     }
 
     @GetMapping("/home")
     @Override
-    public ResponseEntity<BaseResponse<DailyChallengeResponse>> orderGetDailyChallenge(@UserId final Long userId,
-                                                                                       @RequestHeader("OS") final String os) {
+    public ResponseEntity<BaseResponse<DailyChallengeResponse>> orderGetDailyChallenge(
+            @UserId final Long userId,
+            @RequestHeader("OS") final String os) {
         return ResponseEntity
                 .status(ChallengeSuccess.GET_DAILY_CHALLENGE_SUCCESS.getHttpStatus())
                 .body(BaseResponse.success(ChallengeSuccess.GET_DAILY_CHALLENGE_SUCCESS,
-                        challengeService.getDailyChallenge(userId)));
+                        challengeFacade.getDailyChallengeInfo(userId)));
     }
 
     @PostMapping("/app")
     @Override
-    public ResponseEntity<BaseResponse<?>> orderAddApps(@UserId final Long userId,
-                                                        @RequestHeader("OS") final String os,
-                                                        @RequestBody final ChallengeAppArrayRequest requests) {
-        Challenge challenge = challengeService.findCurrentChallengeByUserId(userId);
-        challengeService.addApps(challenge, requests.apps(), os);
+    public ResponseEntity<BaseResponse<?>> orderAddApps(
+            @UserId final Long userId,
+            @RequestHeader("OS") final String os,
+            @RequestBody @Valid final ChallengeAppArrayRequest requests) {
+        challengeFacade.addAppsToCurrentChallenge(userId, requests.apps(), os);
 
         return ResponseEntity
                 .status(AppSuccess.ADD_APP_SUCCESS.getHttpStatus())
@@ -71,11 +74,11 @@ public class ChallengeController implements ChallengeApi {
 
     @DeleteMapping("/app")
     @Override
-    public ResponseEntity<BaseResponse<?>> orderRemoveApp(@UserId final Long userId,
-                                                          @RequestHeader("OS") final String os,
-                                                          @RequestBody final AppRemoveRequest request) {
-        Challenge challenge = challengeService.findCurrentChallengeByUserId(userId);
-        challengeService.removeApp(challenge, request, os);
+    public ResponseEntity<BaseResponse<?>> orderRemoveApp(
+            @UserId final Long userId,
+            @RequestHeader("OS") final String os,
+            @RequestBody @Valid final AppRemoveRequest request) {
+        challengeFacade.removeAppFromCurrentChallenge(userId, request.appCode(), os);
 
         return ResponseEntity
                 .status(AppSuccess.REMOVE_APP_SUCCESS.getHttpStatus())
