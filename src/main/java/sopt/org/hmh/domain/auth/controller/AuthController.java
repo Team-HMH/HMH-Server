@@ -32,7 +32,10 @@ public class AuthController implements AuthApi {
     ) {
         return ResponseEntity
                 .status(AuthSuccess.LOGIN_SUCCESS.getHttpStatus())
-                .body(BaseResponse.success(AuthSuccess.LOGIN_SUCCESS, authFacade.login(socialAccessToken, request)));
+                .body(BaseResponse.success(
+                        AuthSuccess.LOGIN_SUCCESS,
+                        authFacade.login(socialAccessToken, request.socialPlatform())
+                ));
     }
 
     @PostMapping("/signup")
@@ -44,7 +47,10 @@ public class AuthController implements AuthApi {
     ) {
         return ResponseEntity
                 .status(AuthSuccess.SIGNUP_SUCCESS.getHttpStatus())
-                .body(BaseResponse.success(AuthSuccess.SIGNUP_SUCCESS, authFacade.signup(socialAccessToken, request, os)));
+                .body(BaseResponse.success(
+                        AuthSuccess.SIGNUP_SUCCESS,
+                        authFacade.signup(socialAccessToken, request, os)
+                ));
     }
 
     @PostMapping("/reissue")
@@ -54,7 +60,10 @@ public class AuthController implements AuthApi {
     ) {
         return ResponseEntity
                 .status(AuthSuccess.REISSUE_SUCCESS.getHttpStatus())
-                .body(BaseResponse.success(AuthSuccess.REISSUE_SUCCESS, authFacade.reissueToken(refreshToken)));
+                .body(BaseResponse.success(
+                        AuthSuccess.REISSUE_SUCCESS,
+                        authFacade.reissueToken(refreshToken)
+                ));
     }
 
     @GetMapping("/social/token/kakao")
@@ -63,6 +72,9 @@ public class AuthController implements AuthApi {
             ) {
         return ResponseEntity
                 .status(AuthSuccess.GET_SOCIAL_ACCESS_TOKEN_SUCCESS.getHttpStatus())
-                .body(BaseResponse.success(AuthSuccess.GET_SOCIAL_ACCESS_TOKEN_SUCCESS, authFacade.getSocialAccessTokenByAuthorizationCode(code)));
+                .body(BaseResponse.success(
+                        AuthSuccess.GET_SOCIAL_ACCESS_TOKEN_SUCCESS,
+                        authFacade.getSocialAccessTokenByAuthorizationCode(code)
+                ));
     }
 }
