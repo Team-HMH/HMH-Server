@@ -29,7 +29,7 @@ public class ChallengeController implements ChallengeApi {
             @UserId final Long userId,
             @RequestHeader("OS") final String os,
             @RequestBody @Valid final ChallengeRequest request) {
-        challengeFacade.addChallengeAndDailyChallengeByPreviousChallenge(userId, request, os);
+        challengeFacade.startNewChallengeByPreviousChallenge(userId, request, os);
 
         return ResponseEntity
                 .status(ChallengeSuccess.ADD_CHALLENGE_SUCCESS.getHttpStatus())

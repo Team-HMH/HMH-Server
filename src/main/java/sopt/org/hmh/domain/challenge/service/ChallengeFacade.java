@@ -1,6 +1,5 @@
 package sopt.org.hmh.domain.challenge.service;
 
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,29 +30,32 @@ public class ChallengeFacade {
     private final ChallengeAppService challengeAppService;
 
     @Transactional
-    public Challenge addChallenge(Long userId, ChallengeRequest challengeRequest, String os) {
+    public Challenge startNewChallengeByPreviousChallenge(Long userId, ChallengeRequest challengeRequest,
+            String os) {
         User user = userService.findByIdOrThrowException(userId);
+        Long previousChallengeId = userService.getCurrentChallengeIdByUser(user);
 
-        Optional<Long> previousChallengeId = Optional.ofNullable(user.getCurrentChallengeId());
+        Challenge newChallenge =
+                challengeService.addChallengeAndUpdateUserCurrentChallenge(challengeRequest.toEntity(userId), user);
 
-        Challenge challenge = challengeService.save(challengeRequest.toEntity(userId));
-        user.changeCurrentChallengeId(challenge.getId());
+        LocalDate startDate = newChallenge.getCreatedAt().toLocalDate(); // TODO: startDate CreatedAt에서 가져오지 않고 새로 만들기
+        dailyChallengeService.addDailyChallenge(userId, startDate, newChallenge);
+
+        challengeAppService.addAppsByPreviousChallengeApp(os, previousChallengeId, newChallenge);
+
+        return newChallenge;
+    }
+
+    @Transactional
+    public Challenge startFirstChallenge(User user, ChallengeRequest challengeRequest, String os) {
+        Long userId = user.getId();
+
+        Challenge challenge = challengeService.addChallengeAndUpdateUserCurrentChallenge(challengeRequest.toEntity(userId), user);
 
         LocalDate startDate = challenge.getCreatedAt().toLocalDate();
         dailyChallengeService.addDailyChallenge(userId, startDate, challenge);
-        this.addAppsIfPreviousChallengeExist(os, previousChallengeId, challenge);
 
         return challenge;
-    }
-
-    private void addAppsIfPreviousChallengeExist(String os, Optional<Long> previousChallengeId, Challenge challenge) {
-        if (previousChallengeId.isPresent()) {
-            Challenge previousChallenge = challengeService.findByIdOrElseThrow(previousChallengeId.get());
-            List<ChallengeAppRequest> previousApps = previousChallenge.getApps().stream()
-                    .map(app -> new ChallengeAppRequest(app.getAppCode(), app.getGoalTime()))
-                    .toList();
-            challengeAppService.addApps(challenge, previousApps, os);
-        }
     }
 
     @Transactional(readOnly = true)
