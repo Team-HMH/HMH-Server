@@ -33,7 +33,8 @@ public class ChallengeFacade {
     @Transactional
     public Challenge addChallenge(Long userId, ChallengeRequest challengeRequest, String os) {
         User user = userService.findByIdOrThrowException(userId);
-        Optional<Long> previousChallengeId = Optional.of(user.getCurrentChallengeId());
+
+        Optional<Long> previousChallengeId = Optional.ofNullable(user.getCurrentChallengeId());
 
         Challenge challenge = challengeService.save(challengeRequest.toEntity(userId));
         user.changeCurrentChallengeId(challenge.getId());
