@@ -31,6 +31,15 @@ public class ChallengeAppService {
                         }).toList());
     }
 
+    public void addAppsByPreviousChallengeApp(String os, Long previousChallengeId, Challenge challenge) {
+        List<ChallengeAppRequest> previousChallengeAppRequests =
+                challengeAppRepository.findAllByChallengeId(previousChallengeId).stream()
+                .map(previousApp -> new ChallengeAppRequest(previousApp.getAppCode(), previousApp.getGoalTime()))
+                .toList();
+
+        this.addApps(challenge, previousChallengeAppRequests, os);
+    }
+
     private void validateAppExist(Long challengeId, String appCode, String os) {
         if (challengeAppRepository.existsByChallengeIdAndAppCodeAndOs(challengeId, appCode, os)) {
             throw new AppException(AppError.APP_EXIST_ALREADY);
