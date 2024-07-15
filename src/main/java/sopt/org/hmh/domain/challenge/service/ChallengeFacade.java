@@ -35,11 +35,10 @@ public class ChallengeFacade {
         User user = userService.findByIdOrThrowException(userId);
         Long previousChallengeId = userService.getCurrentChallengeIdByUser(user);
 
-        Challenge newChallenge =
-                challengeService.addChallengeAndUpdateUserCurrentChallenge(challengeRequest.toEntity(userId), user);
+        Challenge newChallenge = challengeService.addChallengeAndUpdateUserCurrentChallenge(
+                challengeRequest.toEntity(userId), user);
 
-        LocalDate startDate = newChallenge.getCreatedAt().toLocalDate(); // TODO: startDate CreatedAt에서 가져오지 않고 새로 만들기
-        dailyChallengeService.addDailyChallenge(userId, startDate, newChallenge);
+        dailyChallengeService.addDailyChallenge(userId, newChallenge);
 
         challengeAppService.addAppsByPreviousChallengeApp(os, previousChallengeId, newChallenge);
 
@@ -52,8 +51,7 @@ public class ChallengeFacade {
 
         Challenge challenge = challengeService.addChallengeAndUpdateUserCurrentChallenge(challengeRequest.toEntity(userId), user);
 
-        LocalDate startDate = challenge.getCreatedAt().toLocalDate();
-        dailyChallengeService.addDailyChallenge(userId, startDate, challenge);
+        dailyChallengeService.addDailyChallenge(userId, challenge);
 
         return challenge;
     }
