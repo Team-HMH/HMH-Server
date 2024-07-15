@@ -54,6 +54,8 @@ public class UserService {
     }
 
     public User addUser(SocialPlatform socialPlatform, String socialId, String name) {
+        this.validateDuplicateUser(socialId, socialPlatform);
+
         return userRepository.save(
                 User.builder()
                         .socialPlatform(socialPlatform)
