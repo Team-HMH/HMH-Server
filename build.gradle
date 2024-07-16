@@ -41,9 +41,6 @@ dependencies {
     runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.5'
     runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.5'
 
-    // Redis
-    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-
     // Open Feign
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:4.1.0'
 
@@ -57,6 +54,10 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+clean {
+    delete file('src/main/generated')
 }
 
 jar.enabled = false
