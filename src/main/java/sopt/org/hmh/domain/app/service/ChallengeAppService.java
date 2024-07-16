@@ -22,28 +22,28 @@ public class ChallengeAppService {
         challengeAppRepository.delete(appToRemove);
     }
 
-    public void addApps(Challenge challenge, List<ChallengeAppRequest> requests, String os) {
-        challengeAppRepository.saveAll(
-                requests.stream().map(
-                        request -> {
-                            validateAppExist(challenge.getId(), request.appCode(), os);
-                            return request.toEntity(challenge, os);
-                        }).toList());
-    }
-
     public void addAppsByPreviousChallengeApp(String os, Long previousChallengeId, Challenge challenge) {
-        List<ChallengeAppRequest> previousChallengeAppRequests =
-                challengeAppRepository.findAllByChallengeId(previousChallengeId).stream()
-                .map(previousApp -> new ChallengeAppRequest(previousApp.getAppCode(), previousApp.getGoalTime()))
-                .toList();
-
-        this.addApps(challenge, previousChallengeAppRequests, os);
+        this.addApps(challengeAppRepository.findAllByChallengeId(previousChallengeId)
+                .stream().map(previousApp ->
+                        new ChallengeAppRequest(previousApp.getAppCode(), previousApp.getGoalTime())
+                                .toEntity(challenge, os))
+                .toList()
+        );
     }
 
-    private void validateAppExist(Long challengeId, String appCode, String os) {
-        if (challengeAppRepository.existsByChallengeIdAndAppCodeAndOs(challengeId, appCode, os)) {
+    public void addApps(List<ChallengeApp> challengeApps) {
+        this.validateAppsExist(challengeApps);
+        challengeAppRepository.saveAll(challengeApps);
+    }
+
+    private void validateAppsExist(List<ChallengeApp> challengeApps) {
+        challengeApps.forEach(this::validateAppExist);
+    }
+
+    private void validateAppExist(ChallengeApp challengeApp) {
+        if (challengeAppRepository.existsByChallengeIdAndAppCodeAndOs(
+                challengeApp.getChallenge().getId(), challengeApp.getAppCode(), challengeApp.getOs())) {
             throw new AppException(AppError.APP_EXIST_ALREADY);
         }
     }
-
 }

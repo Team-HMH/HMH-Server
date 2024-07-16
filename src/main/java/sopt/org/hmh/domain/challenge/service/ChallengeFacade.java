@@ -8,6 +8,7 @@ import sopt.org.hmh.domain.app.dto.response.ChallengeAppResponse;
 import sopt.org.hmh.domain.app.service.ChallengeAppService;
 import sopt.org.hmh.domain.challenge.domain.Challenge;
 import sopt.org.hmh.domain.challenge.dto.request.ChallengeRequest;
+import sopt.org.hmh.domain.challenge.dto.request.ChallengeSignUpRequest;
 import sopt.org.hmh.domain.challenge.dto.response.ChallengeResponse;
 import sopt.org.hmh.domain.challenge.dto.response.DailyChallengeResponse;
 import sopt.org.hmh.domain.dailychallenge.domain.DailyChallenge;
@@ -30,8 +31,7 @@ public class ChallengeFacade {
     private final ChallengeAppService challengeAppService;
 
     @Transactional
-    public Challenge startNewChallengeByPreviousChallenge(Long userId, ChallengeRequest challengeRequest,
-            String os) {
+    public void startNewChallengeByPreviousChallenge(Long userId, ChallengeRequest challengeRequest, String os) {
         User user = userService.findByIdOrThrowException(userId);
         Long previousChallengeId = userService.getCurrentChallengeIdByUser(user);
 
@@ -41,19 +41,23 @@ public class ChallengeFacade {
         dailyChallengeService.addDailyChallenge(userId, newChallenge);
 
         challengeAppService.addAppsByPreviousChallengeApp(os, previousChallengeId, newChallenge);
-
-        return newChallenge;
     }
 
     @Transactional
-    public Challenge startFirstChallenge(User user, ChallengeRequest challengeRequest, String os) {
+    public void startFirstChallengeWithChallengeSignUpRequest(
+            ChallengeSignUpRequest challengeSignUpRequest, User user, String os) {
         Long userId = user.getId();
 
-        Challenge challenge = challengeService.addChallengeAndUpdateUserCurrentChallenge(challengeRequest.toEntity(userId), user);
+        Challenge newChallenge = challengeService.addChallengeAndUpdateUserCurrentChallenge(
+                challengeSignUpRequest.toChallengeRequest().toEntity(userId), user);
 
-        dailyChallengeService.addDailyChallenge(userId, challenge);
+        dailyChallengeService.addDailyChallenge(userId, newChallenge);
 
-        return challenge;
+        challengeAppService.addApps(
+                challengeSignUpRequest.apps().stream()
+                        .map(challengeAppRequest -> challengeAppRequest.toEntity(newChallenge, os))
+                        .toList()
+        );
     }
 
     @Transactional(readOnly = true)
@@ -98,7 +102,11 @@ public class ChallengeFacade {
     @Transactional
     public void addAppsToCurrentChallenge(Long userId, List<ChallengeAppRequest> requests, String os) {
         Challenge challenge = this.findCurrentChallengeByUserId(userId);
-        challengeAppService.addApps(challenge, requests, os);
+        challengeAppService.addApps(
+                requests.stream()
+                        .map(request -> request.toEntity(challenge, os))
+                        .toList()
+        );
     }
 
     @Transactional
