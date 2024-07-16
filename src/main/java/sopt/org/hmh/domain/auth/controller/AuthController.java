@@ -49,7 +49,7 @@ public class AuthController implements AuthApi {
                 .status(AuthSuccess.SIGNUP_SUCCESS.getHttpStatus())
                 .body(BaseResponse.success(
                         AuthSuccess.SIGNUP_SUCCESS,
-                        authFacade.signup(socialAccessToken, request, os)
+                        authFacade.signup(request, socialAccessToken, os)
                 ));
     }
 
