@@ -12,6 +12,8 @@ import sopt.org.hmh.domain.auth.exception.AuthError;
 import sopt.org.hmh.domain.auth.exception.AuthException;
 import sopt.org.hmh.domain.auth.repository.OnboardingInfoRepository;
 import sopt.org.hmh.domain.auth.repository.ProblemRepository;
+import sopt.org.hmh.domain.challenge.domain.exception.ChallengeError;
+import sopt.org.hmh.domain.challenge.domain.exception.ChallengeException;
 import sopt.org.hmh.domain.user.domain.User;
 import sopt.org.hmh.domain.user.domain.UserConstants;
 import sopt.org.hmh.domain.user.domain.exception.UserError;
@@ -100,6 +102,11 @@ public class UserService {
     public Long getCurrentChallengeIdByUserId(Long userId) {
         return Optional.ofNullable(this.findByIdOrThrowException(userId).getCurrentChallengeId())
                 .orElseThrow(() -> new UserException(UserError.NOT_FOUND_CURRENT_CHALLENGE_ID));
+    }
+
+    public Long getCurrentChallengeIdByUser(User user) {
+        return Optional.ofNullable(user.getCurrentChallengeId())
+                .orElseThrow(() -> new ChallengeException(ChallengeError.CHALLENGE_NOT_FOUND));
     }
 
     @Transactional
