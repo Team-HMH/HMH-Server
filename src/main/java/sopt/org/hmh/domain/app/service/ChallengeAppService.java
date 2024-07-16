@@ -7,7 +7,7 @@ import sopt.org.hmh.domain.app.domain.ChallengeApp;
 import sopt.org.hmh.domain.app.domain.exception.AppError;
 import sopt.org.hmh.domain.app.domain.exception.AppException;
 import sopt.org.hmh.domain.app.dto.request.ChallengeAppRequest;
-import sopt.org.hmh.domain.app.repository.ChallengeAppRepository;
+import sopt.org.hmh.domain.app.repository.challenge_app.ChallengeAppRepository;
 import sopt.org.hmh.domain.challenge.domain.Challenge;
 
 @Service
@@ -18,7 +18,7 @@ public class ChallengeAppService {
 
     public void removeApp(Challenge challenge, String appcode, String os) {
         ChallengeApp appToRemove =
-                challengeAppRepository.findFirstByChallengeIdAndAppCodeAndOsOrElseThrow(challenge.getId(), appcode, os);
+                this.findFirstByChallengeIdAndAppCodeAndOsOrElseThrow(challenge.getId(), appcode, os);
         challengeAppRepository.delete(appToRemove);
     }
 
@@ -45,5 +45,10 @@ public class ChallengeAppService {
                 challengeApp.getChallenge().getId(), challengeApp.getAppCode(), challengeApp.getOs())) {
             throw new AppException(AppError.APP_EXIST_ALREADY);
         }
+    }
+
+    private ChallengeApp findFirstByChallengeIdAndAppCodeAndOsOrElseThrow(Long challengeId, String appCode, String os) {
+        return challengeAppRepository.findFirstByChallengeIdAndAppCodeAndOs(challengeId, appCode, os)
+                .orElseThrow(() -> new AppException(AppError.APP_NOT_FOUND));
     }
 }
