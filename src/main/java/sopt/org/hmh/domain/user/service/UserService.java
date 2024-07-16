@@ -42,11 +42,13 @@ public class UserService {
     }
 
     public User getUserBySocialPlatformAndSocialId(SocialPlatform socialPlatform, String socialId) {
-        User user = this.findBySocialPlatformAndSocialIdOrThrowException(socialPlatform, socialId);
+        return this.findBySocialPlatformAndSocialIdOrThrowException(socialPlatform, socialId);
+    }
+
+    public void recoverIfIsDeletedUser(User user) {
         if (user.isDeleted()) {
             user.recover();
         }
-        return user;
     }
 
     public void validateDuplicateUser(String socialId, SocialPlatform socialPlatform) {
