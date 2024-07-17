@@ -1,6 +1,5 @@
 package sopt.org.hmh.domain.challenge.service;
 
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,6 +8,7 @@ import sopt.org.hmh.domain.app.dto.response.ChallengeAppResponse;
 import sopt.org.hmh.domain.app.service.ChallengeAppService;
 import sopt.org.hmh.domain.challenge.domain.Challenge;
 import sopt.org.hmh.domain.challenge.dto.request.ChallengeRequest;
+import sopt.org.hmh.domain.challenge.dto.request.ChallengeSignUpRequest;
 import sopt.org.hmh.domain.challenge.dto.response.ChallengeResponse;
 import sopt.org.hmh.domain.challenge.dto.response.DailyChallengeResponse;
 import sopt.org.hmh.domain.dailychallenge.domain.DailyChallenge;
@@ -31,29 +31,33 @@ public class ChallengeFacade {
     private final ChallengeAppService challengeAppService;
 
     @Transactional
-    public Challenge addChallenge(Long userId, ChallengeRequest challengeRequest, String os) {
+    public void startNewChallengeByPreviousChallenge(Long userId, ChallengeRequest challengeRequest, String os) {
         User user = userService.findByIdOrThrowException(userId);
+        Long previousChallengeId = userService.getCurrentChallengeIdByUser(user);
 
-        Optional<Long> previousChallengeId = Optional.ofNullable(user.getCurrentChallengeId());
+        Challenge newChallenge = challengeService.addChallengeAndUpdateUserCurrentChallenge(
+                challengeRequest.toEntity(userId), user);
 
-        Challenge challenge = challengeService.save(challengeRequest.toEntity(userId));
-        user.changeCurrentChallengeId(challenge.getId());
+        dailyChallengeService.addDailyChallenge(userId, newChallenge);
 
-        LocalDate startDate = challenge.getCreatedAt().toLocalDate();
-        dailyChallengeService.addDailyChallenge(userId, startDate, challenge);
-        this.addAppsIfPreviousChallengeExist(os, previousChallengeId, challenge);
-
-        return challenge;
+        challengeAppService.addAppsByPreviousChallengeApp(os, previousChallengeId, newChallenge);
     }
 
-    private void addAppsIfPreviousChallengeExist(String os, Optional<Long> previousChallengeId, Challenge challenge) {
-        if (previousChallengeId.isPresent()) {
-            Challenge previousChallenge = challengeService.findByIdOrElseThrow(previousChallengeId.get());
-            List<ChallengeAppRequest> previousApps = previousChallenge.getApps().stream()
-                    .map(app -> new ChallengeAppRequest(app.getAppCode(), app.getGoalTime()))
-                    .toList();
-            challengeAppService.addApps(challenge, previousApps, os);
-        }
+    @Transactional
+    public void startFirstChallengeWithChallengeSignUpRequest(
+            ChallengeSignUpRequest challengeSignUpRequest, User user, String os) {
+        Long userId = user.getId();
+
+        Challenge newChallenge = challengeService.addChallengeAndUpdateUserCurrentChallenge(
+                challengeSignUpRequest.toChallengeRequest().toEntity(userId), user);
+
+        dailyChallengeService.addDailyChallenge(userId, newChallenge);
+
+        challengeAppService.addApps(
+                challengeSignUpRequest.apps().stream()
+                        .map(challengeAppRequest -> challengeAppRequest.toEntity(newChallenge, os))
+                        .toList()
+        );
     }
 
     @Transactional(readOnly = true)
@@ -98,7 +102,11 @@ public class ChallengeFacade {
     @Transactional
     public void addAppsToCurrentChallenge(Long userId, List<ChallengeAppRequest> requests, String os) {
         Challenge challenge = this.findCurrentChallengeByUserId(userId);
-        challengeAppService.addApps(challenge, requests, os);
+        challengeAppService.addApps(
+                requests.stream()
+                        .map(request -> request.toEntity(challenge, os))
+                        .toList()
+        );
     }
 
     @Transactional

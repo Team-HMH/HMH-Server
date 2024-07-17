@@ -41,8 +41,11 @@ dependencies {
     runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.5'
     runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.5'
 
-    // Redis
-    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    // Querydsl
+    implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+    annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jakarta"
+    annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+    annotationProcessor "jakarta.persistence:jakarta.persistence-api"
 
     // Open Feign
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:4.1.0'
@@ -57,6 +60,10 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+clean {
+    delete file('src/main/generated')
 }
 
 jar.enabled = false

@@ -44,7 +44,8 @@ public class DailyChallengeService {
         throw new DailyChallengeException(DailyChallengeError.DAILY_CHALLENGE_ALREADY_PROCESSED);
     }
 
-    public void addDailyChallenge(Long userId, LocalDate startDate, Challenge challenge) {
+    public void addDailyChallenge(Long userId, Challenge challenge) {
+        LocalDate startDate = challenge.getCreatedAt().toLocalDate(); // TODO: startDate CreatedAt에서 가져오지 않고 새로 만들기
         dailyChallengeRepository.saveAll(IntStream.range(0, challenge.getPeriod())
                 .mapToObj(i -> DailyChallenge.builder()
                         .challengeDate(startDate.plusDays(i))

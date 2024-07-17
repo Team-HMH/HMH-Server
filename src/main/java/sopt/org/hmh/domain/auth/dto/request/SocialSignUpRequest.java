@@ -1,6 +1,5 @@
 package sopt.org.hmh.domain.auth.dto.request;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import java.util.List;
@@ -14,26 +13,20 @@ public record SocialSignUpRequest(
         @NotNull(message = "소셜 플랫폼은 null일 수 없습니다.")
         SocialPlatform socialPlatform,
         String name,
-        @JsonProperty(value = "onboarding")
-        OnboardingRequest onboardingRequest,
+        OnboardingRequest onboarding,
         @Valid
-        @JsonProperty(value = "challenge")
-        ChallengeSignUpRequest challengeSignUpRequest
+        ChallengeSignUpRequest challenge
 ) {
-
-    public ChallengeRequest toChallengeRequest() {
-        return new ChallengeRequest(challengeSignUpRequest.period(), challengeSignUpRequest.goalTime());
-    }
 
     public OnboardingInfo toOnboardingInfo(Long userId) {
         return OnboardingInfo.builder()
-                .averageUseTime(onboardingRequest.averageUseTime())
+                .averageUseTime(onboarding.averageUseTime())
                 .userId(userId)
                 .build();
     }
 
     public List<OnboardingProblem> toProblemList(Long onboardingInfoId) {
-        return onboardingRequest.problemList().stream()
+        return onboarding.problemList().stream()
                 .map(problem -> OnboardingProblem.builder()
                         .onboardingInfoId(onboardingInfoId)
                         .problem(problem)
