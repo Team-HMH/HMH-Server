@@ -21,4 +21,8 @@ public record ChallengeSignUpRequest(
                         throw new ChallengeException(ChallengeError.INVALID_GOAL_TIME);
                 }
         }
+
+        public ChallengeRequest toChallengeRequest() {
+                return new ChallengeRequest(this.period, this.goalTime);
+        }
 }

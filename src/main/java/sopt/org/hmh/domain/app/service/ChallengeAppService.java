@@ -7,7 +7,7 @@ import sopt.org.hmh.domain.app.domain.ChallengeApp;
 import sopt.org.hmh.domain.app.domain.exception.AppError;
 import sopt.org.hmh.domain.app.domain.exception.AppException;
 import sopt.org.hmh.domain.app.dto.request.ChallengeAppRequest;
-import sopt.org.hmh.domain.app.repository.ChallengeAppRepository;
+import sopt.org.hmh.domain.app.repository.challenge_app.ChallengeAppRepository;
 import sopt.org.hmh.domain.challenge.domain.Challenge;
 
 @Service
@@ -18,23 +18,37 @@ public class ChallengeAppService {
 
     public void removeApp(Challenge challenge, String appcode, String os) {
         ChallengeApp appToRemove =
-                challengeAppRepository.findFirstByChallengeIdAndAppCodeAndOsOrElseThrow(challenge.getId(), appcode, os);
+                this.findFirstByChallengeIdAndAppCodeAndOsOrElseThrow(challenge.getId(), appcode, os);
         challengeAppRepository.delete(appToRemove);
     }
 
-    public void addApps(Challenge challenge, List<ChallengeAppRequest> requests, String os) {
-        challengeAppRepository.saveAll(
-                requests.stream().map(
-                        request -> {
-                            validateAppExist(challenge.getId(), request.appCode(), os);
-                            return request.toEntity(challenge, os);
-                        }).toList());
+    public void addAppsByPreviousChallengeApp(String os, Long previousChallengeId, Challenge challenge) {
+        this.addApps(challengeAppRepository.findAllByChallengeId(previousChallengeId)
+                .stream().map(previousApp ->
+                        new ChallengeAppRequest(previousApp.getAppCode(), previousApp.getGoalTime())
+                                .toEntity(challenge, os))
+                .toList()
+        );
     }
 
-    private void validateAppExist(Long challengeId, String appCode, String os) {
-        if (challengeAppRepository.existsByChallengeIdAndAppCodeAndOs(challengeId, appCode, os)) {
+    public void addApps(List<ChallengeApp> challengeApps) {
+        this.validateAppsExist(challengeApps);
+        challengeAppRepository.saveAll(challengeApps);
+    }
+
+    private void validateAppsExist(List<ChallengeApp> challengeApps) {
+        challengeApps.forEach(this::validateAppExist);
+    }
+
+    private void validateAppExist(ChallengeApp challengeApp) {
+        if (challengeAppRepository.existsByChallengeIdAndAppCodeAndOs(
+                challengeApp.getChallenge().getId(), challengeApp.getAppCode(), challengeApp.getOs())) {
             throw new AppException(AppError.APP_EXIST_ALREADY);
         }
     }
 
+    private ChallengeApp findFirstByChallengeIdAndAppCodeAndOsOrElseThrow(Long challengeId, String appCode, String os) {
+        return challengeAppRepository.findFirstByChallengeIdAndAppCodeAndOs(challengeId, appCode, os)
+                .orElseThrow(() -> new AppException(AppError.APP_NOT_FOUND));
+    }
 }

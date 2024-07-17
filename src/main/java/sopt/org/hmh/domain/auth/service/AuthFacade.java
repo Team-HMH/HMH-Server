@@ -3,12 +3,9 @@ package sopt.org.hmh.domain.auth.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sopt.org.hmh.domain.app.service.ChallengeAppService;
 import sopt.org.hmh.domain.auth.dto.response.ReissueResponse;
-import sopt.org.hmh.domain.challenge.domain.Challenge;
 import sopt.org.hmh.domain.challenge.service.ChallengeFacade;
 import sopt.org.hmh.domain.user.domain.User;
-import sopt.org.hmh.domain.auth.dto.request.SocialPlatformRequest;
 import sopt.org.hmh.domain.auth.dto.request.SocialSignUpRequest;
 import sopt.org.hmh.domain.auth.dto.response.LoginResponse;
 import sopt.org.hmh.domain.user.service.UserService;
@@ -27,53 +24,60 @@ public class AuthFacade {
     private final KakaoLoginService kakaoLoginService;
     private final AppleOAuthProvider appleOAuthProvider;
     private final ChallengeFacade challengeFacade;
-    private final ChallengeAppService challengeAppService;
     private final TokenService tokenService;
     private final UserService userService;
 
     @Transactional(readOnly = true)
-    public LoginResponse login(String socialAccessToken, SocialPlatformRequest request) {
-        SocialPlatform socialPlatform = request.socialPlatform();
+    public LoginResponse login(String socialAccessToken, SocialPlatform socialPlatform) {
         String socialId = this.getSocialIdBySocialAccessToken(socialPlatform, socialAccessToken);
         User loginUser = userService.getUserBySocialPlatformAndSocialId(socialPlatform, socialId);
 
-        return performLogin(socialAccessToken, socialPlatform, loginUser);
+        return performLogin(loginUser, socialAccessToken, socialPlatform);
     }
 
     @Transactional
-    public LoginResponse signup(String socialAccessToken, SocialSignUpRequest request, String os) {
+    public LoginResponse signup(SocialSignUpRequest request, String socialAccessToken, String os) {
         SocialPlatform socialPlatform = request.socialPlatform();
         String socialId = this.getSocialIdBySocialAccessToken(socialPlatform, socialAccessToken);
 
-        userService.validateDuplicateUser(socialId, socialPlatform);
-        User user = userService.addUser(socialPlatform, socialId, request.name());
-        Long userId = user.getId();
-        userService.registerOnboardingInfo(request, userId);
+        User newUser = userService.addUser(socialPlatform, socialId, request.name());
+        Long newUserId = newUser.getId();
 
-        Challenge challenge = challengeFacade.addChallenge(userId, request.toChallengeRequest() , os);
-        challengeAppService.addApps(challenge, request.challengeSignUpRequest().apps(), os);
+        userService.registerOnboardingInfo(request, newUserId);
 
-        return performLogin(socialAccessToken, socialPlatform, user);
+        challengeFacade.startFirstChallengeWithChallengeSignUpRequest(request.challenge(), newUser , os);
+
+        return performLogin(newUser, socialAccessToken, socialPlatform);
     }
 
     private String getSocialIdBySocialAccessToken(SocialPlatform socialPlatform, String socialAccessToken) {
-        return switch (socialPlatform.toString()) {
-            case "KAKAO" -> kakaoLoginService.getSocialIdByKakao(socialAccessToken);
-            case "APPLE" -> appleOAuthProvider.getApplePlatformId(socialAccessToken);
-            default -> throw new JwtException(JwtError.INVALID_SOCIAL_ACCESS_TOKEN);
-        };
+        if (socialPlatform == SocialPlatform.APPLE) {
+            return appleOAuthProvider.getApplePlatformId(socialAccessToken);
+        }
+        if (socialPlatform == SocialPlatform.KAKAO) {
+            return kakaoLoginService.getSocialIdByKakao(socialAccessToken);
+        }
+        throw new JwtException(JwtError.INVALID_SOCIAL_ACCESS_TOKEN);
     }
 
-    public ReissueResponse reissueToken(String refreshToken) {
-        return tokenService.reissueToken(refreshToken);
+    private LoginResponse performLogin(User loginUser, String socialAccessToken, SocialPlatform socialPlatform) {
+        this.updateAdditionalUserLoginInfo(loginUser, socialAccessToken, socialPlatform);
+
+        Long userId = loginUser.getId();
+        return new LoginResponse(userId, tokenService.issueToken(userId.toString()));
     }
 
-    private LoginResponse performLogin(String socialAccessToken, SocialPlatform socialPlatform, User loginUser) {
+    private void updateAdditionalUserLoginInfo(User loginUser, String socialAccessToken, SocialPlatform socialPlatform) {
+        userService.recoverIfIsDeletedUser(loginUser);
+
         if (socialPlatform == SocialPlatform.KAKAO) {
             kakaoLoginService.updateUserInfoByKakao(loginUser, socialAccessToken);
         }
-        Long userId = loginUser.getId();
-        return new LoginResponse(userId, tokenService.issueToken(userId.toString()));
+    }
+
+
+    public ReissueResponse reissueToken(String refreshToken) {
+        return tokenService.reissueToken(refreshToken);
     }
 
     public SocialAccessTokenResponse getSocialAccessTokenByAuthorizationCode(String code) {
