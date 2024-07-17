@@ -38,7 +38,7 @@ public class ChallengeFacade {
         Challenge newChallenge = challengeService.addChallengeAndUpdateUserCurrentChallenge(
                 challengeRequest.toEntity(userId), user);
 
-        dailyChallengeService.addDailyChallenge(userId, newChallenge);
+        dailyChallengeService.addDailyChallenge(newChallenge);
 
         challengeAppService.addAppsByPreviousChallengeApp(os, previousChallengeId, newChallenge);
     }
@@ -51,7 +51,7 @@ public class ChallengeFacade {
         Challenge newChallenge = challengeService.addChallengeAndUpdateUserCurrentChallenge(
                 challengeSignUpRequest.toChallengeRequest().toEntity(userId), user);
 
-        dailyChallengeService.addDailyChallenge(userId, newChallenge);
+        dailyChallengeService.addDailyChallenge(newChallenge);
 
         challengeAppService.addApps(
                 challengeSignUpRequest.apps().stream()

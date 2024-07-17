@@ -44,12 +44,13 @@ public class DailyChallengeService {
         throw new DailyChallengeException(DailyChallengeError.DAILY_CHALLENGE_ALREADY_PROCESSED);
     }
 
-    public void addDailyChallenge(Long userId, Challenge challenge) {
-        dailyChallengeRepository.saveAll(createDailyChallengeByChallengePeriod(userId, challenge));
+    public void addDailyChallenge(Challenge challenge) {
+        dailyChallengeRepository.saveAll(createDailyChallengeByChallengePeriod(challenge));
     }
 
-    private List<DailyChallenge> createDailyChallengeByChallengePeriod(Long userId, Challenge challenge) {
+    private List<DailyChallenge> createDailyChallengeByChallengePeriod(Challenge challenge) {
         LocalDate startDate = challenge.getStartDate();
+        Long userId = challenge.getUserId();
         return IntStream.range(0, challenge.getPeriod())
                 .mapToObj(i -> DailyChallenge.builder()
                         .challengeDate(startDate.plusDays(i))
