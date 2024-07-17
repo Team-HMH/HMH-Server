@@ -45,14 +45,18 @@ public class DailyChallengeService {
     }
 
     public void addDailyChallenge(Long userId, Challenge challenge) {
-        LocalDate startDate = challenge.getCreatedAt().toLocalDate(); // TODO: startDate CreatedAt에서 가져오지 않고 새로 만들기
-        dailyChallengeRepository.saveAll(IntStream.range(0, challenge.getPeriod())
+        dailyChallengeRepository.saveAll(createDailyChallengeByChallengePeriod(userId, challenge));
+    }
+
+    private List<DailyChallenge> createDailyChallengeByChallengePeriod(Long userId, Challenge challenge) {
+        LocalDate startDate = challenge.getStartDate();
+        return IntStream.range(0, challenge.getPeriod())
                 .mapToObj(i -> DailyChallenge.builder()
                         .challengeDate(startDate.plusDays(i))
                         .challenge(challenge)
                         .userId(userId)
                         .goalTime(challenge.getGoalTime()).build())
-                .toList());
+                .toList();
     }
 
     public List<DailyChallenge> getDailyChallengesByChallengeId(Long challengeId) {
