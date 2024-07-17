@@ -19,13 +19,13 @@ import sopt.org.hmh.global.common.response.EmptyJsonResponse;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/challenge")
-public class ChallengeControllerDeprecated implements ChallengeApi {
+public class ChallengeControllerDeprecated implements ChallengeApiDeprecated {
 
     private final ChallengeFacade challengeFacade;
 
     @PostMapping
     @Override
-    public ResponseEntity<BaseResponse<?>> orderAddChallenge(
+    public ResponseEntity<BaseResponse<EmptyJsonResponse>> orderAddChallenge(
             @UserId final Long userId,
             @RequestHeader("OS") final String os,
             @RequestBody @Valid final ChallengeRequest request) {
@@ -60,7 +60,7 @@ public class ChallengeControllerDeprecated implements ChallengeApi {
 
     @PostMapping("/app")
     @Override
-    public ResponseEntity<BaseResponse<?>> orderAddApps(
+    public ResponseEntity<BaseResponse<EmptyJsonResponse>> orderAddApps(
             @UserId final Long userId,
             @RequestHeader("OS") final String os,
             @RequestBody @Valid final ChallengeAppArrayRequest requests) {
@@ -74,7 +74,7 @@ public class ChallengeControllerDeprecated implements ChallengeApi {
 
     @DeleteMapping("/app")
     @Override
-    public ResponseEntity<BaseResponse<?>> orderRemoveApp(
+    public ResponseEntity<BaseResponse<EmptyJsonResponse>> orderRemoveApp(
             @UserId final Long userId,
             @RequestHeader("OS") final String os,
             @RequestBody @Valid final AppRemoveRequest request) {

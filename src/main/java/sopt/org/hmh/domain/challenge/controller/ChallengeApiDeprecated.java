@@ -20,7 +20,7 @@ import sopt.org.hmh.global.common.response.EmptyJsonResponse;
 
 @Tag(name = "챌린지 관련 API")
 @SecurityRequirement(name = JwtConstants.AUTHORIZATION)
-public interface ChallengeApi {
+public interface ChallengeApiDeprecated {
 
     @PostMapping
     @Operation(
@@ -38,10 +38,9 @@ public interface ChallengeApi {
                             description = "서버 내부 오류입니다.",
                             content = @Content)})
     ResponseEntity<BaseResponse<EmptyJsonResponse>> orderAddChallenge(
-            @Parameter(hidden = true) final Long userId,
-            final String os,
-            final String timeZone,
-            final ChallengeRequest request);
+            @UserId @Parameter(hidden = true) final Long userId,
+            @RequestHeader("OS") final String os,
+            @RequestBody final ChallengeRequest request);
 
     @GetMapping
     @Operation(
@@ -97,8 +96,8 @@ public interface ChallengeApi {
                             description = "서버 내부 오류입니다.",
                             content = @Content)})
     ResponseEntity<BaseResponse<EmptyJsonResponse>> orderAddApps(@UserId @Parameter(hidden = true) Long userId,
-            @RequestHeader("OS") String os,
-            @RequestBody ChallengeAppArrayRequest requests);
+                                                 @RequestHeader("OS") String os,
+                                                 @RequestBody ChallengeAppArrayRequest requests);
 
     @GetMapping("/app")
     @Operation(
@@ -116,7 +115,7 @@ public interface ChallengeApi {
                             description = "서버 내부 오류입니다.",
                             content = @Content)})
     ResponseEntity<BaseResponse<EmptyJsonResponse>> orderRemoveApp(@UserId Long userId,
-            @RequestHeader("OS") String os,
-            @RequestBody AppRemoveRequest request);
+                                                   @RequestHeader("OS") String os,
+                                                   @RequestBody AppRemoveRequest request);
 }
 
