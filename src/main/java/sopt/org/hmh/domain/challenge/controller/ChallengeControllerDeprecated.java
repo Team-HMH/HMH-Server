@@ -25,6 +25,7 @@ public class ChallengeControllerDeprecated implements ChallengeApiDeprecated {
 
     @PostMapping
     @Override
+    @Deprecated
     public ResponseEntity<BaseResponse<EmptyJsonResponse>> orderAddChallenge(
             @UserId final Long userId,
             @RequestHeader("OS") final String os,
@@ -38,6 +39,7 @@ public class ChallengeControllerDeprecated implements ChallengeApiDeprecated {
 
     @GetMapping
     @Override
+    @Deprecated
     public ResponseEntity<BaseResponse<ChallengeResponse>> orderGetChallenge(
             @UserId final Long userId,
             @RequestHeader("OS") final String os) {
@@ -49,6 +51,7 @@ public class ChallengeControllerDeprecated implements ChallengeApiDeprecated {
 
     @GetMapping("/home")
     @Override
+    @Deprecated
     public ResponseEntity<BaseResponse<DailyChallengeResponse>> orderGetDailyChallenge(
             @UserId final Long userId,
             @RequestHeader("OS") final String os) {
@@ -60,6 +63,7 @@ public class ChallengeControllerDeprecated implements ChallengeApiDeprecated {
 
     @PostMapping("/app")
     @Override
+    @Deprecated
     public ResponseEntity<BaseResponse<EmptyJsonResponse>> orderAddApps(
             @UserId final Long userId,
             @RequestHeader("OS") final String os,
@@ -74,6 +78,7 @@ public class ChallengeControllerDeprecated implements ChallengeApiDeprecated {
 
     @DeleteMapping("/app")
     @Override
+    @Deprecated
     public ResponseEntity<BaseResponse<EmptyJsonResponse>> orderRemoveApp(
             @UserId final Long userId,
             @RequestHeader("OS") final String os,
