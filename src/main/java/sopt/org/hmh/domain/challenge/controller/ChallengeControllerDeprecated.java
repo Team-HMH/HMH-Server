@@ -18,8 +18,8 @@ import sopt.org.hmh.global.common.response.EmptyJsonResponse;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v2/challenge")
-public class ChallengeController implements ChallengeApi {
+@RequestMapping("/api/v1/challenge")
+public class ChallengeControllerDeprecated implements ChallengeApi {
 
     private final ChallengeFacade challengeFacade;
 
