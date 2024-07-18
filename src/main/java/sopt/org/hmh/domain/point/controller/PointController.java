@@ -58,7 +58,7 @@ public class PointController implements PointApi {
         return ResponseEntity
                 .status(PointSuccess.POINT_USAGE_SUCCESS.getHttpStatus())
                 .body(BaseResponse.success(PointSuccess.POINT_USAGE_SUCCESS,
-                        pointFacade.usePointAndChallengeFailed(userId, timeZone)));
+                        pointFacade.usePointAndTodayDailyChallengeFailed(userId, timeZone)));
     }
 
     @Override

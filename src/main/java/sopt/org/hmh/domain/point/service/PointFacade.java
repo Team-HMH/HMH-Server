@@ -1,6 +1,7 @@
 package sopt.org.hmh.domain.point.service;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 
 import lombok.RequiredArgsConstructor;
@@ -41,7 +42,8 @@ public class PointFacade {
     }
 
     @Transactional
-    public UsePointResponse usePointAndChallengeFailed(Long userId, String timeZone) {
+    public UsePointResponse usePointAndTodayDailyChallengeFailed(Long userId, String timeZone) {
+        LocalDate challengeDate = LocalDate.now(ZoneId.of(timeZone));
         DailyChallenge dailyChallenge =
                 dailyChallengeService.findDailyChallengeByChallengeDateAndUserIdOrElseThrow(challengeDate, userId);
         User user = userService.findByIdOrThrowException(userId);
