@@ -15,6 +15,7 @@ import sopt.org.hmh.global.auth.jwt.JwtConstants;
 import sopt.org.hmh.global.common.response.BaseResponse;
 import sopt.org.hmh.global.common.response.EmptyJsonResponse;
 
+@Deprecated
 @Tag(name = "챌린지 관련 API")
 @SecurityRequirement(name = JwtConstants.AUTHORIZATION)
 public interface ChallengeApiDeprecated {

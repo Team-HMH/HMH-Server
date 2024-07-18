@@ -9,13 +9,14 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import sopt.org.hmh.domain.dailychallenge.domain.exception.DailyChallengeSuccess;
-import sopt.org.hmh.domain.dailychallenge.dto.request.FinishedDailyChallengeListRequest;
-import sopt.org.hmh.domain.dailychallenge.dto.request.FinishedDailyChallengeStatusListRequest;
+import sopt.org.hmh.domain.dailychallenge.dto.request.FinishedDailyChallengeListRequestDeprecated;
+import sopt.org.hmh.domain.dailychallenge.dto.request.FinishedDailyChallengeStatusListRequestDeprecated;
 import sopt.org.hmh.domain.dailychallenge.service.DailyChallengeFacade;
 import sopt.org.hmh.global.auth.UserId;
 import sopt.org.hmh.global.common.response.BaseResponse;
 import sopt.org.hmh.global.common.response.EmptyJsonResponse;
 
+@Deprecated
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/challenge/daily")
@@ -28,7 +29,7 @@ public class DailyChallengeControllerDeprecated implements DailyChallengeApiDepr
     public ResponseEntity<BaseResponse<EmptyJsonResponse>> orderAddHistoryDailyChallenge(
             @UserId final Long userId,
             @RequestHeader("OS") final String os,
-            @RequestBody @Valid final FinishedDailyChallengeListRequest request
+            @RequestBody @Valid final FinishedDailyChallengeListRequestDeprecated request
     ) {
         dailyChallengeFacade.addFinishedDailyChallengeHistory(userId, request, os);
         return ResponseEntity
@@ -42,7 +43,7 @@ public class DailyChallengeControllerDeprecated implements DailyChallengeApiDepr
     public ResponseEntity<BaseResponse<EmptyJsonResponse>> orderChangeStatusDailyChallenge(
             @UserId final Long userId,
             @RequestHeader("OS") final String os,
-            @RequestBody final FinishedDailyChallengeStatusListRequest request
+            @RequestBody final FinishedDailyChallengeStatusListRequestDeprecated request
     ) {
         dailyChallengeFacade.changeDailyChallengeStatusByIsSuccess(userId, request);
         return ResponseEntity

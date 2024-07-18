@@ -15,6 +15,7 @@ import sopt.org.hmh.global.auth.UserId;
 import sopt.org.hmh.global.common.response.BaseResponse;
 import sopt.org.hmh.global.common.response.EmptyJsonResponse;
 
+@Deprecated
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/challenge")

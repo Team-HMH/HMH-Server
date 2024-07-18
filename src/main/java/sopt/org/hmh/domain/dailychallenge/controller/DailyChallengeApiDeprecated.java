@@ -7,13 +7,14 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
-import sopt.org.hmh.domain.dailychallenge.dto.request.FinishedDailyChallengeListRequest;
-import sopt.org.hmh.domain.dailychallenge.dto.request.FinishedDailyChallengeStatusListRequest;
+import sopt.org.hmh.domain.dailychallenge.dto.request.FinishedDailyChallengeListRequestDeprecated;
+import sopt.org.hmh.domain.dailychallenge.dto.request.FinishedDailyChallengeStatusListRequestDeprecated;
 import sopt.org.hmh.global.auth.jwt.JwtConstants;
 import sopt.org.hmh.global.common.response.BaseResponse;
 import sopt.org.hmh.global.common.response.EmptyJsonResponse;
 
 @Tag(name = "일별챌린지 관련 API")
+@Deprecated
 @SecurityRequirement(name = JwtConstants.AUTHORIZATION)
 public interface DailyChallengeApiDeprecated {
 
@@ -34,12 +35,12 @@ public interface DailyChallengeApiDeprecated {
         ResponseEntity<BaseResponse<EmptyJsonResponse>> orderAddHistoryDailyChallenge(
                 @Parameter(hidden = true) final Long userId,
                 final String os,
-                final FinishedDailyChallengeListRequest request
+                final FinishedDailyChallengeListRequestDeprecated request
         );
 
         ResponseEntity<BaseResponse<EmptyJsonResponse>> orderChangeStatusDailyChallenge(
                 @Parameter(hidden = true) final Long userId,
                 final String os,
-                final FinishedDailyChallengeStatusListRequest request
+                final FinishedDailyChallengeStatusListRequestDeprecated request
         );
     }
