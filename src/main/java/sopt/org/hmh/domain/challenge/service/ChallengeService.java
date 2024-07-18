@@ -37,6 +37,6 @@ public class ChallengeService {
     }
 
     public Integer getChallengePeriod(Long challengeId) {
-        return findByIdOrElseThrow(challengeId).getPeriod();
+        return this.findByIdOrElseThrow(challengeId).getPeriod();
     }
 }
