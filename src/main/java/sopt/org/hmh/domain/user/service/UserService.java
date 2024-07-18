@@ -12,8 +12,6 @@ import sopt.org.hmh.domain.auth.exception.AuthError;
 import sopt.org.hmh.domain.auth.exception.AuthException;
 import sopt.org.hmh.domain.auth.repository.OnboardingInfoRepository;
 import sopt.org.hmh.domain.auth.repository.ProblemRepository;
-import sopt.org.hmh.domain.challenge.domain.exception.ChallengeError;
-import sopt.org.hmh.domain.challenge.domain.exception.ChallengeException;
 import sopt.org.hmh.domain.user.domain.User;
 import sopt.org.hmh.domain.user.domain.UserConstants;
 import sopt.org.hmh.domain.user.domain.exception.UserError;
