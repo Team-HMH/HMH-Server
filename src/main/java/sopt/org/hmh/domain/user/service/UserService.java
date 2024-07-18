@@ -106,9 +106,8 @@ public class UserService {
                 .orElseThrow(() -> new UserException(UserError.NOT_FOUND_CURRENT_CHALLENGE_ID));
     }
 
-    public Long getCurrentChallengeIdByUser(User user) {
-        return Optional.ofNullable(user.getCurrentChallengeId())
-                .orElseThrow(() -> new ChallengeException(ChallengeError.CHALLENGE_NOT_FOUND));
+    public void changeCurrentChallengeIdByUserId(Long userId, Long challengeId) {
+        this.findByIdOrThrowException(userId).changeCurrentChallengeId(challengeId);
     }
 
     @Transactional
