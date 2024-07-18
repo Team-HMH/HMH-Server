@@ -25,6 +25,7 @@ public class DailyChallengeController implements DailyChallengeApi {
     public ResponseEntity<BaseResponse<EmptyJsonResponse>> orderAddHistoryDailyChallenge(
             @UserId final Long userId,
             @RequestHeader(CustomHeaderType.OS) final String os,
+            @RequestHeader(CustomHeaderType.TIME_ZONE) final String timeZone,
             @RequestBody @Valid final FinishedDailyChallengeListRequest request
     ) {
         dailyChallengeFacade.addFinishedDailyChallengeHistory(userId, request, os);
@@ -37,7 +38,7 @@ public class DailyChallengeController implements DailyChallengeApi {
     @PostMapping("/success")
     public ResponseEntity<BaseResponse<EmptyJsonResponse>> orderChangeStatusDailyChallenge(
             @UserId final Long userId,
-            @RequestHeader(CustomHeaderType.OS) final String os,
+            @RequestHeader(CustomHeaderType.TIME_ZONE) final String timeZone,
             @RequestBody final FinishedDailyChallengeStatusListRequest request
     ) {
         dailyChallengeFacade.changeDailyChallengeStatusByIsSuccess(userId, request);
