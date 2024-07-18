@@ -40,7 +40,7 @@ public class ChallengeController implements ChallengeApi {
     @GetMapping
     public ResponseEntity<BaseResponse<ChallengeResponse>> orderGetChallenge(
             @UserId final Long userId,
-            @RequestHeader final String timeZone) {
+            @RequestHeader(CustomHeaderType.TIME_ZONE) final String timeZone) {
         return ResponseEntity
                 .status(ChallengeSuccess.GET_CHALLENGE_SUCCESS.getHttpStatus())
                 .body(BaseResponse.success(ChallengeSuccess.GET_CHALLENGE_SUCCESS,
@@ -51,7 +51,7 @@ public class ChallengeController implements ChallengeApi {
     @GetMapping("/home")
     public ResponseEntity<BaseResponse<DailyChallengeResponse>> orderGetDailyChallenge(
             @UserId final Long userId,
-            @RequestHeader final String timeZone) {
+            @RequestHeader(CustomHeaderType.TIME_ZONE) final String timeZone) {
         return ResponseEntity
                 .status(ChallengeSuccess.GET_DAILY_CHALLENGE_SUCCESS.getHttpStatus())
                 .body(BaseResponse.success(ChallengeSuccess.GET_DAILY_CHALLENGE_SUCCESS,
