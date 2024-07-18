@@ -30,7 +30,8 @@ public class DailyChallengeFacade {
 
         requests.finishedDailyChallenges().forEach(request -> {
             DailyChallenge dailyChallenge =
-                    dailyChallengeService.findDailyChallengeByChallengeDateAndUserIdOrElseThrow(request.challengeDate(), userId);
+                    dailyChallengeService.findDailyChallengeByChallengeIdAndChallengePeriodIndex(
+                            currentChallengeId, request.challengePeriodIndex());
             dailyChallengeService.changeStatusByCurrentStatus(dailyChallenge);
             historyAppService.addHistoryApp(currentChallengeApps, request.apps(), dailyChallenge, os);
         });
@@ -38,9 +39,11 @@ public class DailyChallengeFacade {
 
     @Transactional
     public void changeDailyChallengeStatusByIsSuccess(Long userId, FinishedDailyChallengeStatusListRequest requests) {
+        Long currentChallengeId = userService.getCurrentChallengeIdByUserId(userId);
         requests.finishedDailyChallenges().forEach(request -> {
             DailyChallenge dailyChallenge =
-                    dailyChallengeService.findDailyChallengeByChallengeDateAndUserIdOrElseThrow(request.challengeDate(), userId);
+                    dailyChallengeService.findDailyChallengeByChallengeIdAndChallengePeriodIndex(
+                            currentChallengeId, request.challengePeriodIndex());
             if (request.isSuccess()) {
                 dailyChallengeService.validateDailyChallengeStatus(dailyChallenge.getStatus(), List.of(Status.NONE));
                 dailyChallenge.changeStatus(Status.UNEARNED);

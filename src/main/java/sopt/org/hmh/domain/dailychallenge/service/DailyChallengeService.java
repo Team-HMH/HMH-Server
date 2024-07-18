@@ -2,6 +2,7 @@ package sopt.org.hmh.domain.dailychallenge.service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,12 @@ public class DailyChallengeService {
     public DailyChallenge findDailyChallengeByChallengeDateAndUserIdOrElseThrow(LocalDate challengeDate, Long userId) {
         return dailyChallengeRepository.findByChallengeDateAndUserId(challengeDate, userId)
                 .orElseThrow(() -> new DailyChallengeException(DailyChallengeError.DAILY_CHALLENGE_NOT_FOUND));
+    }
+
+    public DailyChallenge findDailyChallengeByChallengeIdAndChallengePeriodIndex(Long challengeId, Integer challengePeriodIndex) {
+        return Optional.ofNullable(
+                dailyChallengeRepository.findAllByChallengeIdOrderByChallengeDate(challengeId).get(challengePeriodIndex)
+        ).orElseThrow(() -> new DailyChallengeException(DailyChallengeError.DAILY_CHALLENGE_PERIOD_INDEX_NOT_FOUND));
     }
 
     public DailyChallenge findDailyChallengeByChallengeAndChallengeDate(Challenge challenge, LocalDate challengeDate) {
@@ -67,12 +74,12 @@ public class DailyChallengeService {
                 .toList();
     }
 
-    public List<DailyChallenge> getDailyChallengesByChallengeId(Long challengeId) {
-        return dailyChallengeRepository.findAllByChallengeId(challengeId);
+    public List<DailyChallenge> getDailyChallengesByChallengeIdOrderByChallengeDate(Long challengeId) {
+        return dailyChallengeRepository.findAllByChallengeIdOrderByChallengeDate(challengeId);
     }
 
     public void changeInfoOfDailyChallenges(Long challengeId, List<Status> statuses, LocalDate challengeDate) {
-        List<DailyChallenge> dailyChallenges = getDailyChallengesByChallengeId(challengeId);
+        List<DailyChallenge> dailyChallenges = this.getDailyChallengesByChallengeIdOrderByChallengeDate(challengeId);
         changeStatusOfDailyChallenges(dailyChallenges, statuses);
         changeChallengeDateOfDailyChallenges(dailyChallenges, challengeDate);
     }
