@@ -18,6 +18,7 @@ import sopt.org.hmh.domain.auth.dto.request.SocialSignUpRequest;
 import sopt.org.hmh.domain.auth.service.AuthFacade;
 import sopt.org.hmh.global.auth.jwt.JwtConstants;
 import sopt.org.hmh.global.auth.social.SocialAccessTokenResponse;
+import sopt.org.hmh.global.common.constant.CustomHeaderType;
 import sopt.org.hmh.global.common.response.BaseResponse;
 
 @RestController
@@ -46,7 +47,7 @@ public class AuthController implements AuthApi {
     @PostMapping("/v1/user/signup")
     public ResponseEntity<BaseResponse<LoginResponse>> orderSignupDeprecated(
             @RequestHeader(JwtConstants.AUTHORIZATION) final String socialAccessToken,
-            @RequestHeader("OS") final String os,
+            @RequestHeader(CustomHeaderType.OS) final String os,
             @RequestBody @Valid final SocialSignUpRequest request
     ) {
         return ResponseEntity
@@ -61,8 +62,8 @@ public class AuthController implements AuthApi {
     @PostMapping("/v2/user/signup")
     public ResponseEntity<BaseResponse<LoginResponse>> orderSignup(
             @RequestHeader(JwtConstants.AUTHORIZATION) final String socialAccessToken,
-            @RequestHeader("OS") final String os,
-            @RequestHeader("Time-Zone") final String timeZone,
+            @RequestHeader(CustomHeaderType.OS) final String os,
+            @RequestHeader(CustomHeaderType.TIME_ZONE) final String timeZone,
             @RequestBody @Valid final SocialSignUpRequest request
     ) {
         return ResponseEntity

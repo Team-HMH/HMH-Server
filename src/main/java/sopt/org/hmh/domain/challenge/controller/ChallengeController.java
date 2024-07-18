@@ -12,6 +12,7 @@ import sopt.org.hmh.domain.challenge.dto.response.ChallengeResponse;
 import sopt.org.hmh.domain.challenge.dto.response.DailyChallengeResponse;
 import sopt.org.hmh.domain.challenge.service.ChallengeFacade;
 import sopt.org.hmh.global.auth.UserId;
+import sopt.org.hmh.global.common.constant.CustomHeaderType;
 import sopt.org.hmh.global.common.response.BaseResponse;
 import sopt.org.hmh.global.common.response.EmptyJsonResponse;
 
@@ -26,8 +27,8 @@ public class ChallengeController implements ChallengeApi {
     @PostMapping
     public ResponseEntity<BaseResponse<EmptyJsonResponse>> orderAddChallenge(
             @UserId final Long userId,
-            @RequestHeader("OS") final String os,
-            @RequestHeader("Time-Zone") final String timeZone,
+            @RequestHeader(CustomHeaderType.OS) final String os,
+            @RequestHeader(CustomHeaderType.TIME_ZONE) final String timeZone,
             @RequestBody @Valid final ChallengeRequest request) {
         challengeFacade.startNewChallenge(createNextChallengeOrder(request, userId, os, timeZone));
         return ResponseEntity

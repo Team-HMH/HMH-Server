@@ -14,6 +14,7 @@ import sopt.org.hmh.domain.app.dto.request.AppRemoveRequest;
 import sopt.org.hmh.domain.app.dto.request.ChallengeAppArrayRequest;
 import sopt.org.hmh.domain.challenge.service.ChallengeFacade;
 import sopt.org.hmh.global.auth.UserId;
+import sopt.org.hmh.global.common.constant.CustomHeaderType;
 import sopt.org.hmh.global.common.response.BaseResponse;
 import sopt.org.hmh.global.common.response.EmptyJsonResponse;
 
@@ -28,7 +29,7 @@ public class ChallengeAppController implements ChallengeAppApi {
     @PostMapping
     public ResponseEntity<BaseResponse<EmptyJsonResponse>> orderAddApps(
             @UserId final Long userId,
-            @RequestHeader("OS") final String os,
+            @RequestHeader(CustomHeaderType.OS) final String os,
             @RequestBody @Valid final ChallengeAppArrayRequest requests) {
         challengeFacade.addAppsToCurrentChallenge(userId, requests.apps(), os);
 
@@ -42,7 +43,7 @@ public class ChallengeAppController implements ChallengeAppApi {
     @DeleteMapping
     public ResponseEntity<BaseResponse<EmptyJsonResponse>> orderRemoveApp(
             @UserId final Long userId,
-            @RequestHeader("OS") final String os,
+            @RequestHeader(CustomHeaderType.OS) final String os,
             @RequestBody @Valid final AppRemoveRequest request) {
         challengeFacade.removeAppFromCurrentChallenge(userId, request.appCode(), os);
 
