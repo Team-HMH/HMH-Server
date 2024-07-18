@@ -41,6 +41,7 @@ public class SecurityConfig {
             "/api/v1/admin/login",
             "/api/v1/user/reissue",
             "/api/v1/user/signup",
+            "/api/v2/user/signup",
             "/api/v1/user/social/token/kakao",
     };
 
