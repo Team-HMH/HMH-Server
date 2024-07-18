@@ -59,31 +59,4 @@ public class ChallengeController implements ChallengeApi {
                 .body(BaseResponse.success(ChallengeSuccess.GET_DAILY_CHALLENGE_SUCCESS,
                         challengeFacade.getDailyChallengeInfo(userId, timeZone)));
     }
-
-    @Override
-    @PostMapping("/app")
-    public ResponseEntity<BaseResponse<EmptyJsonResponse>> orderAddApps(
-            @UserId final Long userId,
-            @RequestHeader("OS") final String os,
-            @RequestBody @Valid final ChallengeAppArrayRequest requests) {
-        challengeFacade.addAppsToCurrentChallenge(userId, requests.apps(), os);
-
-        return ResponseEntity
-                .status(AppSuccess.ADD_APP_SUCCESS.getHttpStatus())
-                .body(BaseResponse.success(AppSuccess.ADD_APP_SUCCESS, new EmptyJsonResponse()));
-
-    }
-
-    @Override
-    @DeleteMapping("/app")
-    public ResponseEntity<BaseResponse<EmptyJsonResponse>> orderRemoveApp(
-            @UserId final Long userId,
-            @RequestHeader("OS") final String os,
-            @RequestBody @Valid final AppRemoveRequest request) {
-        challengeFacade.removeAppFromCurrentChallenge(userId, request.appCode(), os);
-
-        return ResponseEntity
-                .status(AppSuccess.REMOVE_APP_SUCCESS.getHttpStatus())
-                .body(BaseResponse.success(AppSuccess.REMOVE_APP_SUCCESS, new EmptyJsonResponse()));
-    }
 }
