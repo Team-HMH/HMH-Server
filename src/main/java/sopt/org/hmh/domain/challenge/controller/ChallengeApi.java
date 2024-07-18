@@ -76,7 +76,8 @@ public interface ChallengeApi {
                             description = "서버 내부 오류입니다.",
                             content = @Content)})
     ResponseEntity<BaseResponse<DailyChallengeResponse>> orderGetDailyChallenge(
-            @Parameter(hidden = true) final Long userId);
+            @Parameter(hidden = true) final Long userId,
+            @RequestHeader final String timeZone);
 
     @Operation(
             summary = "스크린타임 설정할 앱을 추가하는 API",

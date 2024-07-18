@@ -27,7 +27,7 @@ public class PointFacade {
     @Transactional
     public UsePointResponse usePointAndChallengeFailed(Long userId, LocalDate challengeDate) {
         DailyChallenge dailyChallenge =
-                dailyChallengeService.findByChallengeDateAndUserIdOrThrowException(challengeDate, userId);
+                dailyChallengeService.findDailyChallengeByChallengeDateAndUserIdOrElseThrow(challengeDate, userId);
         User user = userService.findByIdOrThrowException(userId);
 
         dailyChallengeService.validateDailyChallengeStatus(dailyChallenge.getStatus(), List.of(Status.NONE));
@@ -42,7 +42,7 @@ public class PointFacade {
     @Transactional
     public EarnPointResponse earnPointAndChallengeEarned(Long userId, LocalDate challengeDate) {
         DailyChallenge dailyChallenge =
-                dailyChallengeService.findByChallengeDateAndUserIdOrThrowException(challengeDate, userId);
+                dailyChallengeService.findDailyChallengeByChallengeDateAndUserIdOrElseThrow(challengeDate, userId);
         User user = userService.findByIdOrThrowException(userId);
 
         dailyChallengeService.validateDailyChallengeStatus(dailyChallenge.getStatus(), List.of(Status.UNEARNED));

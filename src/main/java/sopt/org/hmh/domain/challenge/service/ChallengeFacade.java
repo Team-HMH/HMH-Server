@@ -1,5 +1,7 @@
 package sopt.org.hmh.domain.challenge.service;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -7,9 +9,10 @@ import sopt.org.hmh.domain.app.dto.request.ChallengeAppRequest;
 import sopt.org.hmh.domain.app.dto.response.ChallengeAppResponse;
 import sopt.org.hmh.domain.app.service.ChallengeAppService;
 import sopt.org.hmh.domain.challenge.domain.Challenge;
-import sopt.org.hmh.domain.challenge.dto.NewChallengeOrder;
+import sopt.org.hmh.domain.challenge.dto.request.NewChallengeOrder;
 import sopt.org.hmh.domain.challenge.dto.response.ChallengeResponse;
 import sopt.org.hmh.domain.challenge.dto.response.DailyChallengeResponse;
+import sopt.org.hmh.domain.dailychallenge.domain.DailyChallenge;
 import sopt.org.hmh.domain.dailychallenge.service.DailyChallengeService;
 import sopt.org.hmh.domain.user.service.UserService;
 import java.util.List;
@@ -48,13 +51,20 @@ public class ChallengeFacade {
     }
 
     @Transactional(readOnly = true)
-    public DailyChallengeResponse getDailyChallengeInfo(Long userId) {
+    public DailyChallengeResponse getDailyChallengeInfo(Long userId, String timeZone) {
         Challenge challenge = this.findCurrentChallengeByUserId(userId);
+        LocalDate localDateNow = LocalDate.now(ZoneId.of(timeZone));
+        DailyChallenge todayChallenge =
+                dailyChallengeService.findDailyChallengeByChallengeAndChallengeDate(challenge, localDateNow);
 
         return DailyChallengeResponse.builder()
+                .status(todayChallenge.getStatus())
                 .goalTime(challenge.getGoalTime())
                 .apps(challenge.getApps().stream()
-                        .map(app -> new ChallengeAppResponse(app.getAppCode(), app.getGoalTime())).toList())
+                        .map(challengeApp -> new ChallengeAppResponse(
+                                challengeApp.getAppCode(),
+                                challengeApp.getGoalTime()
+                        )).toList())
                 .build();
     }
 

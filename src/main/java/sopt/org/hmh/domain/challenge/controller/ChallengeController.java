@@ -1,6 +1,6 @@
 package sopt.org.hmh.domain.challenge.controller;
 
-import static sopt.org.hmh.domain.challenge.dto.NewChallengeOrder.createNextChallengeOrder;
+import static sopt.org.hmh.domain.challenge.dto.request.NewChallengeOrder.createNextChallengeOrder;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -51,11 +51,12 @@ public class ChallengeController implements ChallengeApi {
     @GetMapping("/home")
     @Override
     public ResponseEntity<BaseResponse<DailyChallengeResponse>> orderGetDailyChallenge(
-            @UserId final Long userId) {
+            @UserId final Long userId,
+            @RequestHeader final String timeZone) {
         return ResponseEntity
                 .status(ChallengeSuccess.GET_DAILY_CHALLENGE_SUCCESS.getHttpStatus())
                 .body(BaseResponse.success(ChallengeSuccess.GET_DAILY_CHALLENGE_SUCCESS,
-                        challengeFacade.getDailyChallengeInfo(userId)));
+                        challengeFacade.getDailyChallengeInfo(userId, timeZone)));
     }
 
     @PostMapping("/app")

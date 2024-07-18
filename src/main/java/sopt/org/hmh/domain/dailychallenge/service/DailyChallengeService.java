@@ -18,8 +18,15 @@ public class DailyChallengeService {
 
     private final DailyChallengeRepository dailyChallengeRepository;
 
-    public DailyChallenge findByChallengeDateAndUserIdOrThrowException(LocalDate challengeDate, Long userId) {
+    public DailyChallenge findDailyChallengeByChallengeDateAndUserIdOrElseThrow(LocalDate challengeDate, Long userId) {
         return dailyChallengeRepository.findByChallengeDateAndUserId(challengeDate, userId)
+                .orElseThrow(() -> new DailyChallengeException(DailyChallengeError.DAILY_CHALLENGE_NOT_FOUND));
+    }
+
+    public DailyChallenge findDailyChallengeByChallengeAndChallengeDate(Challenge challenge, LocalDate challengeDate) {
+        return challenge.getHistoryDailyChallenges().stream()
+                .filter(dailyChallenge -> dailyChallenge.getChallengeDate().equals(challengeDate))
+                .findFirst()
                 .orElseThrow(() -> new DailyChallengeException(DailyChallengeError.DAILY_CHALLENGE_NOT_FOUND));
     }
 
