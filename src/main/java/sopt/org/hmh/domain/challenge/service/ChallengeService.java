@@ -8,7 +8,6 @@ import sopt.org.hmh.domain.challenge.domain.Challenge;
 import sopt.org.hmh.domain.challenge.domain.exception.ChallengeError;
 import sopt.org.hmh.domain.challenge.domain.exception.ChallengeException;
 import sopt.org.hmh.domain.challenge.repository.ChallengeRepository;
-import sopt.org.hmh.domain.user.domain.User;
 
 @Service
 @RequiredArgsConstructor
@@ -33,10 +32,8 @@ public class ChallengeService {
         return this.findByIdOrElseThrow(challengeId).getApps();
     }
 
-    public Challenge addChallengeAndUpdateUserCurrentChallenge(Challenge challenge, User user) {
-        Challenge newChallenge = challengeRepository.save(challenge);
-        user.changeCurrentChallengeId(newChallenge.getId());
-        return newChallenge;
+    public Challenge addChallenge(Challenge challenge) {
+        return challengeRepository.save(challenge);
     }
 
     public Integer getChallengePeriod(Long challengeId) {
