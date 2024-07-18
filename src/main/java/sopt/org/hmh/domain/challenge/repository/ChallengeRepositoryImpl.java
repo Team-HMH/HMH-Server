@@ -13,6 +13,11 @@ public class ChallengeRepositoryImpl implements ChallengeRepository{
     private final ChallengeJpaRepository challengeJpaRepository;
 
     @Override
+    public Challenge save(Challenge challenge) {
+        return challengeJpaRepository.save(challenge);
+    }
+
+    @Override
     public Optional<Challenge> findById(Long id) {
         return challengeJpaRepository.findById(id);
     }
@@ -26,4 +31,5 @@ public class ChallengeRepositoryImpl implements ChallengeRepository{
     public void deleteByUserId(Long userId) {
         challengeJpaRepository.deleteByUserId(userId);
     }
+
 }

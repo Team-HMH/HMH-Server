@@ -10,4 +10,6 @@ public interface ChallengeRepository {
     void deleteByUserIdIn(List<Long> userId);
 
     void deleteByUserId(Long userId);
+
+    Challenge save(Challenge challenge);
 }
