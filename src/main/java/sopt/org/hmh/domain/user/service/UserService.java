@@ -1,6 +1,7 @@
 package sopt.org.hmh.domain.user.service;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Optional;
 
 import lombok.RequiredArgsConstructor;
@@ -108,15 +109,28 @@ public class UserService {
         this.findByIdOrThrowException(userId).changeCurrentChallengeId(challengeId);
     }
 
+    @Deprecated
     @Transactional
-    public void changeRecentLockDate(Long userId, LocalDate lockDate) {
+    public void changeRecentLockDateDeprecated(Long userId, LocalDate lockDate) {
         this.findByIdOrThrowException(userId).changeRecentLockDate(lockDate);
     }
 
+    @Transactional
+    public void changeRecentLockDateToToday(Long userId, String timeZone) {
+        this.findByIdOrThrowException(userId).changeRecentLockDate(LocalDate.now(ZoneId.of(timeZone)));
+    }
+
     @Transactional(readOnly = true)
-    public IsLockTodayResponse checkIsTodayLock(Long userId, LocalDate lockCheckDate) {
+    @Deprecated
+    public IsLockTodayResponse checkIsTodayLockDeprecated(Long userId, LocalDate lockCheckDate) {
         LocalDate userRecentLockDate = this.findByIdOrThrowException(userId).getRecentLockDate();
         return new IsLockTodayResponse(lockCheckDate.equals(userRecentLockDate));
+    }
+
+    @Transactional(readOnly = true)
+    public IsLockTodayResponse checkIsTodayLock(Long userId, String timeZone) {
+        LocalDate userRecentLockDate = this.findByIdOrThrowException(userId).getRecentLockDate();
+        return new IsLockTodayResponse(userRecentLockDate.equals(LocalDate.now(ZoneId.of(timeZone))));
     }
 
     public void withdrawImmediately(Long userId) {
