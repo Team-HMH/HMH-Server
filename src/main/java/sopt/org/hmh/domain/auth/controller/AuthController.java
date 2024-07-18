@@ -10,24 +10,27 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import sopt.org.hmh.domain.auth.dto.response.LoginResponse;
+import sopt.org.hmh.domain.auth.dto.response.ReissueResponse;
 import sopt.org.hmh.domain.auth.exception.AuthSuccess;
 import sopt.org.hmh.domain.auth.dto.request.SocialPlatformRequest;
 import sopt.org.hmh.domain.auth.dto.request.SocialSignUpRequest;
 import sopt.org.hmh.domain.auth.service.AuthFacade;
+import sopt.org.hmh.global.auth.jwt.JwtConstants;
 import sopt.org.hmh.global.auth.social.SocialAccessTokenResponse;
 import sopt.org.hmh.global.common.response.BaseResponse;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/user")
+@RequestMapping("/api")
 public class AuthController implements AuthApi {
 
     private final AuthFacade authFacade;
 
-    @PostMapping("/login")
+    @PostMapping("/v1/user/login")
     @Override
-    public ResponseEntity<BaseResponse<?>> orderLogin(
-            @RequestHeader("Authorization") final String socialAccessToken,
+    public ResponseEntity<BaseResponse<LoginResponse>> orderLogin(
+            @RequestHeader(JwtConstants.AUTHORIZATION) final String socialAccessToken,
             @RequestBody final SocialPlatformRequest request
     ) {
         return ResponseEntity
@@ -38,10 +41,11 @@ public class AuthController implements AuthApi {
                 ));
     }
 
-    @PostMapping("/signup")
     @Override
-    public ResponseEntity<BaseResponse<?>> orderSignup(
-            @RequestHeader("Authorization") final String socialAccessToken,
+    @Deprecated
+    @PostMapping("/v1/user/signup")
+    public ResponseEntity<BaseResponse<LoginResponse>> orderSignupDeprecated(
+            @RequestHeader(JwtConstants.AUTHORIZATION) final String socialAccessToken,
             @RequestHeader("OS") final String os,
             @RequestBody @Valid final SocialSignUpRequest request
     ) {
@@ -49,14 +53,30 @@ public class AuthController implements AuthApi {
                 .status(AuthSuccess.SIGNUP_SUCCESS.getHttpStatus())
                 .body(BaseResponse.success(
                         AuthSuccess.SIGNUP_SUCCESS,
-                        authFacade.signup(request, socialAccessToken, os)
+                        authFacade.signup(request, socialAccessToken, os, "Asia/Seoul")
                 ));
     }
 
-    @PostMapping("/reissue")
     @Override
-    public ResponseEntity<BaseResponse<?>> orderReissue(
-            @RequestHeader("Authorization") final String refreshToken
+    @PostMapping("/v2/user/signup")
+    public ResponseEntity<BaseResponse<LoginResponse>> orderSignup(
+            @RequestHeader(JwtConstants.AUTHORIZATION) final String socialAccessToken,
+            @RequestHeader("OS") final String os,
+            @RequestHeader("Time-Zone") final String timeZone,
+            @RequestBody @Valid final SocialSignUpRequest request
+    ) {
+        return ResponseEntity
+                .status(AuthSuccess.SIGNUP_SUCCESS.getHttpStatus())
+                .body(BaseResponse.success(
+                        AuthSuccess.SIGNUP_SUCCESS,
+                        authFacade.signup(request, socialAccessToken, os, timeZone)
+                ));
+    }
+
+    @Override
+    @PostMapping("/v1/user/reissue")
+    public ResponseEntity<BaseResponse<ReissueResponse>> orderReissue(
+            @RequestHeader(JwtConstants.AUTHORIZATION) final String refreshToken
     ) {
         return ResponseEntity
                 .status(AuthSuccess.REISSUE_SUCCESS.getHttpStatus())
@@ -66,7 +86,7 @@ public class AuthController implements AuthApi {
                 ));
     }
 
-    @GetMapping("/social/token/kakao")
+    @GetMapping("/v1/user/social/token/kakao")
     public ResponseEntity<BaseResponse<SocialAccessTokenResponse>> orderGetKakaoAccessToken(
             @RequestParam("code") final String code
             ) {

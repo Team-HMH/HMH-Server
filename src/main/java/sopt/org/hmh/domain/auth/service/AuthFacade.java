@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sopt.org.hmh.domain.auth.dto.response.ReissueResponse;
+import sopt.org.hmh.domain.challenge.dto.request.NewChallengeOrder;
 import sopt.org.hmh.domain.challenge.service.ChallengeFacade;
 import sopt.org.hmh.domain.user.domain.User;
 import sopt.org.hmh.domain.auth.dto.request.SocialSignUpRequest;
@@ -36,7 +37,7 @@ public class AuthFacade {
     }
 
     @Transactional
-    public LoginResponse signup(SocialSignUpRequest request, String socialAccessToken, String os) {
+    public LoginResponse signup(SocialSignUpRequest request, String socialAccessToken, String os, String timeZone) {
         SocialPlatform socialPlatform = request.socialPlatform();
         String socialId = this.getSocialIdBySocialAccessToken(socialPlatform, socialAccessToken);
 
@@ -45,7 +46,10 @@ public class AuthFacade {
 
         userService.registerOnboardingInfo(request, newUserId);
 
-        challengeFacade.startFirstChallengeWithChallengeSignUpRequest(request.challenge(), newUser , os);
+        challengeFacade.startNewChallenge(NewChallengeOrder.createFirstChallengeOrder(
+                request.challenge().toChallengeRequest(), request.challenge().apps(),
+                newUserId, os, timeZone
+        ));
 
         return performLogin(newUser, socialAccessToken, socialPlatform);
     }
