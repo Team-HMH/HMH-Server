@@ -25,8 +25,8 @@ public class ChallengeController implements ChallengeApi {
 
     private final ChallengeFacade challengeFacade;
 
-    @PostMapping
     @Override
+    @PostMapping
     public ResponseEntity<BaseResponse<EmptyJsonResponse>> orderAddChallenge(
             @UserId final Long userId,
             @RequestHeader("OS") final String os,
@@ -38,18 +38,19 @@ public class ChallengeController implements ChallengeApi {
                 .body(BaseResponse.success(ChallengeSuccess.ADD_CHALLENGE_SUCCESS, new EmptyJsonResponse()));
     }
 
-    @GetMapping
     @Override
+    @GetMapping
     public ResponseEntity<BaseResponse<ChallengeResponse>> orderGetChallenge(
-            @UserId final Long userId) {
+            @UserId final Long userId,
+            @RequestHeader final String timeZone) {
         return ResponseEntity
                 .status(ChallengeSuccess.GET_CHALLENGE_SUCCESS.getHttpStatus())
                 .body(BaseResponse.success(ChallengeSuccess.GET_CHALLENGE_SUCCESS,
-                        challengeFacade.getCurrentChallengeInfo(userId)));
+                        challengeFacade.getCurrentChallengeInfo(userId, timeZone)));
     }
 
-    @GetMapping("/home")
     @Override
+    @GetMapping("/home")
     public ResponseEntity<BaseResponse<DailyChallengeResponse>> orderGetDailyChallenge(
             @UserId final Long userId,
             @RequestHeader final String timeZone) {
@@ -59,8 +60,8 @@ public class ChallengeController implements ChallengeApi {
                         challengeFacade.getDailyChallengeInfo(userId, timeZone)));
     }
 
-    @PostMapping("/app")
     @Override
+    @PostMapping("/app")
     public ResponseEntity<BaseResponse<EmptyJsonResponse>> orderAddApps(
             @UserId final Long userId,
             @RequestHeader("OS") final String os,
@@ -73,8 +74,8 @@ public class ChallengeController implements ChallengeApi {
 
     }
 
-    @DeleteMapping("/app")
     @Override
+    @DeleteMapping("/app")
     public ResponseEntity<BaseResponse<EmptyJsonResponse>> orderRemoveApp(
             @UserId final Long userId,
             @RequestHeader("OS") final String os,

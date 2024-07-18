@@ -1,7 +1,7 @@
-package sopt.org.hmh.domain.challenge.dto;
+package sopt.org.hmh.domain.challenge.dto.request;
 
+import java.time.LocalDate;
 import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -9,7 +9,6 @@ import lombok.Getter;
 import sopt.org.hmh.domain.app.domain.ChallengeApp;
 import sopt.org.hmh.domain.app.dto.request.ChallengeAppRequest;
 import sopt.org.hmh.domain.challenge.domain.Challenge;
-import sopt.org.hmh.domain.challenge.dto.request.ChallengeRequest;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -41,7 +40,7 @@ public class NewChallengeOrder {
                 .period(challengeRequest.period())
                 .userId(userId)
                 .goalTime(challengeRequest.goalTime())
-                .startDate(ZonedDateTime.now(zoneId).toLocalDate())
+                .startDate(LocalDate.now(zoneId))
                 .build();
     }
 

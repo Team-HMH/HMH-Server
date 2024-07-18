@@ -21,7 +21,6 @@ import sopt.org.hmh.global.common.response.EmptyJsonResponse;
 @SecurityRequirement(name = JwtConstants.AUTHORIZATION)
 public interface ChallengeApi {
 
-    @PostMapping
     @Operation(
             summary = "챌린지가 끝난 후 새 챌린지 생성하는 API",
             responses = {
@@ -42,7 +41,6 @@ public interface ChallengeApi {
             final String timeZone,
             final ChallengeRequest request);
 
-    @GetMapping
     @Operation(
             summary = "달성현황뷰 챌린지 정보를 불러오는 API",
             responses = {
@@ -58,9 +56,9 @@ public interface ChallengeApi {
                             description = "서버 내부 오류입니다.",
                             content = @Content)})
     ResponseEntity<BaseResponse<ChallengeResponse>> orderGetChallenge(
-            @Parameter(hidden = true) final Long userId);
+            @Parameter(hidden = true) final Long userId,
+            @RequestHeader final String timeZone);
 
-    @GetMapping("/home")
     @Operation(
             summary = "이용시간 통계 정보를 불러오는 API",
             responses = {
@@ -98,7 +96,6 @@ public interface ChallengeApi {
             @RequestHeader("OS") String os,
             @RequestBody ChallengeAppArrayRequest requests);
 
-    @GetMapping("/app")
     @Operation(
             summary = "스크린타임 설정한 앱을 삭제하는 API",
             responses = {

@@ -46,8 +46,9 @@ public class ChallengeFacade {
     }
 
     @Transactional(readOnly = true)
-    public ChallengeResponse getCurrentChallengeInfo(Long userId) {
-        return ChallengeResponse.of(this.findCurrentChallengeByUserId(userId));
+    public ChallengeResponse getCurrentChallengeInfo(Long userId, String timeZone) {
+        Challenge currentChallenge = this.findCurrentChallengeByUserId(userId);
+        return ChallengeResponse.of(currentChallenge, timeZone);
     }
 
     @Transactional(readOnly = true)

@@ -47,7 +47,7 @@ public class ChallengeControllerDeprecated implements ChallengeApiDeprecated {
         return ResponseEntity
                 .status(ChallengeSuccess.GET_CHALLENGE_SUCCESS.getHttpStatus())
                 .body(BaseResponse.success(ChallengeSuccess.GET_CHALLENGE_SUCCESS,
-                        challengeFacade.getCurrentChallengeInfo(userId)));
+                        challengeFacade.getCurrentChallengeInfo(userId, "Asia/Seoul")));
     }
 
     @GetMapping("/home")
