@@ -11,7 +11,6 @@ import sopt.org.hmh.domain.challenge.dto.NewChallengeOrder;
 import sopt.org.hmh.domain.challenge.dto.response.ChallengeResponse;
 import sopt.org.hmh.domain.challenge.dto.response.DailyChallengeResponse;
 import sopt.org.hmh.domain.dailychallenge.service.DailyChallengeService;
-import sopt.org.hmh.domain.user.domain.User;
 import sopt.org.hmh.domain.user.service.UserService;
 import java.util.List;
 
@@ -41,8 +40,6 @@ public class ChallengeFacade {
         }
         Long previousChallengeId = userService.getCurrentChallengeIdByUserId(newChallengeOrder.getUserId());
         challengeAppService.addAppsByPreviousChallengeApp(newChallengeOrder.getOs(), previousChallengeId, newChallenge);
-        // TODO: userId를 이용해 previousChallengeId를 찾아서 그 ChallengeApp을 가져오는 로직을 join을 이용해 한 번에 처리하도록 변경
-        // 그 후, challengeAppService로 메서드 책임 이전
     }
 
     @Transactional(readOnly = true)
@@ -62,8 +59,8 @@ public class ChallengeFacade {
     }
 
     public Challenge findCurrentChallengeByUserId(Long userId) {
-        User user = userService.findByIdOrThrowException(userId);
-        return challengeService.findByIdOrElseThrow(user.getCurrentChallengeId());
+        Long currentChallengeId = userService.getCurrentChallengeIdByUserId(userId);
+        return challengeService.findByIdOrElseThrow(currentChallengeId);
     }
 
     @Transactional
