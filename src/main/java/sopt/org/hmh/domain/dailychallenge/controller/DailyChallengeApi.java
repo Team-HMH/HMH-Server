@@ -37,6 +37,20 @@ public interface DailyChallengeApi {
             final FinishedDailyChallengeListRequest request
     );
 
+    @Operation(
+            summary = "완료된 챌린지 정보 리스트 전송 API",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "완료된 챌린지 정보 리스트 전송에 성공했습니다."),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "잘못된 요청입니다.",
+                            content = @Content),
+                    @ApiResponse(
+                            responseCode = "500",
+                            description = "서버 내부 오류입니다.",
+                            content = @Content)})
     ResponseEntity<BaseResponse<EmptyJsonResponse>> orderChangeStatusDailyChallenge(
             @Parameter(hidden = true) final Long userId,
             final String os,
