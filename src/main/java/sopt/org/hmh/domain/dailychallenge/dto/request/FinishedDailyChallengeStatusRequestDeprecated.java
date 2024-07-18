@@ -2,7 +2,8 @@ package sopt.org.hmh.domain.dailychallenge.dto.request;
 
 import java.time.LocalDate;
 
-public record FinishedDailyChallengeStatusRequest(
+@Deprecated
+public record FinishedDailyChallengeStatusRequestDeprecated(
         LocalDate challengeDate,
         boolean isSuccess
 ) {

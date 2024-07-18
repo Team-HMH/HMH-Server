@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import sopt.org.hmh.domain.dailychallenge.domain.exception.DailyChallengeSuccess;
 import sopt.org.hmh.domain.dailychallenge.dto.request.FinishedDailyChallengeListRequestDeprecated;
 import sopt.org.hmh.domain.dailychallenge.dto.request.FinishedDailyChallengeStatusListRequestDeprecated;
-import sopt.org.hmh.domain.dailychallenge.service.DailyChallengeFacade;
+import sopt.org.hmh.domain.dailychallenge.service.DailyChallengeFacadeDeprecated;
 import sopt.org.hmh.global.auth.UserId;
 import sopt.org.hmh.global.common.response.BaseResponse;
 import sopt.org.hmh.global.common.response.EmptyJsonResponse;
@@ -22,7 +22,7 @@ import sopt.org.hmh.global.common.response.EmptyJsonResponse;
 @RequestMapping("/api/v1/challenge/daily")
 public class DailyChallengeControllerDeprecated implements DailyChallengeApiDeprecated {
 
-    private final DailyChallengeFacade dailyChallengeFacade;
+    private final DailyChallengeFacadeDeprecated dailyChallengeFacadeDeprecated;
 
     @Override
     @PostMapping("/finish")
@@ -31,7 +31,7 @@ public class DailyChallengeControllerDeprecated implements DailyChallengeApiDepr
             @RequestHeader("OS") final String os,
             @RequestBody @Valid final FinishedDailyChallengeListRequestDeprecated request
     ) {
-        dailyChallengeFacade.addFinishedDailyChallengeHistory(userId, request, os);
+        dailyChallengeFacadeDeprecated.addFinishedDailyChallengeHistory(userId, request, os);
         return ResponseEntity
                 .status(DailyChallengeSuccess.SEND_FINISHED_DAILY_CHALLENGE_SUCCESS.getHttpStatus())
                 .body(BaseResponse.success(DailyChallengeSuccess.SEND_FINISHED_DAILY_CHALLENGE_SUCCESS,
@@ -45,7 +45,7 @@ public class DailyChallengeControllerDeprecated implements DailyChallengeApiDepr
             @RequestHeader("OS") final String os,
             @RequestBody final FinishedDailyChallengeStatusListRequestDeprecated request
     ) {
-        dailyChallengeFacade.changeDailyChallengeStatusByIsSuccess(userId, request);
+        dailyChallengeFacadeDeprecated.changeDailyChallengeStatusByIsSuccess(userId, request);
         return ResponseEntity
                 .status(DailyChallengeSuccess.SEND_FINISHED_DAILY_CHALLENGE_SUCCESS.getHttpStatus())
                 .body(BaseResponse.success(DailyChallengeSuccess.SEND_FINISHED_DAILY_CHALLENGE_SUCCESS,

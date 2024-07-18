@@ -6,7 +6,8 @@ import java.time.LocalDate;
 import java.util.List;
 import sopt.org.hmh.domain.app.dto.request.HistoryAppRequest;
 
-public record FinishedDailyChallengeRequest(
+@Deprecated
+public record FinishedDailyChallengeRequestDeprecated(
         @NotNull(message = "챌린지 날짜는 null일 수 없습니다.")
         LocalDate challengeDate,
         List<@Valid HistoryAppRequest> apps
