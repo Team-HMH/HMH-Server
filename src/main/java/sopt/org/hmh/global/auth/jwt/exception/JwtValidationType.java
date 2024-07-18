@@ -1,4 +1,4 @@
-package sopt.org.hmh.global.auth.jwt;
+package sopt.org.hmh.global.auth.jwt.exception;
 
 import lombok.AccessLevel;
 import lombok.Getter;

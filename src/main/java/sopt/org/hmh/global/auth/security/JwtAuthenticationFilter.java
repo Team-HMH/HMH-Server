@@ -14,8 +14,8 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import sopt.org.hmh.global.auth.jwt.JwtConstants;
-import sopt.org.hmh.global.auth.jwt.JwtProvider;
-import sopt.org.hmh.global.auth.jwt.JwtValidator;
+import sopt.org.hmh.global.auth.jwt.service.JwtProvider;
+import sopt.org.hmh.global.auth.jwt.service.JwtValidator;
 
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {

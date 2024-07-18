@@ -1,7 +1,7 @@
-package sopt.org.hmh.global.auth.jwt;
+package sopt.org.hmh.global.auth.jwt.service;
 
 import static sopt.org.hmh.global.auth.jwt.JwtConstants.ADMIN_ROLE;
-import static sopt.org.hmh.global.auth.jwt.JwtPrefixExtractor.extractPrefix;
+import static sopt.org.hmh.global.auth.jwt.service.JwtPrefixExtractor.extractPrefix;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;

@@ -10,7 +10,7 @@ import sopt.org.hmh.domain.user.domain.User;
 import sopt.org.hmh.domain.auth.dto.request.SocialSignUpRequest;
 import sopt.org.hmh.domain.auth.dto.response.LoginResponse;
 import sopt.org.hmh.domain.user.service.UserService;
-import sopt.org.hmh.global.auth.jwt.TokenService;
+import sopt.org.hmh.global.auth.jwt.service.TokenService;
 import sopt.org.hmh.global.auth.jwt.exception.JwtError;
 import sopt.org.hmh.global.auth.jwt.exception.JwtException;
 import sopt.org.hmh.global.auth.social.SocialPlatform;

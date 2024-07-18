@@ -1,11 +1,12 @@
-package sopt.org.hmh.global.auth.jwt;
+package sopt.org.hmh.global.auth.jwt.service;
 
-import static sopt.org.hmh.global.auth.jwt.JwtPrefixExtractor.extractPrefix;
+import static sopt.org.hmh.global.auth.jwt.service.JwtPrefixExtractor.extractPrefix;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sopt.org.hmh.domain.auth.dto.response.ReissueResponse;
+import sopt.org.hmh.global.auth.jwt.dto.TokenResponse;
 
 @Service
 @RequiredArgsConstructor
