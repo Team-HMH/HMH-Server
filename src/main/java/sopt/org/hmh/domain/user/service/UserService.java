@@ -129,8 +129,9 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public IsLockTodayResponse checkIsTodayLock(Long userId, String timeZone) {
+        LocalDate now = LocalDate.now(ZoneId.of(timeZone));
         LocalDate userRecentLockDate = this.findByIdOrThrowException(userId).getRecentLockDate();
-        return new IsLockTodayResponse(userRecentLockDate.equals(LocalDate.now(ZoneId.of(timeZone))));
+        return new IsLockTodayResponse(now.equals(userRecentLockDate));
     }
 
     public void withdrawImmediately(Long userId) {
