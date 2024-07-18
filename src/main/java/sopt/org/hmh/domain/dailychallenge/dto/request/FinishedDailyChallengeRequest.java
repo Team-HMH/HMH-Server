@@ -6,7 +6,7 @@ import java.util.List;
 import sopt.org.hmh.domain.app.dto.request.HistoryAppRequest;
 
 public record FinishedDailyChallengeRequest(
-    @NotNull(message = "챌린지 날짜는 null일 수 없습니다.")
+    @NotNull(message = "챌린지 기간 인덱스는 null일 수 없습니다.")
     Integer challengePeriodIndex,
     List<@Valid HistoryAppRequest> apps
 ) {
