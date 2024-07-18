@@ -1,5 +1,7 @@
 package sopt.org.hmh.domain.challenge.controller;
 
+import static sopt.org.hmh.domain.challenge.dto.NewChallengeOrder.createNextChallengeOrder;
+
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +32,7 @@ public class ChallengeControllerDeprecated implements ChallengeApiDeprecated {
             @UserId final Long userId,
             @RequestHeader("OS") final String os,
             @RequestBody @Valid final ChallengeRequest request) {
-        challengeFacade.startNewChallengeByPreviousChallenge(userId, request, os);
+        challengeFacade.startNewChallenge(createNextChallengeOrder(request, userId, os, "Asia/Seoul"));
 
         return ResponseEntity
                 .status(ChallengeSuccess.ADD_CHALLENGE_SUCCESS.getHttpStatus())
@@ -41,8 +43,7 @@ public class ChallengeControllerDeprecated implements ChallengeApiDeprecated {
     @Override
     @Deprecated
     public ResponseEntity<BaseResponse<ChallengeResponse>> orderGetChallenge(
-            @UserId final Long userId,
-            @RequestHeader("OS") final String os) {
+            @UserId final Long userId) {
         return ResponseEntity
                 .status(ChallengeSuccess.GET_CHALLENGE_SUCCESS.getHttpStatus())
                 .body(BaseResponse.success(ChallengeSuccess.GET_CHALLENGE_SUCCESS,
@@ -53,8 +54,7 @@ public class ChallengeControllerDeprecated implements ChallengeApiDeprecated {
     @Override
     @Deprecated
     public ResponseEntity<BaseResponse<DailyChallengeResponse>> orderGetDailyChallenge(
-            @UserId final Long userId,
-            @RequestHeader("OS") final String os) {
+            @UserId final Long userId) {
         return ResponseEntity
                 .status(ChallengeSuccess.GET_DAILY_CHALLENGE_SUCCESS.getHttpStatus())
                 .body(BaseResponse.success(ChallengeSuccess.GET_DAILY_CHALLENGE_SUCCESS,

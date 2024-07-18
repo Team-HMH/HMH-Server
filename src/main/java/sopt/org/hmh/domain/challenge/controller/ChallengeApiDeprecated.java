@@ -13,7 +13,6 @@ import sopt.org.hmh.domain.app.dto.request.AppRemoveRequest;
 import sopt.org.hmh.domain.challenge.dto.request.ChallengeRequest;
 import sopt.org.hmh.domain.challenge.dto.response.ChallengeResponse;
 import sopt.org.hmh.domain.challenge.dto.response.DailyChallengeResponse;
-import sopt.org.hmh.global.auth.UserId;
 import sopt.org.hmh.global.auth.jwt.JwtConstants;
 import sopt.org.hmh.global.common.response.BaseResponse;
 import sopt.org.hmh.global.common.response.EmptyJsonResponse;
@@ -22,7 +21,6 @@ import sopt.org.hmh.global.common.response.EmptyJsonResponse;
 @SecurityRequirement(name = JwtConstants.AUTHORIZATION)
 public interface ChallengeApiDeprecated {
 
-    @PostMapping
     @Operation(
             summary = "챌린지가 끝난 후 새 챌린지 생성하는 API",
             responses = {
@@ -38,11 +36,10 @@ public interface ChallengeApiDeprecated {
                             description = "서버 내부 오류입니다.",
                             content = @Content)})
     ResponseEntity<BaseResponse<EmptyJsonResponse>> orderAddChallenge(
-            @UserId @Parameter(hidden = true) final Long userId,
+            @Parameter(hidden = true) final Long userId,
             @RequestHeader("OS") final String os,
             @RequestBody final ChallengeRequest request);
 
-    @GetMapping
     @Operation(
             summary = "달성현황뷰 챌린지 정보를 불러오는 API",
             responses = {
@@ -58,10 +55,8 @@ public interface ChallengeApiDeprecated {
                             description = "서버 내부 오류입니다.",
                             content = @Content)})
     ResponseEntity<BaseResponse<ChallengeResponse>> orderGetChallenge(
-            @UserId @Parameter(hidden = true) final Long userId,
-            @RequestHeader("OS") final String os);
+            @Parameter(hidden = true) final Long userId);
 
-    @GetMapping("/home")
     @Operation(
             summary = "이용시간 통계 정보를 불러오는 API",
             responses = {
@@ -77,10 +72,8 @@ public interface ChallengeApiDeprecated {
                             description = "서버 내부 오류입니다.",
                             content = @Content)})
     ResponseEntity<BaseResponse<DailyChallengeResponse>> orderGetDailyChallenge(
-            @UserId @Parameter(hidden = true) final Long userId,
-            @RequestHeader("OS") final String os);
+            @Parameter(hidden = true) final Long userId);
 
-    @PostMapping("/app")
     @Operation(
             summary = "스크린타임 설정할 앱을 추가하는 API",
             responses = {
@@ -95,11 +88,11 @@ public interface ChallengeApiDeprecated {
                             responseCode = "500",
                             description = "서버 내부 오류입니다.",
                             content = @Content)})
-    ResponseEntity<BaseResponse<EmptyJsonResponse>> orderAddApps(@UserId @Parameter(hidden = true) Long userId,
-                                                 @RequestHeader("OS") String os,
-                                                 @RequestBody ChallengeAppArrayRequest requests);
+    ResponseEntity<BaseResponse<EmptyJsonResponse>> orderAddApps(
+            @Parameter(hidden = true) Long userId,
+            @RequestHeader("OS") String os,
+            @RequestBody ChallengeAppArrayRequest requests);
 
-    @GetMapping("/app")
     @Operation(
             summary = "스크린타임 설정한 앱을 삭제하는 API",
             responses = {
@@ -114,8 +107,9 @@ public interface ChallengeApiDeprecated {
                             responseCode = "500",
                             description = "서버 내부 오류입니다.",
                             content = @Content)})
-    ResponseEntity<BaseResponse<EmptyJsonResponse>> orderRemoveApp(@UserId Long userId,
-                                                   @RequestHeader("OS") String os,
-                                                   @RequestBody AppRemoveRequest request);
+    ResponseEntity<BaseResponse<EmptyJsonResponse>> orderRemoveApp(
+            @Parameter(hidden = true) Long userId,
+            @RequestHeader("OS") String os,
+            @RequestBody AppRemoveRequest request);
 }
 

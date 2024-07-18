@@ -1,5 +1,7 @@
 package sopt.org.hmh.domain.challenge.controller;
 
+import static sopt.org.hmh.domain.challenge.dto.NewChallengeOrder.createNextChallengeOrder;
+
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -30,8 +32,7 @@ public class ChallengeController implements ChallengeApi {
             @RequestHeader("OS") final String os,
             @RequestHeader("Time-Zone") final String timeZone,
             @RequestBody @Valid final ChallengeRequest request) {
-        challengeFacade.startNewChallengeByPreviousChallenge(userId, request, os);
-
+        challengeFacade.startNewChallenge(createNextChallengeOrder(request, userId, os, timeZone));
         return ResponseEntity
                 .status(ChallengeSuccess.ADD_CHALLENGE_SUCCESS.getHttpStatus())
                 .body(BaseResponse.success(ChallengeSuccess.ADD_CHALLENGE_SUCCESS, new EmptyJsonResponse()));
@@ -40,8 +41,7 @@ public class ChallengeController implements ChallengeApi {
     @GetMapping
     @Override
     public ResponseEntity<BaseResponse<ChallengeResponse>> orderGetChallenge(
-            @UserId final Long userId,
-            @RequestHeader("OS") final String os) {
+            @UserId final Long userId) {
         return ResponseEntity
                 .status(ChallengeSuccess.GET_CHALLENGE_SUCCESS.getHttpStatus())
                 .body(BaseResponse.success(ChallengeSuccess.GET_CHALLENGE_SUCCESS,
@@ -51,8 +51,7 @@ public class ChallengeController implements ChallengeApi {
     @GetMapping("/home")
     @Override
     public ResponseEntity<BaseResponse<DailyChallengeResponse>> orderGetDailyChallenge(
-            @UserId final Long userId,
-            @RequestHeader("OS") final String os) {
+            @UserId final Long userId) {
         return ResponseEntity
                 .status(ChallengeSuccess.GET_DAILY_CHALLENGE_SUCCESS.getHttpStatus())
                 .body(BaseResponse.success(ChallengeSuccess.GET_DAILY_CHALLENGE_SUCCESS,
