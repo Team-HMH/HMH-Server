@@ -14,12 +14,17 @@ public class DailyChallengeRepositoryImpl implements DailyChallengeRepository {
     private final DailyChallengeJpaRepository dailyChallengeJpaRepository;
 
     @Override
+    public void saveAll(List<DailyChallenge> dailyChallengeByChallengePeriod) {
+        dailyChallengeJpaRepository.saveAll(dailyChallengeByChallengePeriod);
+    }
+
+    @Override
     public Optional<DailyChallenge> findByChallengeDateAndUserId(LocalDate challengeDate, Long userId) {
         return dailyChallengeJpaRepository.findByChallengeDateAndUserId(challengeDate, userId);
     }
 
     @Override
-    public List<DailyChallenge> findAllByChallengeId(Long challengeId) {
-        return dailyChallengeJpaRepository.findAllByChallengeId(challengeId);
+    public List<DailyChallenge> findAllByChallengeIdOrderByChallengeDate(Long challengeId) {
+        return dailyChallengeJpaRepository.findAllByChallengeIdOrderByChallengeDate(challengeId);
     }
 }
