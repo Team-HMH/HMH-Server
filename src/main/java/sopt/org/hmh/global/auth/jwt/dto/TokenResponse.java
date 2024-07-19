@@ -1,4 +1,4 @@
-package sopt.org.hmh.global.auth.jwt;
+package sopt.org.hmh.global.auth.jwt.dto;
 
 public record TokenResponse(
         String accessToken,

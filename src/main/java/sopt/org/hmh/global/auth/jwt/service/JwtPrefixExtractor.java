@@ -1,8 +1,9 @@
-package sopt.org.hmh.global.auth.jwt;
+package sopt.org.hmh.global.auth.jwt.service;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.springframework.util.StringUtils;
+import sopt.org.hmh.global.auth.jwt.JwtConstants;
 import sopt.org.hmh.global.auth.jwt.exception.JwtError;
 import sopt.org.hmh.global.auth.jwt.exception.JwtException;
 

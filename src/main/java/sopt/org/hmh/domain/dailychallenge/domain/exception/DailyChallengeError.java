@@ -8,6 +8,7 @@ import sopt.org.hmh.global.common.exception.base.ErrorBase;
 public enum DailyChallengeError implements ErrorBase {
 
     DAILY_CHALLENGE_NOT_FOUND(HttpStatus.NOT_FOUND, "일별 챌린지를 찾을 수 없습니다."),
+    DAILY_CHALLENGE_PERIOD_INDEX_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 인덱스의 일별 챌린지를 찾을 수 없습니다."),
     DAILY_CHALLENGE_ALREADY_PROCESSED(HttpStatus.BAD_REQUEST, "이미 처리된 일별 챌린지입니다.")
     ;
 

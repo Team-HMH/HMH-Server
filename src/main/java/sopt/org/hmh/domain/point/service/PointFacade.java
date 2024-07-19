@@ -1,6 +1,7 @@
 package sopt.org.hmh.domain.point.service;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 
 import lombok.RequiredArgsConstructor;
@@ -25,9 +26,26 @@ public class PointFacade {
     private final ChallengeService challengeService;
 
     @Transactional
-    public UsePointResponse usePointAndChallengeFailed(Long userId, LocalDate challengeDate) {
+    @Deprecated
+    public UsePointResponse usePointAndChallengeFailedDeprecated(Long userId, LocalDate challengeDate) {
         DailyChallenge dailyChallenge =
-                dailyChallengeService.findByChallengeDateAndUserIdOrThrowException(challengeDate, userId);
+                dailyChallengeService.findDailyChallengeByChallengeDateAndUserIdOrElseThrow(challengeDate, userId);
+        User user = userService.findByIdOrThrowException(userId);
+
+        dailyChallengeService.validateDailyChallengeStatus(dailyChallenge.getStatus(), List.of(Status.NONE));
+        dailyChallenge.changeStatus(Status.FAILURE);
+
+        return new UsePointResponse(
+                ChallengeConstants.USAGE_POINT,
+                user.decreasePoint(ChallengeConstants.USAGE_POINT)
+        );
+    }
+
+    @Transactional
+    public UsePointResponse usePointAndTodayDailyChallengeFailed(Long userId, String timeZone) {
+        LocalDate challengeDate = LocalDate.now(ZoneId.of(timeZone));
+        DailyChallenge dailyChallenge =
+                dailyChallengeService.findDailyChallengeByChallengeDateAndUserIdOrElseThrow(challengeDate, userId);
         User user = userService.findByIdOrThrowException(userId);
 
         dailyChallengeService.validateDailyChallengeStatus(dailyChallenge.getStatus(), List.of(Status.NONE));
@@ -42,7 +60,7 @@ public class PointFacade {
     @Transactional
     public EarnPointResponse earnPointAndChallengeEarned(Long userId, LocalDate challengeDate) {
         DailyChallenge dailyChallenge =
-                dailyChallengeService.findByChallengeDateAndUserIdOrThrowException(challengeDate, userId);
+                dailyChallengeService.findDailyChallengeByChallengeDateAndUserIdOrElseThrow(challengeDate, userId);
         User user = userService.findByIdOrThrowException(userId);
 
         dailyChallengeService.validateDailyChallengeStatus(dailyChallenge.getStatus(), List.of(Status.UNEARNED));

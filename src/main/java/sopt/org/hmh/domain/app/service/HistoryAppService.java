@@ -24,7 +24,7 @@ public class HistoryAppService {
     }
 
     private List<HistoryApp> supplementAdditionalInfo(List<ChallengeApp> currentChallengeApps,
-                                                      List<HistoryAppRequest> apps, DailyChallenge dailyChallenge, String os) {
+            List<HistoryAppRequest> apps, DailyChallenge dailyChallenge, String os) {
         return apps.stream().map(app -> HistoryApp.builder()
                 .goalTime(this.getGoalTime(currentChallengeApps, app.appCode()))
                 .appCode(app.appCode())

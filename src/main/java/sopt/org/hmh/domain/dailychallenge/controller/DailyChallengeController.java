@@ -9,12 +9,13 @@ import sopt.org.hmh.domain.dailychallenge.dto.request.FinishedDailyChallengeList
 import sopt.org.hmh.domain.dailychallenge.dto.request.FinishedDailyChallengeStatusListRequest;
 import sopt.org.hmh.domain.dailychallenge.service.DailyChallengeFacade;
 import sopt.org.hmh.global.auth.UserId;
+import sopt.org.hmh.global.common.constant.CustomHeaderType;
 import sopt.org.hmh.global.common.response.BaseResponse;
 import sopt.org.hmh.global.common.response.EmptyJsonResponse;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/challenge/daily")
+@RequestMapping("/api/v2/challenge/daily")
 public class DailyChallengeController implements DailyChallengeApi {
 
     private final DailyChallengeFacade dailyChallengeFacade;
@@ -23,7 +24,8 @@ public class DailyChallengeController implements DailyChallengeApi {
     @PostMapping("/finish")
     public ResponseEntity<BaseResponse<EmptyJsonResponse>> orderAddHistoryDailyChallenge(
             @UserId final Long userId,
-            @RequestHeader("OS") final String os,
+            @RequestHeader(CustomHeaderType.OS) final String os,
+            @RequestHeader(CustomHeaderType.TIME_ZONE) final String timeZone,
             @RequestBody @Valid final FinishedDailyChallengeListRequest request
     ) {
         dailyChallengeFacade.addFinishedDailyChallengeHistory(userId, request, os);
@@ -36,7 +38,7 @@ public class DailyChallengeController implements DailyChallengeApi {
     @PostMapping("/success")
     public ResponseEntity<BaseResponse<EmptyJsonResponse>> orderChangeStatusDailyChallenge(
             @UserId final Long userId,
-            @RequestHeader("OS") final String os,
+            @RequestHeader(CustomHeaderType.TIME_ZONE) final String timeZone,
             @RequestBody final FinishedDailyChallengeStatusListRequest request
     ) {
         dailyChallengeFacade.changeDailyChallengeStatusByIsSuccess(userId, request);

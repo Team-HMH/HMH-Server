@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestHeader;
 import sopt.org.hmh.domain.challenge.dto.request.ChallengeDateRequest;
 import sopt.org.hmh.domain.point.dto.response.ChallengePointStatusListResponse;
 import sopt.org.hmh.domain.point.dto.response.EarnPointResponse;
@@ -14,6 +15,7 @@ import sopt.org.hmh.domain.point.dto.response.EarnedPointResponse;
 import sopt.org.hmh.domain.point.dto.response.UsagePointResponse;
 import sopt.org.hmh.domain.point.dto.response.UsePointResponse;
 import sopt.org.hmh.global.auth.jwt.JwtConstants;
+import sopt.org.hmh.global.common.constant.CustomHeaderType;
 import sopt.org.hmh.global.common.response.BaseResponse;
 
 @Tag(name = "포인트 관련 API")
@@ -38,6 +40,24 @@ public interface PointApi {
             @Parameter(hidden = true) Long userId);
 
     @Operation(
+            summary = "포인트 사용 API Deprecated",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "포인트 사용에 성공하였습니다."),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "잘못된 요청입니다.",
+                            content = @Content),
+                    @ApiResponse(
+                            responseCode = "500",
+                            description = "서버 내부 오류입니다.",
+                            content = @Content)})
+    ResponseEntity<BaseResponse<UsePointResponse>> orderUsagePointAndChallengeFailedDeprecated(
+            @Parameter(hidden = true) Long userId,
+            ChallengeDateRequest challengeDateRequest);
+
+    @Operation(
             summary = "포인트 사용 API",
             responses = {
                     @ApiResponse(
@@ -52,7 +72,8 @@ public interface PointApi {
                             description = "서버 내부 오류입니다.",
                             content = @Content)})
     ResponseEntity<BaseResponse<UsePointResponse>> orderUsagePointAndChallengeFailed(
-            @Parameter(hidden = true) Long userId, ChallengeDateRequest challengeDateRequest);
+            @Parameter(hidden = true) Long userId,
+            @RequestHeader(CustomHeaderType.TIME_ZONE) String timeZone);
 
     @Operation(
             summary = "포인트 받기 API",
@@ -69,7 +90,8 @@ public interface PointApi {
                             description = "서버 내부 오류입니다.",
                             content = @Content)})
     ResponseEntity<BaseResponse<EarnPointResponse>> orderEarnPointAndChallengeEarned(
-            @Parameter(hidden = true) Long userId, ChallengeDateRequest challengeDateRequest);
+            @Parameter(hidden = true) Long userId,
+            ChallengeDateRequest challengeDateRequest);
 
     @Operation(
             summary = "사용할 포인트 받기 API",

@@ -1,4 +1,4 @@
-package sopt.org.hmh.global.auth.jwt;
+package sopt.org.hmh.global.auth.jwt.service;
 
 import static sopt.org.hmh.global.auth.jwt.JwtConstants.ADMIN_ROLE;
 

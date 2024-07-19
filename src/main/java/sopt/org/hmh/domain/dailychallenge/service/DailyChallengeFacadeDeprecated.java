@@ -9,13 +9,14 @@ import sopt.org.hmh.domain.app.service.HistoryAppService;
 import sopt.org.hmh.domain.challenge.service.ChallengeService;
 import sopt.org.hmh.domain.dailychallenge.domain.DailyChallenge;
 import sopt.org.hmh.domain.dailychallenge.domain.Status;
-import sopt.org.hmh.domain.dailychallenge.dto.request.FinishedDailyChallengeListRequest;
-import sopt.org.hmh.domain.dailychallenge.dto.request.FinishedDailyChallengeStatusListRequest;
+import sopt.org.hmh.domain.dailychallenge.dto.request.FinishedDailyChallengeListRequestDeprecated;
+import sopt.org.hmh.domain.dailychallenge.dto.request.FinishedDailyChallengeStatusListRequestDeprecated;
 import sopt.org.hmh.domain.user.service.UserService;
 
 @Service
+@Deprecated
 @RequiredArgsConstructor
-public class DailyChallengeFacade {
+public class DailyChallengeFacadeDeprecated {
 
     private final DailyChallengeService dailyChallengeService;
     private final HistoryAppService historyAppService;
@@ -23,27 +24,26 @@ public class DailyChallengeFacade {
     private final UserService userService;
 
     @Transactional
-    public void addFinishedDailyChallengeHistory(Long userId, FinishedDailyChallengeListRequest requests, String os) {
+    @Deprecated
+    public void addFinishedDailyChallengeHistory(Long userId, FinishedDailyChallengeListRequestDeprecated requests, String os) {
         Long currentChallengeId = userService.getCurrentChallengeIdByUserId(userId);
         List<ChallengeApp> currentChallengeApps =
                 challengeService.getCurrentChallengeAppByChallengeId(currentChallengeId);
 
         requests.finishedDailyChallenges().forEach(request -> {
             DailyChallenge dailyChallenge =
-                    dailyChallengeService.findDailyChallengeByChallengeIdAndChallengePeriodIndex(
-                            currentChallengeId, request.challengePeriodIndex());
+                    dailyChallengeService.findDailyChallengeByChallengeDateAndUserIdOrElseThrow(request.challengeDate(), userId);
             dailyChallengeService.changeStatusByCurrentStatus(dailyChallenge);
             historyAppService.addHistoryApp(currentChallengeApps, request.apps(), dailyChallenge, os);
         });
     }
 
     @Transactional
-    public void changeDailyChallengeStatusByIsSuccess(Long userId, FinishedDailyChallengeStatusListRequest requests) {
-        Long currentChallengeId = userService.getCurrentChallengeIdByUserId(userId);
+    @Deprecated
+    public void changeDailyChallengeStatusByIsSuccess(Long userId, FinishedDailyChallengeStatusListRequestDeprecated requests) {
         requests.finishedDailyChallenges().forEach(request -> {
             DailyChallenge dailyChallenge =
-                    dailyChallengeService.findDailyChallengeByChallengeIdAndChallengePeriodIndex(
-                            currentChallengeId, request.challengePeriodIndex());
+                    dailyChallengeService.findDailyChallengeByChallengeDateAndUserIdOrElseThrow(request.challengeDate(), userId);
             if (request.isSuccess()) {
                 dailyChallengeService.validateDailyChallengeStatus(dailyChallenge.getStatus(), List.of(Status.NONE));
                 dailyChallenge.changeStatus(Status.UNEARNED);

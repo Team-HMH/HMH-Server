@@ -2,6 +2,7 @@ package sopt.org.hmh.domain.dailychallenge.service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,8 +19,21 @@ public class DailyChallengeService {
 
     private final DailyChallengeRepository dailyChallengeRepository;
 
-    public DailyChallenge findByChallengeDateAndUserIdOrThrowException(LocalDate challengeDate, Long userId) {
+    public DailyChallenge findDailyChallengeByChallengeDateAndUserIdOrElseThrow(LocalDate challengeDate, Long userId) {
         return dailyChallengeRepository.findByChallengeDateAndUserId(challengeDate, userId)
+                .orElseThrow(() -> new DailyChallengeException(DailyChallengeError.DAILY_CHALLENGE_NOT_FOUND));
+    }
+
+    public DailyChallenge findDailyChallengeByChallengeIdAndChallengePeriodIndex(Long challengeId, Integer challengePeriodIndex) {
+        return Optional.ofNullable(
+                dailyChallengeRepository.findAllByChallengeIdOrderByChallengeDate(challengeId).get(challengePeriodIndex)
+        ).orElseThrow(() -> new DailyChallengeException(DailyChallengeError.DAILY_CHALLENGE_PERIOD_INDEX_NOT_FOUND));
+    }
+
+    public DailyChallenge findDailyChallengeByChallengeAndChallengeDate(Challenge challenge, LocalDate challengeDate) {
+        return challenge.getHistoryDailyChallenges().stream()
+                .filter(dailyChallenge -> dailyChallenge.getChallengeDate().equals(challengeDate))
+                .findFirst()
                 .orElseThrow(() -> new DailyChallengeException(DailyChallengeError.DAILY_CHALLENGE_NOT_FOUND));
     }
 
@@ -44,23 +58,28 @@ public class DailyChallengeService {
         throw new DailyChallengeException(DailyChallengeError.DAILY_CHALLENGE_ALREADY_PROCESSED);
     }
 
-    public void addDailyChallenge(Long userId, Challenge challenge) {
-        LocalDate startDate = challenge.getCreatedAt().toLocalDate(); // TODO: startDate CreatedAt에서 가져오지 않고 새로 만들기
-        dailyChallengeRepository.saveAll(IntStream.range(0, challenge.getPeriod())
+    public void addDailyChallenge(Challenge challenge) {
+        dailyChallengeRepository.saveAll(createDailyChallengeByChallengePeriod(challenge));
+    }
+
+    private List<DailyChallenge> createDailyChallengeByChallengePeriod(Challenge challenge) {
+        LocalDate startDate = challenge.getStartDate();
+        Long userId = challenge.getUserId();
+        return IntStream.range(0, challenge.getPeriod())
                 .mapToObj(i -> DailyChallenge.builder()
                         .challengeDate(startDate.plusDays(i))
                         .challenge(challenge)
                         .userId(userId)
                         .goalTime(challenge.getGoalTime()).build())
-                .toList());
+                .toList();
     }
 
-    public List<DailyChallenge> getDailyChallengesByChallengeId(Long challengeId) {
-        return dailyChallengeRepository.findAllByChallengeId(challengeId);
+    public List<DailyChallenge> getDailyChallengesByChallengeIdOrderByChallengeDate(Long challengeId) {
+        return dailyChallengeRepository.findAllByChallengeIdOrderByChallengeDate(challengeId);
     }
 
     public void changeInfoOfDailyChallenges(Long challengeId, List<Status> statuses, LocalDate challengeDate) {
-        List<DailyChallenge> dailyChallenges = getDailyChallengesByChallengeId(challengeId);
+        List<DailyChallenge> dailyChallenges = this.getDailyChallengesByChallengeIdOrderByChallengeDate(challengeId);
         changeStatusOfDailyChallenges(dailyChallenges, statuses);
         changeChallengeDateOfDailyChallenges(dailyChallenges, challengeDate);
     }
