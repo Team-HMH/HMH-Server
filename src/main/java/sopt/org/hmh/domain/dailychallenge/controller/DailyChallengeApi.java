@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import sopt.org.hmh.domain.dailychallenge.dto.request.FinishedDailyChallengeListRequest;
 import sopt.org.hmh.domain.dailychallenge.dto.request.FinishedDailyChallengeStatusListRequest;
+import sopt.org.hmh.domain.dailychallenge.dto.response.ChallengeStatusesResponse;
 import sopt.org.hmh.global.auth.jwt.JwtConstants;
 import sopt.org.hmh.global.common.constant.CustomHeaderType;
 import sopt.org.hmh.global.common.response.BaseResponse;
@@ -34,7 +35,7 @@ public interface DailyChallengeApi {
                             responseCode = "500",
                             description = "서버 내부 오류입니다.",
                             content = @Content)})
-    ResponseEntity<BaseResponse<EmptyJsonResponse>> orderAddHistoryDailyChallenge(
+    ResponseEntity<BaseResponse<ChallengeStatusesResponse>> orderAddHistoryDailyChallenge(
             @Parameter(hidden = true) final Long userId,
             @RequestHeader(CustomHeaderType.TIME_ZONE) final String os,
             @RequestHeader(CustomHeaderType.TIME_ZONE) final String timeZone,
@@ -55,7 +56,7 @@ public interface DailyChallengeApi {
                             responseCode = "500",
                             description = "서버 내부 오류입니다.",
                             content = @Content)})
-    ResponseEntity<BaseResponse<EmptyJsonResponse>> orderChangeStatusDailyChallenge(
+    ResponseEntity<BaseResponse<ChallengeStatusesResponse>> orderChangeStatusDailyChallenge(
             @Parameter(hidden = true) final Long userId,
             @RequestHeader(CustomHeaderType.TIME_ZONE) final String timeZone,
             @RequestBody final FinishedDailyChallengeStatusListRequest request
