@@ -54,4 +54,13 @@ public class DailyChallengeFacade {
             }
         });
     }
+
+    public List<Status> getChangedChallengeStatuses(Long userId) {
+        Long currentChallengeId = userService.getCurrentChallengeIdByUserId(userId);
+        return challengeService.findByIdOrElseThrow(currentChallengeId)
+                .getHistoryDailyChallenges()
+                .stream()
+                .map(DailyChallenge::getStatus)
+                .toList();
+    }
 }
