@@ -59,7 +59,18 @@ public class DailyChallengeService {
     }
 
     public void addDailyChallenge(Challenge challenge) {
+        validateDuplicateDailyChallenge(challenge);
         dailyChallengeRepository.saveAll(createDailyChallengeByChallengePeriod(challenge));
+    }
+
+    private void validateDuplicateDailyChallenge(Challenge challenge) {
+        List<LocalDate> localDatesToCheck = IntStream.range(0, challenge.getPeriod())
+                .mapToObj(i -> challenge.getStartDate().plusDays(i))
+                .toList();
+
+        if (dailyChallengeRepository.existsByUserIdAndChallengeDateIn(challenge.getUserId(), localDatesToCheck)) {
+            throw new DailyChallengeException(DailyChallengeError.DAILY_CHALLENGE_ALREADY_EXISTS);
+        }
     }
 
     private List<DailyChallenge> createDailyChallengeByChallengePeriod(Challenge challenge) {
