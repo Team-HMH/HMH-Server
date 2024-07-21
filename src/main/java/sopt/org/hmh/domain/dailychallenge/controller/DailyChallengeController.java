@@ -31,11 +31,10 @@ public class DailyChallengeController implements DailyChallengeApi {
             @RequestHeader(CustomHeaderType.TIME_ZONE) final String timeZone,
             @RequestBody @Valid final FinishedDailyChallengeListRequest request
     ) {
-        dailyChallengeFacade.addFinishedDailyChallengeHistory(userId, request, os);
         return ResponseEntity
                 .status(DailyChallengeSuccess.SEND_FINISHED_DAILY_CHALLENGE_SUCCESS.getHttpStatus())
                 .body(BaseResponse.success(DailyChallengeSuccess.SEND_FINISHED_DAILY_CHALLENGE_SUCCESS,
-                        new ChallengeStatusesResponse(dailyChallengeFacade.getChangedChallengeStatuses(userId))));
+                        new ChallengeStatusesResponse(dailyChallengeFacade.addFinishedDailyChallengeHistory(userId, request, os))));
     }
 
     @Override
@@ -45,10 +44,9 @@ public class DailyChallengeController implements DailyChallengeApi {
             @RequestHeader(CustomHeaderType.TIME_ZONE) final String timeZone,
             @RequestBody final FinishedDailyChallengeStatusListRequest request
     ) {
-        dailyChallengeFacade.changeDailyChallengeStatusByIsSuccess(userId, request);
         return ResponseEntity
                 .status(DailyChallengeSuccess.SEND_FINISHED_DAILY_CHALLENGE_SUCCESS.getHttpStatus())
                 .body(BaseResponse.success(DailyChallengeSuccess.SEND_FINISHED_DAILY_CHALLENGE_SUCCESS,
-                        new ChallengeStatusesResponse(dailyChallengeFacade.getChangedChallengeStatuses(userId))));
+                        new ChallengeStatusesResponse(dailyChallengeFacade.changeDailyChallengeStatusByIsSuccess(userId, request))));
     }
 }
