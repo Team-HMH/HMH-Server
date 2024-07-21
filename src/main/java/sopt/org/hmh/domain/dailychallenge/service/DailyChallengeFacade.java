@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sopt.org.hmh.domain.app.domain.ChallengeApp;
 import sopt.org.hmh.domain.app.service.HistoryAppService;
+import sopt.org.hmh.domain.challenge.domain.Challenge;
 import sopt.org.hmh.domain.challenge.service.ChallengeService;
 import sopt.org.hmh.domain.dailychallenge.domain.DailyChallenge;
 import sopt.org.hmh.domain.dailychallenge.domain.Status;
@@ -23,27 +24,31 @@ public class DailyChallengeFacade {
     private final UserService userService;
 
     @Transactional
-    public void addFinishedDailyChallengeHistory(Long userId, FinishedDailyChallengeListRequest requests, String os) {
-        Long currentChallengeId = userService.getCurrentChallengeIdByUserId(userId);
-        List<ChallengeApp> currentChallengeApps =
-                challengeService.getCurrentChallengeAppByChallengeId(currentChallengeId);
+    public List<Status> addFinishedDailyChallengeHistory(Long userId, FinishedDailyChallengeListRequest requests, String os) {
+        Challenge challenge = challengeService.findByIdOrElseThrow(userService.getCurrentChallengeIdByUserId(userId));
 
         requests.finishedDailyChallenges().forEach(request -> {
             DailyChallenge dailyChallenge =
                     dailyChallengeService.findDailyChallengeByChallengeIdAndChallengePeriodIndex(
-                            currentChallengeId, request.challengePeriodIndex());
+                            challenge.getId(), request.challengePeriodIndex());
             dailyChallengeService.changeStatusByCurrentStatus(dailyChallenge);
-            historyAppService.addHistoryApp(currentChallengeApps, request.apps(), dailyChallenge, os);
+            historyAppService.addHistoryApp(challenge.getApps(), request.apps(), dailyChallenge, os);
         });
+
+        return challenge.getHistoryDailyChallenges()
+                .stream()
+                .map(DailyChallenge::getStatus)
+                .toList();
     }
 
     @Transactional
-    public void changeDailyChallengeStatusByIsSuccess(Long userId, FinishedDailyChallengeStatusListRequest requests) {
-        Long currentChallengeId = userService.getCurrentChallengeIdByUserId(userId);
+    public List<Status> changeDailyChallengeStatusByIsSuccess(Long userId, FinishedDailyChallengeStatusListRequest requests) {
+        Challenge challenge = challengeService.findByIdOrElseThrow(userService.getCurrentChallengeIdByUserId(userId));
+
         requests.finishedDailyChallenges().forEach(request -> {
             DailyChallenge dailyChallenge =
                     dailyChallengeService.findDailyChallengeByChallengeIdAndChallengePeriodIndex(
-                            currentChallengeId, request.challengePeriodIndex());
+                            challenge.getId(), request.challengePeriodIndex());
             if (request.isSuccess()) {
                 dailyChallengeService.validateDailyChallengeStatus(dailyChallenge.getStatus(), List.of(Status.NONE));
                 dailyChallenge.changeStatus(Status.UNEARNED);
@@ -53,12 +58,8 @@ public class DailyChallengeFacade {
                 dailyChallenge.changeStatus(Status.FAILURE);
             }
         });
-    }
 
-    public List<Status> getChangedChallengeStatuses(Long userId) {
-        Long currentChallengeId = userService.getCurrentChallengeIdByUserId(userId);
-        return challengeService.findByIdOrElseThrow(currentChallengeId)
-                .getHistoryDailyChallenges()
+        return challenge.getHistoryDailyChallenges()
                 .stream()
                 .map(DailyChallenge::getStatus)
                 .toList();
