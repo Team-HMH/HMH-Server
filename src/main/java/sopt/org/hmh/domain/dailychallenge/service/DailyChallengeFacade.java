@@ -25,29 +25,29 @@ public class DailyChallengeFacade {
     private final UserService userService;
 
     @Transactional
-    public List<Status> addFinishedDailyChallengeHistory(Long userId, FinishedDailyChallengeListRequest requests, String os) {
+    public List<Status> addFinishedDailyChallengeHistory(Long userId, FinishedDailyChallengeListRequest request, String os) {
         Challenge challenge = challengeService.findByIdOrElseThrow(userService.getCurrentChallengeIdByUserId(userId));
 
-        requests.finishedDailyChallenges().forEach(request -> {
+        request.finishedDailyChallenges().forEach(challengeRequest -> {
             DailyChallenge dailyChallenge =
                     dailyChallengeService.findDailyChallengeByChallengeIdAndChallengePeriodIndex(
                             challenge.getId(), request.challengePeriodIndex());
             dailyChallengeService.changeStatusByCurrentStatus(dailyChallenge);
-            historyAppService.addHistoryApp(challenge.getApps(), request.apps(), dailyChallenge, os);
+            historyAppService.addHistoryApp(challenge.getApps(), challengeRequest.apps(), dailyChallenge, os);
         });
 
         return getHistoryDailyChallengesOrderByChallengeDate(challenge);
     }
 
     @Transactional
-    public List<Status> changeDailyChallengeStatusByIsSuccess(Long userId, FinishedDailyChallengeStatusListRequest requests) {
+    public List<Status> changeDailyChallengeStatusByIsSuccess(Long userId, FinishedDailyChallengeStatusListRequest request) {
         Challenge challenge = challengeService.findByIdOrElseThrow(userService.getCurrentChallengeIdByUserId(userId));
 
-        requests.finishedDailyChallenges().forEach(request -> {
+        request.finishedDailyChallenges().forEach(challengeRequest -> {
             DailyChallenge dailyChallenge =
                     dailyChallengeService.findDailyChallengeByChallengeIdAndChallengePeriodIndex(
                             challenge.getId(), request.challengePeriodIndex());
-            if (request.isSuccess()) {
+            if (challengeRequest.isSuccess()) {
                 dailyChallengeService.validateDailyChallengeStatus(dailyChallenge.getStatus(), List.of(Status.NONE));
                 dailyChallenge.changeStatus(Status.UNEARNED);
             } else {
