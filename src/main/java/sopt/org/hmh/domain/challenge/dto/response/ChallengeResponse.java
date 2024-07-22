@@ -9,6 +9,7 @@ import sopt.org.hmh.domain.challenge.domain.Challenge;
 import sopt.org.hmh.domain.dailychallenge.domain.DailyChallenge;
 import sopt.org.hmh.domain.dailychallenge.domain.Status;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Builder
@@ -25,6 +26,7 @@ public record ChallengeResponse(
                 .period(challenge.getPeriod())
                 .statuses(challenge.getHistoryDailyChallenges()
                         .stream()
+                        .sorted(Comparator.comparing(DailyChallenge::getChallengeDate))
                         .map(DailyChallenge::getStatus)
                         .toList())
                 .todayIndex(calculateTodayIndex(challenge, LocalDate.now(ZoneId.of(timeZone))))
