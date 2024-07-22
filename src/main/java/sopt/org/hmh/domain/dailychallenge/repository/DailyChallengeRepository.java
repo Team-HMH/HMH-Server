@@ -13,4 +13,5 @@ public interface DailyChallengeRepository {
 
     List<DailyChallenge> findAllByChallengeIdOrderByChallengeDate(Long challengeId);
 
+    boolean existsByUserIdAndChallengeDateIn(Long userId, List<LocalDate> localDates);
 }
