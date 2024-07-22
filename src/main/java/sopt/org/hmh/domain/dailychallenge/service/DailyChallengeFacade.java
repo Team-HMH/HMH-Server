@@ -36,11 +36,7 @@ public class DailyChallengeFacade {
             historyAppService.addHistoryApp(challenge.getApps(), request.apps(), dailyChallenge, os);
         });
 
-        return challenge.getHistoryDailyChallenges()
-                .stream()
-                .sorted(Comparator.comparing(DailyChallenge::getChallengeDate))
-                .map(DailyChallenge::getStatus)
-                .toList();
+        return getHistoryDailyChallengesOrderByChallengeDate(challenge);
     }
 
     @Transactional
@@ -61,6 +57,10 @@ public class DailyChallengeFacade {
             }
         });
 
+        return getHistoryDailyChallengesOrderByChallengeDate(challenge);
+    }
+
+    private List<Status> getHistoryDailyChallengesOrderByChallengeDate(Challenge challenge) {
         return challenge.getHistoryDailyChallenges()
                 .stream()
                 .sorted(Comparator.comparing(DailyChallenge::getChallengeDate))
