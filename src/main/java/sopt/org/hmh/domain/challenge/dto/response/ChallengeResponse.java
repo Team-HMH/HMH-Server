@@ -26,7 +26,6 @@ public record ChallengeResponse(
                 .period(challenge.getPeriod())
                 .statuses(challenge.getHistoryDailyChallenges()
                         .stream()
-                        .sorted(Comparator.comparing(DailyChallenge::getChallengeDate))
                         .map(DailyChallenge::getStatus)
                         .toList())
                 .todayIndex(calculateTodayIndex(challenge, LocalDate.now(ZoneId.of(timeZone))))

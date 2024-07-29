@@ -1,6 +1,5 @@
 package sopt.org.hmh.domain.dailychallenge.service;
 
-import java.util.Comparator;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -61,7 +60,6 @@ public class DailyChallengeFacade {
     private List<Status> getHistoryDailyChallengesOrderByChallengeDate(Challenge challenge) {
         return challenge.getHistoryDailyChallenges()
                 .stream()
-                .sorted(Comparator.comparing(DailyChallenge::getChallengeDate))
                 .map(DailyChallenge::getStatus)
                 .toList();
     }
