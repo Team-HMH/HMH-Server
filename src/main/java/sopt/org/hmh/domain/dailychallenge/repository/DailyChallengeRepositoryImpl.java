@@ -27,8 +27,8 @@ public class DailyChallengeRepositoryImpl implements DailyChallengeRepository {
     }
 
     @Override
-    public List<DailyChallenge> findAllByChallengeIdOrderByChallengeDate(Long challengeId) {
-        return dailyChallengeJpaRepository.findAllByChallengeIdOrderByChallengeDate(challengeId);
+    public List<DailyChallenge> findAllByChallengeId(Long challengeId) {
+        return dailyChallengeJpaRepository.findAllByChallengeId(challengeId);
     }
 
     @Override

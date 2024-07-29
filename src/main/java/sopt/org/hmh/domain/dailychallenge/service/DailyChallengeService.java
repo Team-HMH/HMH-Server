@@ -24,9 +24,9 @@ public class DailyChallengeService {
                 .orElseThrow(() -> new DailyChallengeException(DailyChallengeError.DAILY_CHALLENGE_NOT_FOUND));
     }
 
-    public DailyChallenge findDailyChallengeByChallengeIdAndChallengePeriodIndex(Long challengeId, Integer challengePeriodIndex) {
+    public DailyChallenge findDailyChallengeByChallengePeriodIndex(Challenge challenge, Integer challengePeriodIndex) {
         return Optional.ofNullable(
-                dailyChallengeRepository.findAllByChallengeIdOrderByChallengeDate(challengeId).get(challengePeriodIndex)
+                challenge.getHistoryDailyChallenges().get(challengePeriodIndex)
         ).orElseThrow(() -> new DailyChallengeException(DailyChallengeError.DAILY_CHALLENGE_PERIOD_INDEX_NOT_FOUND));
     }
 
@@ -85,12 +85,12 @@ public class DailyChallengeService {
                 .toList();
     }
 
-    public List<DailyChallenge> getDailyChallengesByChallengeIdOrderByChallengeDate(Long challengeId) {
-        return dailyChallengeRepository.findAllByChallengeIdOrderByChallengeDate(challengeId);
+    public List<DailyChallenge> getDailyChallengesByChallengeId(Long challengeId) {
+        return dailyChallengeRepository.findAllByChallengeId(challengeId);
     }
 
     public void changeInfoOfDailyChallenges(Long challengeId, List<Status> statuses, LocalDate challengeDate) {
-        List<DailyChallenge> dailyChallenges = this.getDailyChallengesByChallengeIdOrderByChallengeDate(challengeId);
+        List<DailyChallenge> dailyChallenges = this.getDailyChallengesByChallengeId(challengeId);
         changeStatusOfDailyChallenges(dailyChallenges, statuses);
         changeChallengeDateOfDailyChallenges(dailyChallenges, challengeDate);
     }

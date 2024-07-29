@@ -9,6 +9,7 @@ import sopt.org.hmh.domain.challenge.domain.Challenge;
 import sopt.org.hmh.domain.dailychallenge.domain.DailyChallenge;
 import sopt.org.hmh.domain.dailychallenge.domain.Status;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Builder

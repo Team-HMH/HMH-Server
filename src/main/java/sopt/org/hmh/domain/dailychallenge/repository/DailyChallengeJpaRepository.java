@@ -10,5 +10,5 @@ public interface DailyChallengeJpaRepository extends JpaRepository<DailyChalleng
 
     Optional<DailyChallenge> findByChallengeDateAndUserId(LocalDate challengeDate, Long userId);
 
-    List<DailyChallenge> findAllByChallengeIdOrderByChallengeDate(Long challengeId);
+    List<DailyChallenge> findAllByChallengeId(Long challengeId);
 }

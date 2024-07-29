@@ -4,9 +4,12 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import sopt.org.hmh.domain.challenge.dto.response.ChallengeResponse;
+import sopt.org.hmh.domain.challenge.service.ChallengeFacade;
 import sopt.org.hmh.domain.dailychallenge.domain.exception.DailyChallengeSuccess;
 import sopt.org.hmh.domain.dailychallenge.dto.request.FinishedDailyChallengeListRequest;
 import sopt.org.hmh.domain.dailychallenge.dto.request.FinishedDailyChallengeStatusListRequest;
+import sopt.org.hmh.domain.dailychallenge.dto.response.ChallengeStatusesResponse;
 import sopt.org.hmh.domain.dailychallenge.service.DailyChallengeFacade;
 import sopt.org.hmh.global.auth.UserId;
 import sopt.org.hmh.global.common.constant.CustomHeaderType;
@@ -22,28 +25,28 @@ public class DailyChallengeController implements DailyChallengeApi {
 
     @Override
     @PostMapping("/finish")
-    public ResponseEntity<BaseResponse<EmptyJsonResponse>> orderAddHistoryDailyChallenge(
+    public ResponseEntity<BaseResponse<ChallengeStatusesResponse>> orderAddHistoryDailyChallenge(
             @UserId final Long userId,
             @RequestHeader(CustomHeaderType.OS) final String os,
             @RequestHeader(CustomHeaderType.TIME_ZONE) final String timeZone,
             @RequestBody @Valid final FinishedDailyChallengeListRequest request
     ) {
-        dailyChallengeFacade.addFinishedDailyChallengeHistory(userId, request, os);
         return ResponseEntity
                 .status(DailyChallengeSuccess.SEND_FINISHED_DAILY_CHALLENGE_SUCCESS.getHttpStatus())
-                .body(BaseResponse.success(DailyChallengeSuccess.SEND_FINISHED_DAILY_CHALLENGE_SUCCESS, new EmptyJsonResponse()));
+                .body(BaseResponse.success(DailyChallengeSuccess.SEND_FINISHED_DAILY_CHALLENGE_SUCCESS,
+                        new ChallengeStatusesResponse(dailyChallengeFacade.addFinishedDailyChallengeHistory(userId, request, os))));
     }
 
     @Override
     @PostMapping("/success")
-    public ResponseEntity<BaseResponse<EmptyJsonResponse>> orderChangeStatusDailyChallenge(
+    public ResponseEntity<BaseResponse<ChallengeStatusesResponse>> orderChangeStatusDailyChallenge(
             @UserId final Long userId,
             @RequestHeader(CustomHeaderType.TIME_ZONE) final String timeZone,
             @RequestBody final FinishedDailyChallengeStatusListRequest request
     ) {
-        dailyChallengeFacade.changeDailyChallengeStatusByIsSuccess(userId, request);
         return ResponseEntity
                 .status(DailyChallengeSuccess.SEND_FINISHED_DAILY_CHALLENGE_SUCCESS.getHttpStatus())
-                .body(BaseResponse.success(DailyChallengeSuccess.SEND_FINISHED_DAILY_CHALLENGE_SUCCESS, new EmptyJsonResponse()));
+                .body(BaseResponse.success(DailyChallengeSuccess.SEND_FINISHED_DAILY_CHALLENGE_SUCCESS,
+                        new ChallengeStatusesResponse(dailyChallengeFacade.changeDailyChallengeStatusByIsSuccess(userId, request))));
     }
 }
