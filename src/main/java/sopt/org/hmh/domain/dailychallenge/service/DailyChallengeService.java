@@ -24,9 +24,9 @@ public class DailyChallengeService {
                 .orElseThrow(() -> new DailyChallengeException(DailyChallengeError.DAILY_CHALLENGE_NOT_FOUND));
     }
 
-    public DailyChallenge findDailyChallengeByChallengeIdAndChallengePeriodIndex(Long challengeId, Integer challengePeriodIndex) {
+    public DailyChallenge findDailyChallengeByChallengePeriodIndex(Challenge challenge, Integer challengePeriodIndex) {
         return Optional.ofNullable(
-                dailyChallengeRepository.findAllByChallengeIdOrderByChallengeDate(challengeId).get(challengePeriodIndex)
+                challenge.getHistoryDailyChallenges().get(challengePeriodIndex)
         ).orElseThrow(() -> new DailyChallengeException(DailyChallengeError.DAILY_CHALLENGE_PERIOD_INDEX_NOT_FOUND));
     }
 
