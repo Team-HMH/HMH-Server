@@ -85,12 +85,12 @@ public class DailyChallengeService {
                 .toList();
     }
 
-    public List<DailyChallenge> getDailyChallengesByChallengeIdOrderByChallengeDate(Long challengeId) {
-        return dailyChallengeRepository.findAllByChallengeIdOrderByChallengeDate(challengeId);
+    public List<DailyChallenge> getDailyChallengesByChallengeId(Long challengeId) {
+        return dailyChallengeRepository.findAllByChallengeId(challengeId);
     }
 
     public void changeInfoOfDailyChallenges(Long challengeId, List<Status> statuses, LocalDate challengeDate) {
-        List<DailyChallenge> dailyChallenges = this.getDailyChallengesByChallengeIdOrderByChallengeDate(challengeId);
+        List<DailyChallenge> dailyChallenges = this.getDailyChallengesByChallengeId(challengeId);
         changeStatusOfDailyChallenges(dailyChallenges, statuses);
         changeChallengeDateOfDailyChallenges(dailyChallenges, challengeDate);
     }
