@@ -39,6 +39,7 @@ public class Challenge extends BaseTimeEntity {
     private List<ChallengeApp> apps;
 
     @OneToMany(mappedBy = "challenge", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OrderBy("challengeDate ASC")
     private List<DailyChallenge> historyDailyChallenges;
 
     @Builder
