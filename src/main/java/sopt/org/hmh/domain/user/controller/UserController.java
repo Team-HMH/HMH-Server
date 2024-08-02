@@ -38,7 +38,7 @@ public class UserController implements UserApi {
                 .body(BaseResponse.success(UserSuccess.LOGOUT_SUCCESS, new EmptyJsonResponse()));
     }
 
-    @GetMapping
+    @GetMapping("/v1/user")
     @Override
     public ResponseEntity<BaseResponse<UserInfoResponse>> orderGetUserInfo(@UserId final Long userId) {
         return ResponseEntity
