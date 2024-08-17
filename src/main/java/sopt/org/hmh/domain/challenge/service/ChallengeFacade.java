@@ -29,11 +29,10 @@ public class ChallengeFacade {
     @Transactional
     public void startNewChallenge(NewChallengeOrder newChallengeOrder) {
         Challenge newChallenge = challengeService.addChallenge(newChallengeOrder.toChallengeEntity());
-        userService.changeCurrentChallengeIdByUserId(newChallengeOrder.getUserId(), newChallenge.getId());
-
         dailyChallengeService.addDailyChallenge(newChallenge);
 
         this.addAppsByNewChallengeOrder(newChallengeOrder, newChallenge);
+        userService.changeCurrentChallengeIdByUserId(newChallengeOrder.getUserId(), newChallenge.getId());
     }
 
     private void addAppsByNewChallengeOrder(NewChallengeOrder newChallengeOrder, Challenge newChallenge) {
