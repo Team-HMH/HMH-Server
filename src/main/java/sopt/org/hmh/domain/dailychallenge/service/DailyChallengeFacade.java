@@ -1,5 +1,7 @@
 package sopt.org.hmh.domain.dailychallenge.service;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,10 +25,13 @@ public class DailyChallengeFacade {
     private final UserService userService;
 
     @Transactional
-    public List<Status> addFinishedDailyChallengeHistory(Long userId, FinishedDailyChallengeListRequest request, String os) {
+    public List<Status> addFinishedDailyChallengeHistory(Long userId, FinishedDailyChallengeListRequest request, String os, String timeZone) {
         Challenge challenge = challengeService.findByIdOrElseThrow(userService.getCurrentChallengeIdByUserId(userId));
+        Integer todayIndex = dailyChallengeService.calculateTodayIndex(challenge, LocalDate.now(ZoneId.of(timeZone)));
 
         request.finishedDailyChallenges().forEach(challengeRequest -> {
+            dailyChallengeService.validatePeriodIndex(challengeRequest.challengePeriodIndex(), todayIndex);
+
             DailyChallenge dailyChallenge = dailyChallengeService
                     .findDailyChallengeByChallengePeriodIndex(challenge, challengeRequest.challengePeriodIndex());
             dailyChallengeService.changeStatusByCurrentStatus(dailyChallenge);
@@ -37,10 +42,13 @@ public class DailyChallengeFacade {
     }
 
     @Transactional
-    public List<Status> changeDailyChallengeStatusByIsSuccess(Long userId, FinishedDailyChallengeStatusListRequest request) {
+    public List<Status> changeDailyChallengeStatusByIsSuccess(Long userId, FinishedDailyChallengeStatusListRequest request, String timeZone) {
         Challenge challenge = challengeService.findByIdOrElseThrow(userService.getCurrentChallengeIdByUserId(userId));
+        Integer todayIndex = dailyChallengeService.calculateTodayIndex(challenge, LocalDate.now(ZoneId.of(timeZone)));
 
         request.finishedDailyChallenges().forEach(challengeRequest -> {
+            dailyChallengeService.validatePeriodIndex(challengeRequest.challengePeriodIndex(), todayIndex);
+
             DailyChallenge dailyChallenge = dailyChallengeService
                     .findDailyChallengeByChallengePeriodIndex(challenge, challengeRequest.challengePeriodIndex());
             if (challengeRequest.isSuccess()) {

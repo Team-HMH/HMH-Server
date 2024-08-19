@@ -1,6 +1,7 @@
 package sopt.org.hmh.domain.dailychallenge.service;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
@@ -73,6 +74,10 @@ public class DailyChallengeService {
         }
     }
 
+    public void validatePeriodIndex(Integer periodIndex, Integer todayIndex) {
+        if (periodIndex >= todayIndex) throw new DailyChallengeException(DailyChallengeError.PERIOD_INDEX_NOT_VALID);
+    }
+
     private List<DailyChallenge> createDailyChallengeByChallengePeriod(Challenge challenge) {
         LocalDate startDate = challenge.getStartDate();
         Long userId = challenge.getUserId();
@@ -105,5 +110,11 @@ public class DailyChallengeService {
         for (int i = 0; i < dailyChallenges.size(); i++) {
             dailyChallenges.get(i).changeChallengeDate(challengeDate.plusDays(i));
         }
+    }
+
+    public Integer calculateTodayIndex(Challenge challenge, LocalDate now) {
+        final int COMPLETED_CHALLENGE_INDEX = -1;
+        int daysBetween = (int) ChronoUnit.DAYS.between(challenge.getStartDate(), now);
+        return (daysBetween >= challenge.getPeriod()) ? COMPLETED_CHALLENGE_INDEX : daysBetween;
     }
 }

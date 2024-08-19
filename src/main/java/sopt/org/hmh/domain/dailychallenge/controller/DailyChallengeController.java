@@ -34,7 +34,7 @@ public class DailyChallengeController implements DailyChallengeApi {
         return ResponseEntity
                 .status(DailyChallengeSuccess.SEND_FINISHED_DAILY_CHALLENGE_SUCCESS.getHttpStatus())
                 .body(BaseResponse.success(DailyChallengeSuccess.SEND_FINISHED_DAILY_CHALLENGE_SUCCESS,
-                        new ChallengeStatusesResponse(dailyChallengeFacade.addFinishedDailyChallengeHistory(userId, request, os))));
+                        new ChallengeStatusesResponse(dailyChallengeFacade.addFinishedDailyChallengeHistory(userId, request, os, timeZone))));
     }
 
     @Override
@@ -47,6 +47,6 @@ public class DailyChallengeController implements DailyChallengeApi {
         return ResponseEntity
                 .status(DailyChallengeSuccess.SEND_FINISHED_DAILY_CHALLENGE_SUCCESS.getHttpStatus())
                 .body(BaseResponse.success(DailyChallengeSuccess.SEND_FINISHED_DAILY_CHALLENGE_SUCCESS,
-                        new ChallengeStatusesResponse(dailyChallengeFacade.changeDailyChallengeStatusByIsSuccess(userId, request))));
+                        new ChallengeStatusesResponse(dailyChallengeFacade.changeDailyChallengeStatusByIsSuccess(userId, request, timeZone))));
     }
 }
