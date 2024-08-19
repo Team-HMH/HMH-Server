@@ -31,6 +31,7 @@ public class DailyChallengeFacade {
 
         request.finishedDailyChallenges().forEach(challengeRequest -> {
             dailyChallengeService.validatePeriodIndex(challengeRequest.challengePeriodIndex(), todayIndex);
+
             DailyChallenge dailyChallenge = dailyChallengeService
                     .findDailyChallengeByChallengePeriodIndex(challenge, challengeRequest.challengePeriodIndex());
             dailyChallengeService.changeStatusByCurrentStatus(dailyChallenge);
@@ -41,10 +42,13 @@ public class DailyChallengeFacade {
     }
 
     @Transactional
-    public List<Status> changeDailyChallengeStatusByIsSuccess(Long userId, FinishedDailyChallengeStatusListRequest request) {
+    public List<Status> changeDailyChallengeStatusByIsSuccess(Long userId, FinishedDailyChallengeStatusListRequest request, String timeZone) {
         Challenge challenge = challengeService.findByIdOrElseThrow(userService.getCurrentChallengeIdByUserId(userId));
+        Integer todayIndex = dailyChallengeService.calculateTodayIndex(challenge, LocalDate.now(ZoneId.of(timeZone)));
 
         request.finishedDailyChallenges().forEach(challengeRequest -> {
+            dailyChallengeService.validatePeriodIndex(challengeRequest.challengePeriodIndex(), todayIndex);
+
             DailyChallenge dailyChallenge = dailyChallengeService
                     .findDailyChallengeByChallengePeriodIndex(challenge, challengeRequest.challengePeriodIndex());
             if (challengeRequest.isSuccess()) {
