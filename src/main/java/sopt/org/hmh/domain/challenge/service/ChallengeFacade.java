@@ -1,5 +1,7 @@
 package sopt.org.hmh.domain.challenge.service;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -7,18 +9,12 @@ import sopt.org.hmh.domain.app.dto.request.ChallengeAppRequest;
 import sopt.org.hmh.domain.app.dto.response.ChallengeAppResponse;
 import sopt.org.hmh.domain.app.service.ChallengeAppService;
 import sopt.org.hmh.domain.challenge.domain.Challenge;
-import sopt.org.hmh.domain.challenge.dto.request.ChallengeRequest;
-import sopt.org.hmh.domain.challenge.dto.request.ChallengeSignUpRequest;
+import sopt.org.hmh.domain.challenge.dto.request.NewChallengeOrder;
 import sopt.org.hmh.domain.challenge.dto.response.ChallengeResponse;
 import sopt.org.hmh.domain.challenge.dto.response.DailyChallengeResponse;
 import sopt.org.hmh.domain.dailychallenge.domain.DailyChallenge;
 import sopt.org.hmh.domain.dailychallenge.service.DailyChallengeService;
-import sopt.org.hmh.domain.user.domain.User;
 import sopt.org.hmh.domain.user.service.UserService;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Service
@@ -31,72 +27,50 @@ public class ChallengeFacade {
     private final ChallengeAppService challengeAppService;
 
     @Transactional
-    public void startNewChallengeByPreviousChallenge(Long userId, ChallengeRequest challengeRequest, String os) {
-        User user = userService.findByIdOrThrowException(userId);
-        Long previousChallengeId = userService.getCurrentChallengeIdByUser(user);
+    public void startNewChallenge(NewChallengeOrder newChallengeOrder) {
+        Challenge newChallenge = challengeService.addChallenge(newChallengeOrder.toChallengeEntity());
+        dailyChallengeService.addDailyChallenge(newChallenge);
 
-        Challenge newChallenge = challengeService.addChallengeAndUpdateUserCurrentChallenge(
-                challengeRequest.toEntity(userId), user);
-
-        dailyChallengeService.addDailyChallenge(userId, newChallenge);
-
-        challengeAppService.addAppsByPreviousChallengeApp(os, previousChallengeId, newChallenge);
+        this.addAppsByNewChallengeOrder(newChallengeOrder, newChallenge);
+        userService.changeCurrentChallengeIdByUserId(newChallengeOrder.getUserId(), newChallenge.getId());
     }
 
-    @Transactional
-    public void startFirstChallengeWithChallengeSignUpRequest(
-            ChallengeSignUpRequest challengeSignUpRequest, User user, String os) {
-        Long userId = user.getId();
-
-        Challenge newChallenge = challengeService.addChallengeAndUpdateUserCurrentChallenge(
-                challengeSignUpRequest.toChallengeRequest().toEntity(userId), user);
-
-        dailyChallengeService.addDailyChallenge(userId, newChallenge);
-
-        challengeAppService.addApps(
-                challengeSignUpRequest.apps().stream()
-                        .map(challengeAppRequest -> challengeAppRequest.toEntity(newChallenge, os))
-                        .toList()
-        );
+    private void addAppsByNewChallengeOrder(NewChallengeOrder newChallengeOrder, Challenge newChallenge) {
+        if (newChallengeOrder.isFirstChallenge()) {
+            challengeAppService.addApps(newChallengeOrder.toChallengeAppEntities(newChallenge));
+            return;
+        }
+        Long previousChallengeId = userService.getCurrentChallengeIdByUserId(newChallengeOrder.getUserId());
+        challengeAppService.addAppsByPreviousChallengeApp(newChallengeOrder.getOs(), previousChallengeId, newChallenge);
     }
 
     @Transactional(readOnly = true)
-    public ChallengeResponse getCurrentChallengeInfo(Long userId) {
-        Challenge challenge = this.findCurrentChallengeByUserId(userId);
-
-        return ChallengeResponse.builder()
-                .period(challenge.getPeriod())
-                .statuses(challenge.getHistoryDailyChallenges()
-                        .stream()
-                        .map(DailyChallenge::getStatus)
-                        .toList())
-                .todayIndex(this.calculateTodayIndex(challenge.getCreatedAt(), challenge.getPeriod()))
-                .startDate(challenge.getCreatedAt().toLocalDate().toString())
-                .goalTime(challenge.getGoalTime())
-                .apps(challenge.getApps().stream()
-                        .map(app -> new ChallengeAppResponse(app.getAppCode(), app.getGoalTime())).toList())
-                .build();
+    public ChallengeResponse getCurrentChallengeInfo(Long userId, String timeZone) {
+        Challenge currentChallenge = this.findCurrentChallengeByUserId(userId);
+        return ChallengeResponse.of(currentChallenge, timeZone);
     }
 
     @Transactional(readOnly = true)
-    public DailyChallengeResponse getDailyChallengeInfo(Long userId) {
+    public DailyChallengeResponse getDailyChallengeInfo(Long userId, String timeZone) {
         Challenge challenge = this.findCurrentChallengeByUserId(userId);
+        LocalDate localDateNow = LocalDate.now(ZoneId.of(timeZone));
+        DailyChallenge todayChallenge =
+                dailyChallengeService.findDailyChallengeByChallengeAndChallengeDate(challenge, localDateNow);
 
         return DailyChallengeResponse.builder()
+                .status(todayChallenge.getStatus())
                 .goalTime(challenge.getGoalTime())
                 .apps(challenge.getApps().stream()
-                        .map(app -> new ChallengeAppResponse(app.getAppCode(), app.getGoalTime())).toList())
+                        .map(challengeApp -> new ChallengeAppResponse(
+                                challengeApp.getAppCode(),
+                                challengeApp.getGoalTime()
+                        )).toList())
                 .build();
     }
 
     public Challenge findCurrentChallengeByUserId(Long userId) {
-        User user = userService.findByIdOrThrowException(userId);
-        return challengeService.findByIdOrElseThrow(user.getCurrentChallengeId());
-    }
-
-    private Integer calculateTodayIndex(LocalDateTime challengeCreateAt, int period) {
-        int daysBetween = (int) ChronoUnit.DAYS.between(challengeCreateAt.toLocalDate(), LocalDate.now());
-        return (daysBetween >= period) ? -1 : daysBetween;
+        Long currentChallengeId = userService.getCurrentChallengeIdByUserId(userId);
+        return challengeService.findByIdOrElseThrow(currentChallengeId);
     }
 
     @Transactional

@@ -19,7 +19,7 @@ import sopt.org.hmh.domain.dailychallenge.domain.Status;
 import sopt.org.hmh.domain.dailychallenge.service.DailyChallengeService;
 import sopt.org.hmh.domain.user.domain.User;
 import sopt.org.hmh.domain.user.service.UserService;
-import sopt.org.hmh.global.auth.jwt.TokenService;
+import sopt.org.hmh.global.auth.jwt.service.TokenService;
 
 @Service
 @RequiredArgsConstructor

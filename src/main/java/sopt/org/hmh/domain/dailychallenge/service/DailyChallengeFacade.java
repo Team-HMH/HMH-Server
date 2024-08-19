@@ -1,11 +1,13 @@
 package sopt.org.hmh.domain.dailychallenge.service;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sopt.org.hmh.domain.app.domain.ChallengeApp;
 import sopt.org.hmh.domain.app.service.HistoryAppService;
+import sopt.org.hmh.domain.challenge.domain.Challenge;
 import sopt.org.hmh.domain.challenge.service.ChallengeService;
 import sopt.org.hmh.domain.dailychallenge.domain.DailyChallenge;
 import sopt.org.hmh.domain.dailychallenge.domain.Status;
@@ -23,25 +25,33 @@ public class DailyChallengeFacade {
     private final UserService userService;
 
     @Transactional
-    public void addFinishedDailyChallengeHistory(Long userId, FinishedDailyChallengeListRequest requests, String os) {
-        Long currentChallengeId = userService.getCurrentChallengeIdByUserId(userId);
-        List<ChallengeApp> currentChallengeApps =
-                challengeService.getCurrentChallengeAppByChallengeId(currentChallengeId);
+    public List<Status> addFinishedDailyChallengeHistory(Long userId, FinishedDailyChallengeListRequest request, String os, String timeZone) {
+        Challenge challenge = challengeService.findByIdOrElseThrow(userService.getCurrentChallengeIdByUserId(userId));
+        Integer todayIndex = dailyChallengeService.calculateTodayIndex(challenge, LocalDate.now(ZoneId.of(timeZone)));
 
-        requests.finishedDailyChallenges().forEach(request -> {
-            DailyChallenge dailyChallenge =
-                    dailyChallengeService.findByChallengeDateAndUserIdOrThrowException(request.challengeDate(), userId);
+        request.finishedDailyChallenges().forEach(challengeRequest -> {
+            dailyChallengeService.validatePeriodIndex(challengeRequest.challengePeriodIndex(), todayIndex);
+
+            DailyChallenge dailyChallenge = dailyChallengeService
+                    .findDailyChallengeByChallengePeriodIndex(challenge, challengeRequest.challengePeriodIndex());
             dailyChallengeService.changeStatusByCurrentStatus(dailyChallenge);
-            historyAppService.addHistoryApp(currentChallengeApps, request.apps(), dailyChallenge, os);
+            historyAppService.addHistoryApp(challenge.getApps(), challengeRequest.apps(), dailyChallenge, os);
         });
+
+        return getHistoryDailyChallenges(challenge);
     }
 
     @Transactional
-    public void changeDailyChallengeStatusByIsSuccess(Long userId, FinishedDailyChallengeStatusListRequest requests) {
-        requests.finishedDailyChallenges().forEach(request -> {
-            DailyChallenge dailyChallenge =
-                    dailyChallengeService.findByChallengeDateAndUserIdOrThrowException(request.challengeDate(), userId);
-            if (request.isSuccess()) {
+    public List<Status> changeDailyChallengeStatusByIsSuccess(Long userId, FinishedDailyChallengeStatusListRequest request, String timeZone) {
+        Challenge challenge = challengeService.findByIdOrElseThrow(userService.getCurrentChallengeIdByUserId(userId));
+        Integer todayIndex = dailyChallengeService.calculateTodayIndex(challenge, LocalDate.now(ZoneId.of(timeZone)));
+
+        request.finishedDailyChallenges().forEach(challengeRequest -> {
+            dailyChallengeService.validatePeriodIndex(challengeRequest.challengePeriodIndex(), todayIndex);
+
+            DailyChallenge dailyChallenge = dailyChallengeService
+                    .findDailyChallengeByChallengePeriodIndex(challenge, challengeRequest.challengePeriodIndex());
+            if (challengeRequest.isSuccess()) {
                 dailyChallengeService.validateDailyChallengeStatus(dailyChallenge.getStatus(), List.of(Status.NONE));
                 dailyChallenge.changeStatus(Status.UNEARNED);
             } else {
@@ -50,5 +60,14 @@ public class DailyChallengeFacade {
                 dailyChallenge.changeStatus(Status.FAILURE);
             }
         });
+
+        return getHistoryDailyChallenges(challenge);
+    }
+
+    private List<Status> getHistoryDailyChallenges(Challenge challenge) {
+        return challenge.getHistoryDailyChallenges()
+                .stream()
+                .map(DailyChallenge::getStatus)
+                .toList();
     }
 }

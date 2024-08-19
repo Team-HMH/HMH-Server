@@ -10,8 +10,8 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import sopt.org.hmh.global.auth.jwt.JwtProvider;
-import sopt.org.hmh.global.auth.jwt.JwtValidator;
+import sopt.org.hmh.global.auth.jwt.service.JwtProvider;
+import sopt.org.hmh.global.auth.jwt.service.JwtValidator;
 import sopt.org.hmh.global.auth.security.JwtAuthenticationEntryPoint;
 import sopt.org.hmh.global.auth.security.JwtAuthenticationFilter;
 import sopt.org.hmh.global.auth.security.exception.ExceptionHandlerFilter;
@@ -41,6 +41,7 @@ public class SecurityConfig {
             "/api/v1/admin/login",
             "/api/v1/user/reissue",
             "/api/v1/user/signup",
+            "/api/v2/user/signup",
             "/api/v1/user/social/token/kakao",
     };
 

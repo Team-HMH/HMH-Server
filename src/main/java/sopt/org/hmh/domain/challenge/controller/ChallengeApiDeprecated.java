@@ -15,9 +15,10 @@ import sopt.org.hmh.global.auth.jwt.JwtConstants;
 import sopt.org.hmh.global.common.response.BaseResponse;
 import sopt.org.hmh.global.common.response.EmptyJsonResponse;
 
+@Deprecated
 @Tag(name = "챌린지 관련 API")
 @SecurityRequirement(name = JwtConstants.AUTHORIZATION)
-public interface ChallengeApi {
+public interface ChallengeApiDeprecated {
 
     @Operation(
             summary = "챌린지가 끝난 후 새 챌린지 생성하는 API",
@@ -35,9 +36,8 @@ public interface ChallengeApi {
                             content = @Content)})
     ResponseEntity<BaseResponse<EmptyJsonResponse>> orderAddChallenge(
             @Parameter(hidden = true) final Long userId,
-            final String os,
-            final String timeZone,
-            final ChallengeRequest request);
+            @RequestHeader("OS") final String os,
+            @RequestBody final ChallengeRequest request);
 
     @Operation(
             summary = "달성현황뷰 챌린지 정보를 불러오는 API",
@@ -54,8 +54,7 @@ public interface ChallengeApi {
                             description = "서버 내부 오류입니다.",
                             content = @Content)})
     ResponseEntity<BaseResponse<ChallengeResponse>> orderGetChallenge(
-            @Parameter(hidden = true) final Long userId,
-            @RequestHeader final String timeZone);
+            @Parameter(hidden = true) final Long userId);
 
     @Operation(
             summary = "이용시간 통계 정보를 불러오는 API",
@@ -72,7 +71,6 @@ public interface ChallengeApi {
                             description = "서버 내부 오류입니다.",
                             content = @Content)})
     ResponseEntity<BaseResponse<DailyChallengeResponse>> orderGetDailyChallenge(
-            @Parameter(hidden = true) final Long userId,
-            @RequestHeader final String timeZone);
+            @Parameter(hidden = true) final Long userId);
 }
 

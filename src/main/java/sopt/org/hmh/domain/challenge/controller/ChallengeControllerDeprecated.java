@@ -12,49 +12,50 @@ import sopt.org.hmh.domain.challenge.dto.response.ChallengeResponse;
 import sopt.org.hmh.domain.challenge.dto.response.DailyChallengeResponse;
 import sopt.org.hmh.domain.challenge.service.ChallengeFacade;
 import sopt.org.hmh.global.auth.UserId;
-import sopt.org.hmh.global.common.constant.CustomHeaderType;
 import sopt.org.hmh.global.common.response.BaseResponse;
 import sopt.org.hmh.global.common.response.EmptyJsonResponse;
 
+@Deprecated
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v2/challenge")
-public class ChallengeController implements ChallengeApi {
+@RequestMapping("/api/v1/challenge")
+public class ChallengeControllerDeprecated implements ChallengeApiDeprecated {
 
     private final ChallengeFacade challengeFacade;
 
-    @Override
     @PostMapping
+    @Override
+    @Deprecated
     public ResponseEntity<BaseResponse<EmptyJsonResponse>> orderAddChallenge(
             @UserId final Long userId,
-            @RequestHeader(CustomHeaderType.OS) final String os,
-            @RequestHeader(CustomHeaderType.TIME_ZONE) final String timeZone,
+            @RequestHeader("OS") final String os,
             @RequestBody @Valid final ChallengeRequest request) {
-        challengeFacade.startNewChallenge(createNextChallengeOrder(request, userId, os, timeZone));
+        challengeFacade.startNewChallenge(createNextChallengeOrder(request, userId, os, "Asia/Seoul"));
+
         return ResponseEntity
                 .status(ChallengeSuccess.ADD_CHALLENGE_SUCCESS.getHttpStatus())
                 .body(BaseResponse.success(ChallengeSuccess.ADD_CHALLENGE_SUCCESS, new EmptyJsonResponse()));
     }
 
-    @Override
     @GetMapping
+    @Override
+    @Deprecated
     public ResponseEntity<BaseResponse<ChallengeResponse>> orderGetChallenge(
-            @UserId final Long userId,
-            @RequestHeader(CustomHeaderType.TIME_ZONE) final String timeZone) {
+            @UserId final Long userId) {
         return ResponseEntity
                 .status(ChallengeSuccess.GET_CHALLENGE_SUCCESS.getHttpStatus())
                 .body(BaseResponse.success(ChallengeSuccess.GET_CHALLENGE_SUCCESS,
-                        challengeFacade.getCurrentChallengeInfo(userId, timeZone)));
+                        challengeFacade.getCurrentChallengeInfo(userId, "Asia/Seoul")));
     }
 
-    @Override
     @GetMapping("/home")
+    @Override
+    @Deprecated
     public ResponseEntity<BaseResponse<DailyChallengeResponse>> orderGetDailyChallenge(
-            @UserId final Long userId,
-            @RequestHeader(CustomHeaderType.TIME_ZONE) final String timeZone) {
+            @UserId final Long userId) {
         return ResponseEntity
                 .status(ChallengeSuccess.GET_DAILY_CHALLENGE_SUCCESS.getHttpStatus())
                 .body(BaseResponse.success(ChallengeSuccess.GET_DAILY_CHALLENGE_SUCCESS,
-                        challengeFacade.getDailyChallengeInfo(userId, timeZone)));
+                        challengeFacade.getDailyChallengeInfo(userId, "Asia/Seoul")));
     }
 }

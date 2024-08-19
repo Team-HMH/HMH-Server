@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import sopt.org.hmh.global.auth.jwt.JwtConstants;
-import sopt.org.hmh.global.auth.jwt.TokenService;
+import sopt.org.hmh.global.auth.jwt.service.TokenService;
 
 @Component
 @RequiredArgsConstructor

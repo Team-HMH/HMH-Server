@@ -3,7 +3,6 @@ package sopt.org.hmh.domain.auth.dto.request;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import java.util.List;
-import sopt.org.hmh.domain.challenge.dto.request.ChallengeRequest;
 import sopt.org.hmh.domain.challenge.dto.request.ChallengeSignUpRequest;
 import sopt.org.hmh.domain.user.domain.OnboardingInfo;
 import sopt.org.hmh.domain.user.domain.OnboardingProblem;

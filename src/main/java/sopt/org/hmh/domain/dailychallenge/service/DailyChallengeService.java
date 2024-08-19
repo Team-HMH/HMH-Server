@@ -1,7 +1,9 @@
 package sopt.org.hmh.domain.dailychallenge.service;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,8 +20,21 @@ public class DailyChallengeService {
 
     private final DailyChallengeRepository dailyChallengeRepository;
 
-    public DailyChallenge findByChallengeDateAndUserIdOrThrowException(LocalDate challengeDate, Long userId) {
+    public DailyChallenge findDailyChallengeByChallengeDateAndUserIdOrElseThrow(LocalDate challengeDate, Long userId) {
         return dailyChallengeRepository.findByChallengeDateAndUserId(challengeDate, userId)
+                .orElseThrow(() -> new DailyChallengeException(DailyChallengeError.DAILY_CHALLENGE_NOT_FOUND));
+    }
+
+    public DailyChallenge findDailyChallengeByChallengePeriodIndex(Challenge challenge, Integer challengePeriodIndex) {
+        return Optional.ofNullable(
+                challenge.getHistoryDailyChallenges().get(challengePeriodIndex)
+        ).orElseThrow(() -> new DailyChallengeException(DailyChallengeError.DAILY_CHALLENGE_PERIOD_INDEX_NOT_FOUND));
+    }
+
+    public DailyChallenge findDailyChallengeByChallengeAndChallengeDate(Challenge challenge, LocalDate challengeDate) {
+        return challenge.getHistoryDailyChallenges().stream()
+                .filter(dailyChallenge -> dailyChallenge.getChallengeDate().equals(challengeDate))
+                .findFirst()
                 .orElseThrow(() -> new DailyChallengeException(DailyChallengeError.DAILY_CHALLENGE_NOT_FOUND));
     }
 
@@ -44,15 +59,35 @@ public class DailyChallengeService {
         throw new DailyChallengeException(DailyChallengeError.DAILY_CHALLENGE_ALREADY_PROCESSED);
     }
 
-    public void addDailyChallenge(Long userId, Challenge challenge) {
-        LocalDate startDate = challenge.getCreatedAt().toLocalDate(); // TODO: startDate CreatedAt에서 가져오지 않고 새로 만들기
-        dailyChallengeRepository.saveAll(IntStream.range(0, challenge.getPeriod())
+    public void addDailyChallenge(Challenge challenge) {
+        validateDuplicateDailyChallenge(challenge);
+        dailyChallengeRepository.saveAll(createDailyChallengeByChallengePeriod(challenge));
+    }
+
+    private void validateDuplicateDailyChallenge(Challenge challenge) {
+        List<LocalDate> localDatesToCheck = IntStream.range(0, challenge.getPeriod())
+                .mapToObj(i -> challenge.getStartDate().plusDays(i))
+                .toList();
+
+        if (dailyChallengeRepository.existsByUserIdAndChallengeDateIn(challenge.getUserId(), localDatesToCheck)) {
+            throw new DailyChallengeException(DailyChallengeError.DAILY_CHALLENGE_ALREADY_EXISTS);
+        }
+    }
+
+    public void validatePeriodIndex(Integer periodIndex, Integer todayIndex) {
+        if (periodIndex >= todayIndex) throw new DailyChallengeException(DailyChallengeError.PERIOD_INDEX_NOT_VALID);
+    }
+
+    private List<DailyChallenge> createDailyChallengeByChallengePeriod(Challenge challenge) {
+        LocalDate startDate = challenge.getStartDate();
+        Long userId = challenge.getUserId();
+        return IntStream.range(0, challenge.getPeriod())
                 .mapToObj(i -> DailyChallenge.builder()
                         .challengeDate(startDate.plusDays(i))
                         .challenge(challenge)
                         .userId(userId)
                         .goalTime(challenge.getGoalTime()).build())
-                .toList());
+                .toList();
     }
 
     public List<DailyChallenge> getDailyChallengesByChallengeId(Long challengeId) {
@@ -60,7 +95,7 @@ public class DailyChallengeService {
     }
 
     public void changeInfoOfDailyChallenges(Long challengeId, List<Status> statuses, LocalDate challengeDate) {
-        List<DailyChallenge> dailyChallenges = getDailyChallengesByChallengeId(challengeId);
+        List<DailyChallenge> dailyChallenges = this.getDailyChallengesByChallengeId(challengeId);
         changeStatusOfDailyChallenges(dailyChallenges, statuses);
         changeChallengeDateOfDailyChallenges(dailyChallenges, challengeDate);
     }
@@ -75,5 +110,11 @@ public class DailyChallengeService {
         for (int i = 0; i < dailyChallenges.size(); i++) {
             dailyChallenges.get(i).changeChallengeDate(challengeDate.plusDays(i));
         }
+    }
+
+    public Integer calculateTodayIndex(Challenge challenge, LocalDate now) {
+        final int COMPLETED_CHALLENGE_INDEX = -1;
+        int daysBetween = (int) ChronoUnit.DAYS.between(challenge.getStartDate(), now);
+        return (daysBetween >= challenge.getPeriod()) ? COMPLETED_CHALLENGE_INDEX : daysBetween;
     }
 }

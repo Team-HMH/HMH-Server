@@ -1,6 +1,7 @@
 package sopt.org.hmh.domain.user.service;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Optional;
 
 import lombok.RequiredArgsConstructor;
@@ -12,8 +13,6 @@ import sopt.org.hmh.domain.auth.exception.AuthError;
 import sopt.org.hmh.domain.auth.exception.AuthException;
 import sopt.org.hmh.domain.auth.repository.OnboardingInfoRepository;
 import sopt.org.hmh.domain.auth.repository.ProblemRepository;
-import sopt.org.hmh.domain.challenge.domain.exception.ChallengeError;
-import sopt.org.hmh.domain.challenge.domain.exception.ChallengeException;
 import sopt.org.hmh.domain.user.domain.User;
 import sopt.org.hmh.domain.user.domain.UserConstants;
 import sopt.org.hmh.domain.user.domain.exception.UserError;
@@ -106,20 +105,33 @@ public class UserService {
                 .orElseThrow(() -> new UserException(UserError.NOT_FOUND_CURRENT_CHALLENGE_ID));
     }
 
-    public Long getCurrentChallengeIdByUser(User user) {
-        return Optional.ofNullable(user.getCurrentChallengeId())
-                .orElseThrow(() -> new ChallengeException(ChallengeError.CHALLENGE_NOT_FOUND));
+    public void changeCurrentChallengeIdByUserId(Long userId, Long challengeId) {
+        this.findByIdOrThrowException(userId).changeCurrentChallengeId(challengeId);
     }
 
+    @Deprecated
     @Transactional
-    public void changeRecentLockDate(Long userId, LocalDate lockDate) {
+    public void changeRecentLockDateDeprecated(Long userId, LocalDate lockDate) {
         this.findByIdOrThrowException(userId).changeRecentLockDate(lockDate);
     }
 
+    @Transactional
+    public void changeRecentLockDateToToday(Long userId, String timeZone) {
+        this.findByIdOrThrowException(userId).changeRecentLockDate(LocalDate.now(ZoneId.of(timeZone)));
+    }
+
     @Transactional(readOnly = true)
-    public IsLockTodayResponse checkIsTodayLock(Long userId, LocalDate lockCheckDate) {
+    @Deprecated
+    public IsLockTodayResponse checkIsTodayLockDeprecated(Long userId, LocalDate lockCheckDate) {
         LocalDate userRecentLockDate = this.findByIdOrThrowException(userId).getRecentLockDate();
         return new IsLockTodayResponse(lockCheckDate.equals(userRecentLockDate));
+    }
+
+    @Transactional(readOnly = true)
+    public IsLockTodayResponse checkIsTodayLock(Long userId, String timeZone) {
+        LocalDate now = LocalDate.now(ZoneId.of(timeZone));
+        LocalDate userRecentLockDate = this.findByIdOrThrowException(userId).getRecentLockDate();
+        return new IsLockTodayResponse(now.equals(userRecentLockDate));
     }
 
     public void withdrawImmediately(Long userId) {
