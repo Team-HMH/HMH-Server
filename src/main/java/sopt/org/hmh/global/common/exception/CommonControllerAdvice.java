@@ -7,22 +7,21 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import sopt.org.hmh.domain.slack.SlackSender;
+import sopt.org.hmh.domain.slack.constant.SlackStatus;
+import sopt.org.hmh.domain.slack.provider.SlackErrorNotificationProvider;
 import sopt.org.hmh.global.common.exception.base.ErrorBase;
 import sopt.org.hmh.global.common.exception.base.ExceptionBase;
 import sopt.org.hmh.global.common.response.BaseResponse;
-
-import java.util.Objects;
 
 @ControllerAdvice
 @RequiredArgsConstructor
 public class CommonControllerAdvice {
 
-    private final SlackSender slackSender;
+    private final SlackErrorNotificationProvider slackErrorNotificationProvider;
 
     @ExceptionHandler(value = ExceptionBase.class)
     public ResponseEntity<?> exceptionHandler(HttpServletRequest request, HttpServletResponse response, ExceptionBase exception) {
-        if (!Objects.equals(request.getRemoteAddr(), "0:0:0:0:0:0:0:1")) // 로컬에서 오류 발생 시 전송 X
-            slackSender.sendNotificationServerRuntimeException(exception, request);
+        slackErrorNotificationProvider.sendNotification(SlackStatus.CLIENT_ERROR, exception, request);
 
         ErrorBase error = exception.getError();
         response.setStatus(error.getHttpStatusCode());

@@ -1,4 +1,4 @@
-package sopt.org.hmh.domain.slack;
+package sopt.org.hmh.domain.slack.constant;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

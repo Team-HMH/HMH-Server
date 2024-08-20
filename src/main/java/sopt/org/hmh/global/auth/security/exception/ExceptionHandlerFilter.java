@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 import sopt.org.hmh.domain.slack.SlackSender;
+import sopt.org.hmh.domain.slack.constant.SlackStatus;
+import sopt.org.hmh.domain.slack.provider.SlackErrorNotificationProvider;
 import sopt.org.hmh.global.auth.jwt.JwtConstants;
 import sopt.org.hmh.global.auth.jwt.exception.JwtError;
 import sopt.org.hmh.global.auth.jwt.exception.JwtException;
@@ -26,7 +28,7 @@ import sopt.org.hmh.global.common.response.BaseResponse;
 @Component
 public class ExceptionHandlerFilter extends OncePerRequestFilter {
     private final ObjectMapper objectMapper = new ObjectMapper();
-    private final SlackSender slackSender;
+    private final SlackErrorNotificationProvider slackErrorNotificationProvider;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException {
@@ -48,7 +50,7 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
     private void handleException(HttpServletResponse response, HttpServletRequest request, Exception e) throws IOException {
         log.error(">>> Exception Handler Filter : ", e);
         setResponse(response, HttpStatus.INTERNAL_SERVER_ERROR, JwtError.INTERNAL_SERVER_ERROR);
-        slackSender.sendNotificationServerInternalError(e, request);
+        slackErrorNotificationProvider.sendNotification(SlackStatus.INTERNAL_ERROR, e, request);
     }
 
     private void setResponse(HttpServletResponse response, HttpStatus httpStatus, ErrorBase errorMessage) throws IOException {
