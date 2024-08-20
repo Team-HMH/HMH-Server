@@ -14,7 +14,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import sopt.org.hmh.domain.slack.SlackSender;
 import sopt.org.hmh.domain.slack.constant.SlackStatus;
 import sopt.org.hmh.domain.slack.provider.SlackErrorNotificationProvider;
 import sopt.org.hmh.global.auth.jwt.JwtConstants;

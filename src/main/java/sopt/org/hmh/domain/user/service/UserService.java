@@ -13,7 +13,6 @@ import sopt.org.hmh.domain.auth.exception.AuthError;
 import sopt.org.hmh.domain.auth.exception.AuthException;
 import sopt.org.hmh.domain.auth.repository.OnboardingInfoRepository;
 import sopt.org.hmh.domain.auth.repository.ProblemRepository;
-import sopt.org.hmh.domain.slack.SlackSender;
 import sopt.org.hmh.domain.slack.constant.SlackStatus;
 import sopt.org.hmh.domain.slack.provider.SlackNewUserNotificationProvider;
 import sopt.org.hmh.domain.user.domain.User;
