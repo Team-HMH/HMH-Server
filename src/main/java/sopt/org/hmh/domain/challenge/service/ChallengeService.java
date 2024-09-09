@@ -35,8 +35,4 @@ public class ChallengeService {
     public Challenge addChallenge(Challenge challenge) {
         return challengeRepository.save(challenge);
     }
-
-    public Integer getChallengePeriod(Long challengeId) {
-        return this.findByIdOrElseThrow(challengeId).getPeriod();
-    }
 }
