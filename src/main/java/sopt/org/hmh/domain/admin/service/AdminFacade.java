@@ -12,6 +12,7 @@ import sopt.org.hmh.domain.admin.dto.request.AdminUserInfoRequest;
 import sopt.org.hmh.domain.admin.dto.response.AdminTokenResponse;
 import sopt.org.hmh.domain.admin.exception.AdminError;
 import sopt.org.hmh.domain.admin.exception.AdminException;
+import sopt.org.hmh.domain.challenge.domain.Challenge;
 import sopt.org.hmh.domain.challenge.domain.exception.ChallengeError;
 import sopt.org.hmh.domain.challenge.domain.exception.ChallengeException;
 import sopt.org.hmh.domain.challenge.service.ChallengeService;
@@ -65,15 +66,17 @@ public class AdminFacade {
     @Transactional
     public void changeDailyChallengeInfo(AdminDailyChallengeRequest request) {
         Long currentChallengeId = userService.getCurrentChallengeIdByUserId(request.userId());
+        Challenge challenge = challengeService.findByIdOrElseThrow(currentChallengeId);
         List<Status> statuses = request.statuses();
         LocalDate challengeDate = request.startDate();
 
-        validateStatusesPeriod(currentChallengeId, statuses);
+        validateStatusesPeriod(challenge, statuses);
+        challenge.changeStartDate(challengeDate);
         dailyChallengeService.changeInfoOfDailyChallenges(currentChallengeId, statuses, challengeDate);
     }
 
-    private void validateStatusesPeriod(Long challengeId, List<Status> statuses) {
-        Integer challengePeriod = challengeService.getChallengePeriod(challengeId);
+    private void validateStatusesPeriod(Challenge challenge, List<Status> statuses) {
+        Integer challengePeriod = challenge.getPeriod();
         if (challengePeriod != statuses.size()) {
             throw new ChallengeException(ChallengeError.INVALID_PERIOD_NUMERIC);
         }
