@@ -50,4 +50,8 @@ public class Challenge extends BaseTimeEntity {
         this.apps = apps;
         this.startDate = startDate;
     }
+
+    public void changeStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
 }
