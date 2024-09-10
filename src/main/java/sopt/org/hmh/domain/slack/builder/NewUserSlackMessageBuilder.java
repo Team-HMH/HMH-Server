@@ -1,7 +1,6 @@
-package sopt.org.hmh.domain.slack.provider;
+package sopt.org.hmh.domain.slack.builder;
 
 import com.slack.api.model.Attachment;
-import com.slack.api.model.Field;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -13,7 +12,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class SlackNewUserNotificationProvider {
+public class NewUserSlackMessageBuilder implements SlackMessageBuilder{
 
     @Value("${slack.webhook.newUserWebUrl}")
     private String newUserWebUrl;
@@ -21,26 +20,24 @@ public class SlackNewUserNotificationProvider {
     private final SlackSender slackSender;
     private final UserRepository userRepository;
 
-    public void sendNotification(String userName, String os, SlackStatus status) {
-        slackSender.sendSlackNotification(newUserWebUrl, status.getTitle(),
-                generateNewUserSlackAttachment(userName, os, status.getColor()));
+    public void sendNotification(SlackStatus status, String userName, String os) {
+        slackSender.sendSlackNotification(
+                newUserWebUrl,
+                status.getTitle(),
+                generateSlackAttachment(status, userName, os));
     }
 
-    public Attachment generateNewUserSlackAttachment(String userName, String os, String colorCode) {
+    @Override
+    public Attachment generateSlackAttachment(SlackStatus status, Object... params) {
+        String userName = (String) params[0];
+        String os = (String) params[1];
+
         return Attachment.builder()
-                .color(colorCode)
+                .color(changeColorToHex(status.getColor()))
                 .title("새로운 유저 '" + userName + "'님이 가입했습니다!")
                 .fields(List.of(
                         generateSlackField("총 유저 수", " 👉 " + userRepository.count() + "명"),
                         generateSlackField("가입한 OS", "👉 " + os)))
-                .build();
-    }
-
-    private Field generateSlackField(String title, String value) {
-        return Field.builder()
-                .title(title)
-                .value(value)
-                .valueShortEnough(false)
                 .build();
     }
 }
