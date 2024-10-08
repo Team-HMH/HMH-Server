@@ -13,6 +13,8 @@ import sopt.org.hmh.domain.auth.exception.AuthError;
 import sopt.org.hmh.domain.auth.exception.AuthException;
 import sopt.org.hmh.domain.auth.repository.OnboardingInfoRepository;
 import sopt.org.hmh.domain.auth.repository.ProblemRepository;
+import sopt.org.hmh.domain.slack.builder.NewUserSlackMessageBuilder;
+import sopt.org.hmh.domain.slack.constant.SlackStatus;
 import sopt.org.hmh.domain.user.domain.User;
 import sopt.org.hmh.domain.user.domain.UserConstants;
 import sopt.org.hmh.domain.user.domain.exception.UserError;
@@ -29,6 +31,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final OnboardingInfoRepository onboardingInfoRepository;
     private final ProblemRepository problemRepository;
+    private final NewUserSlackMessageBuilder newUserSlackMessageBuilder;
 
     @Transactional
     public void withdraw(Long userId) {
@@ -56,16 +59,17 @@ public class UserService {
         }
     }
 
-    public User addUser(SocialPlatform socialPlatform, String socialId, String name) {
+    public User addUser(SocialPlatform socialPlatform, String socialId, String name, String os) {
         this.validateDuplicateUser(socialId, socialPlatform);
-
-        return userRepository.save(
+        User user = userRepository.save(
                 User.builder()
                         .socialPlatform(socialPlatform)
                         .socialId(socialId)
                         .name(validateName(name))
                         .build()
         );
+        newUserSlackMessageBuilder.sendNotification(SlackStatus.NEW_USER_SIGNUP, name, os);
+        return user;
     }
 
     private String validateName(String name) {

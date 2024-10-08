@@ -41,7 +41,7 @@ public class AuthFacade {
         SocialPlatform socialPlatform = request.socialPlatform();
         String socialId = this.getSocialIdBySocialAccessToken(socialPlatform, socialAccessToken);
 
-        User newUser = userService.addUser(socialPlatform, socialId, request.name());
+        User newUser = userService.addUser(socialPlatform, socialId, request.name(), os);
         Long newUserId = newUser.getId();
 
         userService.registerOnboardingInfo(request, newUserId);
