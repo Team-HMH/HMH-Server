@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import sopt.org.hmh.domain.slack.builder.ErrorSlackMessageBuilder;
 import sopt.org.hmh.global.auth.jwt.service.JwtProvider;
 import sopt.org.hmh.global.auth.jwt.service.JwtValidator;
 import sopt.org.hmh.global.auth.security.JwtAuthenticationEntryPoint;
@@ -24,6 +25,7 @@ public class SecurityConfig {
     private final JwtValidator jwtValidator;
     private final JwtProvider jwtProvider;
     private final JwtAuthenticationEntryPoint customJwtAuthenticationEntryPoint;
+    private final ErrorSlackMessageBuilder errorSlackMessageBuilder;
 
     private static final String[] AUTH_WHITELIST = {
             // Global
@@ -61,7 +63,7 @@ public class SecurityConfig {
                         authorizationManagerRequestMatcherRegistry
                                 .anyRequest().authenticated())
                 .addFilterBefore(new JwtAuthenticationFilter(jwtValidator, jwtProvider), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new ExceptionHandlerFilter(), JwtAuthenticationFilter.class)
+                .addFilterBefore(new ExceptionHandlerFilter(errorSlackMessageBuilder), JwtAuthenticationFilter.class)
                 .build();
     }
 
