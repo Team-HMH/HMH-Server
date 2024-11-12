@@ -17,10 +17,10 @@ public class SlackSender {
 
     private final Slack slackClient = Slack.getInstance();
 
-    public void sendSlackNotification(String webhookUrl, String title, Attachment attachment) {
+    public void sendSlackNotification(String webhookUrl, String mainText, Attachment attachment) {
         try {
             slackClient.send(webhookUrl, WebhookPayloads.payload(p -> p
-                    .text(title)
+                    .text("*" + mainText + "*")
                     .attachments(List.of(attachment))
             ));
         } catch (IOException slackError) {
