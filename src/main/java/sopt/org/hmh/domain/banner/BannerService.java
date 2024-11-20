@@ -4,13 +4,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import sopt.org.hmh.domain.banner.exception.BannerError;
 import sopt.org.hmh.domain.banner.exception.BannerException;
-import sopt.org.hmh.domain.banner.repository.BannerRepository;
 
 @Service
 @RequiredArgsConstructor
 public class BannerService {
 
-    private final BannerRepository bannerRepository;
+    private final BannerJpaRepository bannerRepository;
 
     public BannerResponse getBanner() {
         return bannerRepository.findTopByOrderByIdAsc()
