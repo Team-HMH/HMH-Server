@@ -1,7 +1,6 @@
-package sopt.org.hmh.domain.banner.repository;
+package sopt.org.hmh.domain.banner;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import sopt.org.hmh.domain.banner.Banner;
 
 import java.util.Optional;
 
