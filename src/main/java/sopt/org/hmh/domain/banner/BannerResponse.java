@@ -20,6 +20,12 @@ public record BannerResponse(
                 .subTitle(banner.getSubTitle())
                 .imageUrl(banner.getImageUrl())
                 .linkUrl(banner.getLinkUrl())
+                .backgroundColors(convertToColorArray(banner.getBackgroundColors()))
                 .build();
+    }
+
+    private static List<String> convertToColorArray(String input) {
+        String[] colorArray = input.split(",\\s*");
+        return Arrays.asList(colorArray);
     }
 }
