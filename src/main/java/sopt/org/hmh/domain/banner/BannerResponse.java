@@ -2,7 +2,6 @@ package sopt.org.hmh.domain.banner;
 
 import lombok.Builder;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Builder
