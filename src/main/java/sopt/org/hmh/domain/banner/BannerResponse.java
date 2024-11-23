@@ -26,6 +26,6 @@ public record BannerResponse(
 
     private static List<String> convertToColorArray(String input) {
         String[] colorArray = input.split(",\\s*");
-        return Arrays.asList(colorArray);
+        return List.of(colorArray);
     }
 }
