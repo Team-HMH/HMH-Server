@@ -22,4 +22,5 @@ public class Banner {
     private String subTitle;
     private String imageUrl;
     private String linkUrl;
+    private String backgroundColors;
 }
