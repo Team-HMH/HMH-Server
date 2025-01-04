@@ -23,7 +23,7 @@ public class NewUserSlackMessageBuilder implements SlackMessageBuilder{
     public void sendNotification(SlackStatus status, String userName, String os) {
         slackSender.sendSlackNotification(
                 newUserWebUrl,
-                status.getTitle(),
+                status.getTitle() + " : 회원 수 " + userRepository.count() + "명",
                 generateSlackAttachment(status, userName, os));
     }
 
@@ -34,10 +34,9 @@ public class NewUserSlackMessageBuilder implements SlackMessageBuilder{
 
         return Attachment.builder()
                 .color(changeColorToHex(status.getColor()))
-                .title("새로운 유저 '" + userName + "'님이 가입했습니다!")
                 .fields(List.of(
-                        generateSlackField("총 유저 수", " 👉 " + userRepository.count() + "명"),
-                        generateSlackField("가입한 OS", "👉 " + os)))
+                        generateSlackField("User Name", userName),
+                        generateSlackField("User OS", os)))
                 .build();
     }
 }
