@@ -6,6 +6,8 @@ import org.springframework.transaction.annotation.Transactional;
 import sopt.org.hmh.domain.auth.dto.response.ReissueResponse;
 import sopt.org.hmh.domain.challenge.dto.request.NewChallengeOrder;
 import sopt.org.hmh.domain.challenge.service.ChallengeFacade;
+import sopt.org.hmh.domain.slack.builder.NewUserSlackMessageBuilder;
+import sopt.org.hmh.domain.slack.constant.SlackStatus;
 import sopt.org.hmh.domain.user.domain.User;
 import sopt.org.hmh.domain.auth.dto.request.SocialSignUpRequest;
 import sopt.org.hmh.domain.auth.dto.response.LoginResponse;
@@ -27,6 +29,7 @@ public class AuthFacade {
     private final ChallengeFacade challengeFacade;
     private final TokenService tokenService;
     private final UserService userService;
+    private final NewUserSlackMessageBuilder newUserSlackMessageBuilder;
 
     @Transactional(readOnly = true)
     public LoginResponse login(String socialAccessToken, SocialPlatform socialPlatform) {
@@ -41,7 +44,7 @@ public class AuthFacade {
         SocialPlatform socialPlatform = request.socialPlatform();
         String socialId = this.getSocialIdBySocialAccessToken(socialPlatform, socialAccessToken);
 
-        User newUser = userService.addUser(socialPlatform, socialId, request.name(), os);
+        User newUser = userService.addUser(socialPlatform, socialId, request.name());
         Long newUserId = newUser.getId();
 
         userService.registerOnboardingInfo(request, newUserId);
@@ -50,6 +53,8 @@ public class AuthFacade {
                 request.challenge().toChallengeRequest(), request.challenge().apps(),
                 newUserId, os, timeZone
         ));
+
+        newUserSlackMessageBuilder.sendNotification(SlackStatus.NEW_USER_SIGNUP, request.name(), os);
 
         return performLogin(newUser, socialAccessToken, socialPlatform);
     }
