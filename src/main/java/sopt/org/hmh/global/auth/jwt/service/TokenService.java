@@ -17,9 +17,8 @@ public class TokenService {
 
     @Transactional
     public ReissueResponse reissueToken(String refreshToken) {
-        String parsedRefreshToken = extractPrefix(refreshToken);
-        String userId = jwtProvider.getSubject(parsedRefreshToken);
-        jwtValidator.validateRefreshToken(parsedRefreshToken);
+        String userId = jwtProvider.getSubject(refreshToken);
+        jwtValidator.validateRefreshToken(refreshToken);
         return ReissueResponse.of(jwtProvider.issueToken(userId));
     }
 
